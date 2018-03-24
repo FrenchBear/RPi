@@ -1,0 +1,1 @@
+ 2106  gcc -c -g -Wa,-a,-ad f2.c >f2.lst

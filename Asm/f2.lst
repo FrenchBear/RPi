@@ -1,0 +1,180 @@
+ARM GAS  /tmp/cc7ne4Qb.s 			page 1
+
+
+   1              		.arch armv6
+   2              		.eabi_attribute 27, 3
+   3              		.eabi_attribute 28, 1
+   4              		.fpu vfp
+   5              		.eabi_attribute 20, 1
+   6              		.eabi_attribute 21, 1
+   7              		.eabi_attribute 23, 3
+   8              		.eabi_attribute 24, 1
+   9              		.eabi_attribute 25, 1
+  10              		.eabi_attribute 26, 2
+  11              		.eabi_attribute 30, 6
+  12              		.eabi_attribute 34, 1
+  13              		.eabi_attribute 18, 4
+  14              		.file	"f2.c"
+  15              		.text
+  16              	.Ltext0:
+  17              		.cfi_sections	.debug_frame
+  18              		.section	.rodata
+  19              		.align	2
+  20              	.LC0:
+  21 0000 25346420 		.ascii	"%4d %4d %4d %4d\012\000"
+  21      25346420 
+  21      25346420 
+  21      2534640A 
+  21      00
+  22 0011 000000   		.align	2
+  23              	.LC1:
+  24 0014 73756D20 		.ascii	"sum digits = %d\012\000"
+  24      64696769 
+  24      7473203D 
+  24      2025640A 
+  24      00
+  25 0025 000000   		.text
+  26              		.align	2
+  27              		.global	main
+  29              	main:
+  30              	.LFB0:
+  31              		.file 1 "f2.c"
+   1:f2.c          **** // f2.c
+   2:f2.c          **** // Sum of digits of i, without division
+   3:f2.c          **** // 2016-05-19	PV
+   4:f2.c          **** 
+   5:f2.c          **** // int = 32 bits
+   6:f2.c          **** // long = 32 bits
+   7:f2.c          **** // long long = 64 bits
+   8:f2.c          **** 
+   9:f2.c          **** #include <stdio.h>
+  10:f2.c          **** 
+  11:f2.c          **** void main() {
+  32              		.loc 1 11 0
+  33              		.cfi_startproc
+  34              		@ args = 0, pretend = 0, frame = 16
+  35              		@ frame_needed = 1, uses_anonymous_args = 0
+  36 0000 30482DE9 		stmfd	sp!, {r4, r5, fp, lr}
+  37              		.cfi_def_cfa_offset 16
+  38              		.cfi_offset 4, -16
+  39              		.cfi_offset 5, -12
+ARM GAS  /tmp/cc7ne4Qb.s 			page 2
+
+
+  40              		.cfi_offset 11, -8
+  41              		.cfi_offset 14, -4
+  42 0004 0CB08DE2 		add	fp, sp, #12
+  43              		.cfi_def_cfa 11, 4
+  44 0008 18D04DE2 		sub	sp, sp, #24
+  12:f2.c          **** 	int i = 1024;
+  45              		.loc 1 12 0
+  46 000c 013BA0E3 		mov	r3, #1024
+  47 0010 10300BE5 		str	r3, [fp, #-16]
+  13:f2.c          **** 	int base = 0x1999999A;	// 2^32/10 rounded up
+  48              		.loc 1 13 0
+  49 0014 D8309FE5 		ldr	r3, .L4
+  50 0018 18300BE5 		str	r3, [fp, #-24]
+  14:f2.c          **** 	int total = 0;
+  51              		.loc 1 14 0
+  52 001c 0030A0E3 		mov	r3, #0
+  53 0020 14300BE5 		str	r3, [fp, #-20]
+  15:f2.c          **** 	while (i>0) {
+  54              		.loc 1 15 0
+  55 0024 2A0000EA 		b	.L2
+  56              	.L3:
+  57              	.LBB2:
+  16:f2.c          **** 		int iDiv10 = ((long long)i*(long long)base)>>32;
+  58              		.loc 1 16 0
+  59 0028 10301BE5 		ldr	r3, [fp, #-16]
+  60 002c 0300A0E1 		mov	r0, r3
+  61 0030 C01FA0E1 		mov	r1, r0, asr #31
+  62 0034 18301BE5 		ldr	r3, [fp, #-24]
+  63 0038 0320A0E1 		mov	r2, r3
+  64 003c C23FA0E1 		mov	r3, r2, asr #31
+  65 0040 92010EE0 		mul	lr, r2, r1
+  66 0044 90030CE0 		mul	ip, r0, r3
+  67 0048 0CC08EE0 		add	ip, lr, ip
+  68 004c 902283E0 		umull	r2, r3, r0, r2
+  69 0050 03108CE0 		add	r1, ip, r3
+  70 0054 0130A0E1 		mov	r3, r1
+  71 0058 0340A0E1 		mov	r4, r3
+  72 005c C35FA0E1 		mov	r5, r3, asr #31
+  73 0060 0430A0E1 		mov	r3, r4
+  74 0064 1C300BE5 		str	r3, [fp, #-28]
+  17:f2.c          **** 		printf("%4d %4d %4d %4d\n", i, iDiv10, 10*iDiv10, i-10*iDiv10);
+  75              		.loc 1 17 0
+  76 0068 1C201BE5 		ldr	r2, [fp, #-28]
+  77 006c 0230A0E1 		mov	r3, r2
+  78 0070 0331A0E1 		mov	r3, r3, asl #2
+  79 0074 023083E0 		add	r3, r3, r2
+  80 0078 8330A0E1 		mov	r3, r3, asl #1
+  81 007c 03C0A0E1 		mov	ip, r3
+  82 0080 1C301BE5 		ldr	r3, [fp, #-28]
+  83 0084 0920E0E3 		mvn	r2, #9
+  84 0088 920302E0 		mul	r2, r2, r3
+  85 008c 10301BE5 		ldr	r3, [fp, #-16]
+  86 0090 033082E0 		add	r3, r2, r3
+  87 0094 00308DE5 		str	r3, [sp]
+  88 0098 58009FE5 		ldr	r0, .L4+4
+  89 009c 10101BE5 		ldr	r1, [fp, #-16]
+  90 00a0 1C201BE5 		ldr	r2, [fp, #-28]
+ARM GAS  /tmp/cc7ne4Qb.s 			page 3
+
+
+  91 00a4 0C30A0E1 		mov	r3, ip
+  92 00a8 FEFFFFEB 		bl	printf
+  18:f2.c          **** 		total += i-10*iDiv10;
+  93              		.loc 1 18 0
+  94 00ac 1C301BE5 		ldr	r3, [fp, #-28]
+  95 00b0 0920E0E3 		mvn	r2, #9
+  96 00b4 920302E0 		mul	r2, r2, r3
+  97 00b8 10301BE5 		ldr	r3, [fp, #-16]
+  98 00bc 033082E0 		add	r3, r2, r3
+  99 00c0 14201BE5 		ldr	r2, [fp, #-20]
+ 100 00c4 033082E0 		add	r3, r2, r3
+ 101 00c8 14300BE5 		str	r3, [fp, #-20]
+  19:f2.c          **** 		i = iDiv10;
+ 102              		.loc 1 19 0
+ 103 00cc 1C301BE5 		ldr	r3, [fp, #-28]
+ 104 00d0 10300BE5 		str	r3, [fp, #-16]
+ 105              	.L2:
+ 106              	.LBE2:
+  15:f2.c          **** 		int iDiv10 = ((long long)i*(long long)base)>>32;
+ 107              		.loc 1 15 0
+ 108 00d4 10301BE5 		ldr	r3, [fp, #-16]
+ 109 00d8 000053E3 		cmp	r3, #0
+ 110 00dc D1FFFFCA 		bgt	.L3
+  20:f2.c          **** 	}
+  21:f2.c          **** 	printf("sum digits = %d\n", total);
+ 111              		.loc 1 21 0
+ 112 00e0 14009FE5 		ldr	r0, .L4+8
+ 113 00e4 14101BE5 		ldr	r1, [fp, #-20]
+ 114 00e8 FEFFFFEB 		bl	printf
+  22:f2.c          **** }
+ 115              		.loc 1 22 0
+ 116 00ec 0CD04BE2 		sub	sp, fp, #12
+ 117              		.cfi_def_cfa 13, 16
+ 118              		@ sp needed
+ 119 00f0 3088BDE8 		ldmfd	sp!, {r4, r5, fp, pc}
+ 120              	.L5:
+ 121              		.align	2
+ 122              	.L4:
+ 123 00f4 9A999919 		.word	429496730
+ 124 00f8 00000000 		.word	.LC0
+ 125 00fc 14000000 		.word	.LC1
+ 126              		.cfi_endproc
+ 127              	.LFE0:
+ 129              	.Letext0:
+ARM GAS  /tmp/cc7ne4Qb.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 f2.c
+     /tmp/cc7ne4Qb.s:19     .rodata:00000000 $d
+     /tmp/cc7ne4Qb.s:26     .text:00000000 $a
+     /tmp/cc7ne4Qb.s:29     .text:00000000 main
+     /tmp/cc7ne4Qb.s:123    .text:000000f4 $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+printf

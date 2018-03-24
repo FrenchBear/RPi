@@ -1,0 +1,7 @@
+cc -S -fverbose-asm -g source.c
+as -alhnd source.s >source.lst
+
+cc -g -c source.c
+objdump -d -S source.o >source.lst
+
+gcc -c -g -Wa,-adlhn source.c >source.lst
