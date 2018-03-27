@@ -1,0 +1,15 @@
+CC = gcc
+CXX = g++
+CFLAGS = -Wall -std=gnu11 `sdl2-config --cflags --libs`
+CXXFLAGS = -Wall `sdl2-config --cflags --libs`
+LDLIBS = -lm -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+
+programs = 00Hello 01_hello_SDL 02_image 03_event 04_key 05_optimized 06_extension 07_texture 08_geometry 09_viewport \
+		10_colorkeying 11_cliprendering 12_colormodulation 13_alphablending 14_animated 15_rotation 16_ttf \
+		17_mouse_events 18_key_states 19_joystick 20_force 21_sound 22_timing 23_advanced_timers 24_frame_rate \
+		15_Rotate_Hilbert 25_capped_fr 26_motion
+
+make:	$(programs)
+
+clean:
+		rm -f $(programs)

@@ -1,0 +1,2635 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='WolframEngine 10.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       160,          7]
+NotebookDataLength[    134527,       2625]
+NotebookOptionsPosition[    134021,       2604]
+NotebookOutlinePosition[    134358,       2619]
+CellTagsIndexPosition[    134315,       2616]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ NamespaceBox["WolframAlphaQueryParseResults",
+  DynamicModuleBox[{Typeset`q$$ = "100/23", Typeset`newq$$ = "100/23", 
+   Typeset`chosen$$ = "100/23", Typeset`open$$ = False}, 
+   PaneSelectorBox[{False->
+    DynamicModuleBox[{WolframAlphaClient`Private`show$$ = False, 
+     WolframAlphaClient`Private`assumptionsQ$$ = False}, 
+     TagBox[
+      FrameBox[
+       TagBox[GridBox[{
+          {
+           InputFieldBox[Dynamic[Typeset`newq$$], String,
+            Appearance->None,
+            BaseStyle->{"CalculateInput"},
+            ContinuousAction->True,
+            Enabled->True,
+            FieldSize->{{1, 40}, {1, 
+               DirectedInfinity[1]}},
+            TrapSelection->False], 
+           ItemBox[
+            ButtonBox[
+             PaneSelectorBox[{True->
+              TagBox[
+               TooltipBox[
+                
+                DynamicBox[FEPrivate`FrontEndResource[
+                 "WABitmaps", "OrangeSquarePlus"],
+                 ImageSizeCache->{10., {3., 8.}}],
+                DynamicBox[
+                 ToBoxes[
+                  FEPrivate`FrontEndResource["WAStrings", "ShowAllResults"], 
+                  StandardForm]]],
+               Annotation[#, 
+                Dynamic[
+                 FEPrivate`FrontEndResource["WAStrings", "ShowAllResults"]], 
+                "Tooltip"]& ], False->
+              TagBox[
+               TooltipBox[
+                
+                DynamicBox[FEPrivate`FrontEndResource[
+                 "WABitmaps", "GraySquarePlus"],
+                 ImageSizeCache->{10., {3., 8.}}],
+                DynamicBox[
+                 ToBoxes[
+                  FEPrivate`FrontEndResource["WAStrings", "ShowAllResults"], 
+                  StandardForm]]],
+               Annotation[#, 
+                Dynamic[
+                 FEPrivate`FrontEndResource["WAStrings", "ShowAllResults"]], 
+                "Tooltip"]& ]}, Dynamic[WolframAlphaClient`Private`show$$],
+              ImageSize->All],
+             Appearance->None,
+             ButtonFunction:>(Quiet[
+                WolframAlpha[]]; If[
+                Or[
+                 CurrentValue["OptionKey"], 
+                 CurrentValue["AltKey"]], SelectionMove[
+                  ButtonNotebook[], All, ButtonCell, AutoScroll -> False]; 
+                NotebookWrite[
+                  ButtonNotebook[], 
+                  Cell[
+                  Typeset`newq$$, "WolframAlphaShort", FormatType -> 
+                   "TextForm"], All], Typeset`open$$ = True; 
+                WolframAlphaClient`Private`extrudeFromFastParse["100/23", 
+                  Defer[100/23], "Fast parse"]; Typeset`open$$ = False]),
+             Evaluator->Automatic,
+             Method->"Queued"],
+            Alignment->{Right, Top},
+            StripOnInput->False]},
+          {
+           PaneBox[
+            TagBox[
+             TooltipBox[
+              ButtonBox[
+               PaneSelectorBox[{False->
+                StyleBox[
+                 RowBox[{"100", "/", "23"}],
+                 StripOnInput->False,
+                 NumberMarks->False], True->
+                StyleBox[
+                 RowBox[{"100", "/", "23"}],
+                 StripOnInput->False,
+                 ShowSyntaxStyles->False,
+                 NumberMarks->False,
+                 FontColor->RGBColor[1, 0.5, 0]]}, Dynamic[
+                 CurrentValue["MouseOver"]],
+                BaseStyle->{ShowStringCharacters -> True},
+                FrameMargins->0,
+                ImageSize->Automatic],
+               Alignment->Left,
+               Appearance->None,
+               BaseStyle->{},
+               ButtonFunction:>(SelectionMove[
+                  ButtonNotebook[], All, ButtonCell]; NotebookWrite[
+                  ButtonNotebook[], 
+                  Cell[
+                   BoxData[
+                    RowBox[{"100", "/", "23"}]], "Input"], All]; SelectionMove[
+                  ButtonNotebook[], After, CellContents]),
+               Evaluator->Automatic,
+               ImageSize->Automatic,
+               Method->"Preemptive"],
+              DynamicBox[
+               ToBoxes[
+                FEPrivate`FrontEndResource["WAStrings", "RemoveResults"], 
+                StandardForm]]],
+             Annotation[#, 
+              Dynamic[
+               FEPrivate`FrontEndResource["WAStrings", "RemoveResults"]], 
+              "Tooltip"]& ],
+            AppearanceElements->{},
+            BaseStyle->{ShowStringCharacters -> True, ScriptLevel -> 0},
+            ImageSize->{Automatic, {1, 100}},
+            Scrollbars->{False, Automatic}], "\[SpanFromLeft]"}
+         },
+         AutoDelete->False,
+         BaselinePosition->{1, 1},
+         FrameStyle->GrayLevel[0.85],
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxDividers->{
+          "Columns" -> {{False}}, "Rows" -> {False, {True}, False}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Grid"],
+       Alignment->Top,
+       Background->Dynamic[
+         FEPrivate`If[
+          FEPrivate`And[
+           FEPrivate`SameQ[
+            FEPrivate`Head[Typeset`newq$$], String], 
+           FEPrivate`UnsameQ[Typeset`q$$, Typeset`newq$$]], 
+          RGBColor[1., 0.975, 0.95], 
+          GrayLevel[1]]],
+       BaselinePosition->Baseline,
+       FrameStyle->GrayLevel[0.85],
+       ImageSize->Automatic,
+       RoundingRadius->5,
+       StripOnInput->False],
+      EventHandlerTag[{
+       "MouseEntered" :> 
+        FEPrivate`Set[WolframAlphaClient`Private`show$$, True], "MouseExited" :> 
+        FEPrivate`Set[WolframAlphaClient`Private`show$$, False], Method -> 
+        "Preemptive", PassEventsDown -> Automatic, PassEventsUp -> True}]],
+     DynamicModuleValues:>{}], True->
+    TagBox[GridBox[{
+       {
+        DynamicModuleBox[{WolframAlphaClient`Private`show$$ = False, 
+         WolframAlphaClient`Private`assumptionsQ$$ = False}, 
+         TagBox[
+          FrameBox[
+           TagBox[GridBox[{
+              {
+               InputFieldBox[Dynamic[Typeset`newq$$], String,
+                Appearance->None,
+                BaseStyle->{"CalculateInput"},
+                ContinuousAction->True,
+                Enabled->True,
+                FieldSize->{{1, 40}, {1, 
+                   DirectedInfinity[1]}},
+                TrapSelection->False], 
+               ItemBox[
+                ButtonBox[
+                 PaneSelectorBox[{True->
+                  TagBox[
+                   TooltipBox[
+                    
+                    DynamicBox[FEPrivate`FrontEndResource[
+                    "WABitmaps", "OrangeSquarePlus"]],
+                    DynamicBox[
+                    ToBoxes[
+                    FEPrivate`FrontEndResource["WAStrings", "ShowAllResults"],
+                     StandardForm]]],
+                   Annotation[#, 
+                    Dynamic[
+                    FEPrivate`FrontEndResource[
+                    "WAStrings", "ShowAllResults"]], "Tooltip"]& ], False->
+                  TagBox[
+                   TooltipBox[
+                    
+                    DynamicBox[FEPrivate`FrontEndResource[
+                    "WABitmaps", "GraySquarePlus"]],
+                    DynamicBox[
+                    ToBoxes[
+                    FEPrivate`FrontEndResource["WAStrings", "ShowAllResults"],
+                     StandardForm]]],
+                   Annotation[#, 
+                    Dynamic[
+                    FEPrivate`FrontEndResource[
+                    "WAStrings", "ShowAllResults"]], "Tooltip"]& ]}, Dynamic[
+                  WolframAlphaClient`Private`show$$],
+                  ImageSize->All],
+                 Appearance->None,
+                 ButtonFunction:>(Quiet[
+                    WolframAlpha[]]; If[
+                    Or[
+                    CurrentValue["OptionKey"], 
+                    CurrentValue["AltKey"]], SelectionMove[
+                    ButtonNotebook[], All, ButtonCell, AutoScroll -> False]; 
+                    NotebookWrite[
+                    ButtonNotebook[], 
+                    Cell[
+                    Typeset`newq$$, "WolframAlphaShort", FormatType -> 
+                    "TextForm"], All], Typeset`open$$ = True; 
+                    WolframAlphaClient`Private`extrudeFromFastParse[
+                    "100/23", 
+                    Defer[100/23], "Fast parse"]; Typeset`open$$ = False]),
+                 Evaluator->Automatic,
+                 Method->"Queued"],
+                Alignment->{Right, Top},
+                StripOnInput->False]},
+              {
+               PaneBox[
+                TagBox[
+                 TooltipBox[
+                  ButtonBox[
+                   PaneSelectorBox[{False->
+                    StyleBox[
+                    RowBox[{"100", "/", "23"}],
+                    StripOnInput->False,
+                    NumberMarks->False], True->
+                    StyleBox[
+                    RowBox[{"100", "/", "23"}],
+                    StripOnInput->False,
+                    ShowSyntaxStyles->False,
+                    NumberMarks->False,
+                    FontColor->RGBColor[1, 0.5, 0]]}, Dynamic[
+                    CurrentValue["MouseOver"]],
+                    BaseStyle->{ShowStringCharacters -> True},
+                    FrameMargins->0,
+                    ImageSize->Automatic],
+                   Alignment->Left,
+                   Appearance->None,
+                   BaseStyle->{},
+                   ButtonFunction:>(SelectionMove[
+                    ButtonNotebook[], All, ButtonCell]; NotebookWrite[
+                    ButtonNotebook[], 
+                    Cell[
+                    BoxData[
+                    RowBox[{"100", "/", "23"}]], "Input"], All]; SelectionMove[
+                    ButtonNotebook[], After, CellContents]),
+                   Evaluator->Automatic,
+                   ImageSize->Automatic,
+                   Method->"Preemptive"],
+                  DynamicBox[
+                   ToBoxes[
+                    FEPrivate`FrontEndResource["WAStrings", "RemoveResults"], 
+                    StandardForm]]],
+                 Annotation[#, 
+                  Dynamic[
+                   FEPrivate`FrontEndResource["WAStrings", "RemoveResults"]], 
+                  "Tooltip"]& ],
+                AppearanceElements->{},
+                BaseStyle->{ShowStringCharacters -> True, ScriptLevel -> 0},
+                ImageSize->{Automatic, {1, 100}},
+                Scrollbars->{False, Automatic}], "\[SpanFromLeft]"}
+             },
+             AutoDelete->False,
+             BaselinePosition->{1, 1},
+             FrameStyle->GrayLevel[0.85],
+             GridBoxAlignment->{"Columns" -> {{Left}}},
+             
+             GridBoxDividers->{
+              "Columns" -> {{False}}, "Rows" -> {False, {True}, False}},
+             
+             GridBoxItemSize->{
+              "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+            "Grid"],
+           Alignment->Top,
+           Background->Dynamic[
+             FEPrivate`If[
+              FEPrivate`And[
+               FEPrivate`SameQ[
+                FEPrivate`Head[Typeset`newq$$], String], 
+               FEPrivate`UnsameQ[Typeset`q$$, Typeset`newq$$]], 
+              RGBColor[1., 0.975, 0.95], 
+              GrayLevel[1]]],
+           BaselinePosition->Baseline,
+           FrameStyle->GrayLevel[0.85],
+           ImageSize->Automatic,
+           RoundingRadius->5,
+           StripOnInput->False],
+          
+          EventHandlerTag[{
+           "MouseEntered" :> 
+            FEPrivate`Set[WolframAlphaClient`Private`show$$, True], 
+            "MouseExited" :> 
+            FEPrivate`Set[WolframAlphaClient`Private`show$$, False], Method -> 
+            "Preemptive", PassEventsDown -> Automatic, PassEventsUp -> True}]],
+         DynamicModuleValues:>{}]},
+       {
+        InterpretationBox[
+         StyleBox[
+          
+          DynamicBox[FEPrivate`FrontEndResource[
+           "FEExpressions", "NecklaceAnimator"][20]],
+          AnimatorBoxOptions->{ImageSize->20}],
+         Animator[Appearance -> "Necklace", ImageSize -> 20],
+         BaseStyle->{"Deploy"}]}
+      },
+      BaselinePosition->{1, 1},
+      DefaultBaseStyle->"Column",
+      GridBoxAlignment->{"Columns" -> {{Left}}},
+      GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+     
+     "Column"]}, Dynamic[
+     TrueQ[Typeset`open$$]],
+    BaseStyle->{Deployed -> True},
+    ImageSize->Automatic],
+   DynamicModuleValues:>{}],
+  BaseStyle->{Deployed -> True},
+  DeleteWithContents->True,
+  Editable->False,
+  SelectWithContents->True]], "WolframAlphaShortInput"],
+
+Cell[BoxData[
+ FractionBox["100", "23"]], "Output",
+ CellChangeTimes->{3.6700947256370564`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ NamespaceBox["WolframAlphaQueryResults",
+  DynamicModuleBox[{Typeset`q$$ = "plot(sin(x)/x)", Typeset`opts$$ = {
+   AppearanceElements -> {"Extrusion", "Warnings", "Assumptions", "Pods"}, 
+    Asynchronous -> All, 
+    Method -> {
+     "ExtrusionChosen" -> {
+       "Plot", "Plots", 1, 2, "Input", "Plot[Sin[x]/x, {x, -9.4, 9.4}]"}, 
+      "Formats" -> {"cell", "minput", "moutput", "msound", "dataformats"}}}, 
+   Typeset`elements$$ = {"Extrusion", "Warnings", "Assumptions", "Pods"}, 
+   Typeset`pod1$$ = XMLElement[
+   "pod", {"error" -> "false", "id" -> "Input", "numsubpods" -> "1", 
+     "position" -> "100", "scanner" -> "Identity", "title" -> 
+     "Input interpretation"}, {
+     XMLElement["subpod", {"title" -> ""}, {
+       XMLElement["cell", {"compressed" -> False, "string" -> True}, {
+         Cell[
+          BoxData[
+           FormBox[
+            TagBox[
+             TagBox[
+              GridBox[{{
+                 PaneBox[
+                  StyleBox[
+                   TagBox[
+                    GridBox[{{
+                    StyleBox[
+                    "\"plot\"", {
+                    LineIndent -> 0, LineSpacing -> {0.9, 0, 1.5}}], 
+                    FractionBox[
+                    RowBox[{"sin", "(", "x", ")"}], "x"]}}, 
+                    GridBoxBackground -> {"Columns" -> {
+                    GrayLevel[0.949], None}, "Rows" -> {{None}}}, 
+                    GridBoxItemSize -> {
+                    "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+                    ColumnsEqual -> False, RowsEqual -> False, 
+                    GridBoxDividers -> {"Columns" -> {
+                    GrayLevel[0.84], 
+                    GrayLevel[0.84], 
+                    GrayLevel[0.84]}, "Rows" -> {{
+                    GrayLevel[0.84]}}, 
+                    "RowsIndexed" -> {
+                    1 -> GrayLevel[0.84], -1 -> GrayLevel[0.84]}}, 
+                    GridBoxSpacings -> {
+                    "Columns" -> {2, 2, 2}, "Rows" -> {{1}}}, 
+                    GridBoxAlignment -> {
+                    "Columns" -> {{Left}}, "Rows" -> {{Baseline}}}, 
+                    AllowScriptLevelChange -> False, BaselinePosition -> 1], 
+                    Global`TagBoxWrapper["Separator" -> " | "]], 
+                   LineSpacing -> {1, 0, 1.5}, LineIndent -> 0], 
+                  BaselinePosition -> Center]}}, 
+               GridBoxItemSize -> {
+                "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}, 
+               ColumnsEqual -> False, RowsEqual -> False, 
+               GridBoxSpacings -> {"Columns" -> {{
+                    AbsoluteThickness[-1]}}, "Rows" -> {{0}}}, 
+               AllowScriptLevelChange -> False], 
+              Global`TagBoxWrapper["Separator" -> " | "]], 
+             PolynomialForm[#, TraditionalOrder -> False]& ], 
+            TraditionalForm]], "Output", {}]}], 
+       XMLElement["dataformats", {}, {"plaintext"}]}]}], Typeset`pod2$$ = 
+   XMLElement[
+   "pod", {"error" -> "false", "id" -> "Plot", "numsubpods" -> "2", 
+     "position" -> "200", "scanner" -> "Plot", "title" -> "Plots"}, {
+     XMLElement["subpod", {"title" -> ""}, {
+       XMLElement["minput", {}, {"Plot[Sin[x]/x, {x, -9.4, 9.4}]"}], 
+       XMLElement["cell", {"compressed" -> True, "string" -> False}, {
+         Cell[
+          BoxData[
+           FormBox[
+            TagBox[
+             FormBox[
+              StyleBox[
+               
+               DynamicModuleBox[{
+                CalculateUtilities`GraphicsUtilities`Private`max2569$$ = 0.5, 
+                 CalculateUtilities`GraphicsUtilities`Private`min2568$$ = \
+-0.5, CalculateUtilities`GraphicsUtilities`Private`more$$ = False, 
+                 Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+                 Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, 
+                 Typeset`animvar$$ = 1, Typeset`name$$ = "\"untitled\"", 
+                 Typeset`specs$$ = {{
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`more$$], {
+                    False, True}}, {{
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`min2568$$], \
+-0.5, "min"}, -1, 1}, {{
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`max2569$$], 
+                    0.5, "max"}, -1, 1}, {
+                    Hold[
+                    Style[
+                    Overlay[{
+                    Dynamic[
+                    RawBoxes[
+                    FEPrivate`FrontEndResource[
+                    "WABitmaps", "PodInfoBackground"]]], 
+                    Pane[
+                    Column[{
+                    Grid[{{
+                    Manipulate`Place[1], 
+                    Manipulate`Place[2]}}]}], 
+                    ImageMargins -> {{20, 30}, {10, 10}}]}, {1, 2}, 2, 
+                    Alignment -> {Left, Top}]]], 
+                    Manipulate`Dump`ThisIsNotAControl}}, Typeset`size$$ = 
+                 Automatic, Typeset`update$$ = 0, Typeset`initDone$$ = False, 
+                 Typeset`skipInitDone$$ = False, 
+                 CalculateUtilities`GraphicsUtilities`Private`more$1677780$$ = 
+                 False, CalculateUtilities`GraphicsUtilities`Private`min2568$\
+1677781$$ = 0, CalculateUtilities`GraphicsUtilities`Private`max2569$1677782$$ = 
+                 0}, 
+                DynamicBox[
+                 Manipulate`ManipulateBoxes[
+                 2, TraditionalForm, 
+                  "Variables" :> {
+                   CalculateUtilities`GraphicsUtilities`Private`max2569$$ = 
+                    0.5, CalculateUtilities`GraphicsUtilities`Private`min2568$\
+$ = -0.5, CalculateUtilities`GraphicsUtilities`Private`more$$ = False}, 
+                  "ControllerVariables" :> {
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`more$$, 
+                    CalculateUtilities`GraphicsUtilities`Private`more$1677780$\
+$, False], 
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`min2568$$, 
+                    CalculateUtilities`GraphicsUtilities`Private`min2568$\
+1677781$$, 0], 
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`max2569$$, 
+                    CalculateUtilities`GraphicsUtilities`Private`max2569$\
+1677782$$, 0]}, "OtherVariables" :> {
+                   Typeset`show$$, Typeset`bookmarkList$$, 
+                    Typeset`bookmarkMode$$, Typeset`animator$$, 
+                    Typeset`animvar$$, Typeset`name$$, Typeset`specs$$, 
+                    Typeset`size$$, Typeset`update$$, Typeset`initDone$$, 
+                    Typeset`skipInitDone$$}, "Body" :> Quiet[
+                    Function[Null, 
+                    CalculateUtilities`GraphicsUtilities`Private`post$1677764[
+                    
+                    Plot[
+                    SlotSequence[1], AspectRatio -> If[
+                    TrueQ[
+                    CalculateUtilities`GraphicsUtilities`Private`aspect], 
+                    Automatic, 1/GoldenRatio]]], HoldAll][
+                    Global`x^(-1) Sin[Global`x], {Global`x, 
+                    If[
+                    NumericQ[
+                    CalculateUtilities`GraphicsUtilities`Private`min2568$$], 
+                    (
+                    Piecewise[{{
+                    0. + 10.075511450176283` Tan[1.5040801783846716` #], # < 
+                    0}}, 0. + 
+                    10.075511450176283` Tan[1.5040801783846716` #]]& )[
+                    CalculateUtilities`GraphicsUtilities`Private`min2568$$], \
+-9.42477796076938], 
+                    If[
+                    And[
+                    NumericQ[
+                    CalculateUtilities`GraphicsUtilities`Private`min2568$$], 
+                    NumericQ[
+                    CalculateUtilities`GraphicsUtilities`Private`max2569$$]], \
+
+                    (Piecewise[{{
+                    0. + 10.075511450176283` Tan[1.5040801783846716` #], # < 
+                    0}}, 0. + 
+                    10.075511450176283` Tan[1.5040801783846716` #]]& )[
+                    If[
+                    CalculateUtilities`GraphicsUtilities`Private`min2568$$ == 
+                    CalculateUtilities`GraphicsUtilities`Private`max2569$$, 
+                    CalculateUtilities`GraphicsUtilities`Private`min2568$$ + 
+                    0.01884955592153876, 
+                    CalculateUtilities`GraphicsUtilities`Private`max2569$$]], 
+                    9.42477796076938]}, 
+                    LabelStyle -> {FontFamily -> "Bitstream Charter"}, 
+                    WorkingPrecision -> MachinePrecision, PlotRange -> 
+                    Automatic, LabelStyle -> {}, Ticks -> Automatic, 
+                    ImageSize -> {300.}, AxesLabel -> {
+                    RawBoxes[
+                    FormBox["x", TraditionalForm]], 
+                    RawBoxes[
+                    FormBox["y", TraditionalForm]]}, AxesLabel -> {
+                    RawBoxes[
+                    FormBox["x", TraditionalForm]], None}]], 
+                  "Specifications" :> {{
+                    CalculateUtilities`GraphicsUtilities`Private`more$$, {
+                    False, True}, ControlType -> None}, {{
+                    CalculateUtilities`GraphicsUtilities`Private`min2568$$, \
+-0.5, "min"}, -1, 1, ImageSize -> Tiny, ControlPlacement -> 1}, {{
+                    CalculateUtilities`GraphicsUtilities`Private`max2569$$, 
+                    0.5, "max"}, -1, 1, ImageSize -> Tiny, ControlPlacement -> 
+                    2}, 
+                    Style[
+                    Overlay[{
+                    Dynamic[
+                    RawBoxes[
+                    FEPrivate`FrontEndResource[
+                    "WABitmaps", "PodInfoBackground"]]], 
+                    Pane[
+                    Column[{
+                    Grid[{{
+                    Manipulate`Place[1], 
+                    Manipulate`Place[2]}}]}], 
+                    ImageMargins -> {{20, 30}, {10, 10}}]}, {1, 2}, 2, 
+                    Alignment -> {Left, Top}]]}, 
+                  "Options" :> {
+                   TrackedSymbols -> True, ControlPlacement -> Bottom, 
+                    FrameMargins -> {{0, 0}, {0, 10}}, Paneled -> False, 
+                    AppearanceElements -> {}, 
+                    LabelStyle -> {
+                    "DialogStyle", FontColor -> GrayLevel[0.25]}}, 
+                  "DefaultOptions" :> {}], SingleEvaluation -> True], 
+                Initialization :> ({
+                   ReleaseHold[
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`WACleanTicks[
+                    
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    Blank[]]] := 
+                    Module[{
+                    CalculateUtilities`GraphicsUtilities`Private`res, 
+                    CalculateUtilities`GraphicsUtilities`Private`unitformat}, 
+                    CalculateUtilities`GraphicsUtilities`Private`res = 
+                    ReplaceAll[
+                    ReplaceAll[
+                    Part[
+                    DeleteCases[
+                    Replace[
+                    ReplaceAll[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    Alternatives[Style, Global`UnitNumberForm, 
+                    NumberForm] -> (#& )], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`t, {
+                    PatternTest[
+                    BlankSequence[], NumberQ]}] :> 
+                    Thread[{CalculateUtilities`GraphicsUtilities`Private`t, 
+                    CalculateUtilities`GraphicsUtilities`Private`t}]], {
+                    Blank[], "", 
+                    BlankNullSequence[]}], All, 
+                    Span[1, 2]], Superscript[
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`b, 
+                    Blank[Integer]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`p, 
+                    Blank[Integer]]] :> 
+                    CalculateUtilities`GraphicsUtilities`Private`b^
+                    CalculateUtilities`GraphicsUtilities`Private`p], Row[{
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    BlankSequence[]]}, "\[Times]"] :> 
+                    Times[CalculateUtilities`GraphicsUtilities`Private`a]]; If[
+                    MatchQ[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`res, All, 2], 
+                    Condition[
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`quants, {
+                    Alternatives[
+                    BlankSequence[Global`ShortQuantity], 
+                    BlankSequence[Quantity]]}], Length[
+                    Union[
+                    Map[
+                    Global`UnitObjectPart, 
+                    CalculateUtilities`GraphicsUtilities`Private`quants]]] == 
+                    1]], CalculateUtilities`GraphicsUtilities`Private`\
+unitformat = Global`ToCDFQuantityFunction[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`res, 1, 2]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`unitformat -> 
+                    Thread[{
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`res, All, 1], 
+                    Global`QuantityPart[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`res, All, 2], 
+                    Global`UnitObjectPart[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`res, 1, 
+                    2]]]}], 
+                    CalculateUtilities`GraphicsUtilities`Private`res]]; 
+                    Options[
+                    CalculateUtilities`GraphicsUtilities`Private`post$1677764]\
+ = {"ReturnInteractiveTypes" -> False, "Nearest" -> Automatic}; 
+                    CalculateUtilities`GraphicsUtilities`Private`post$1677764[
+                    
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`g, 
+                    Blank[Graphics]], 
+                    OptionsPattern[]] := Check[
+                    
+                    Module[{
+                    CalculateUtilities`GraphicsUtilities`Private`lines, 
+                    CalculateUtilities`GraphicsUtilities`Private`pts, 
+                    CalculateUtilities`GraphicsUtilities`Private`gg, 
+                    CalculateUtilities`GraphicsUtilities`Private`type, 
+                    CalculateUtilities`GraphicsUtilities`Private`b, 
+                    CalculateUtilities`GraphicsUtilities`Private`l, 
+                    CalculateUtilities`GraphicsUtilities`Private`t, 
+                    CalculateUtilities`GraphicsUtilities`Private`r, 
+                    CalculateUtilities`GraphicsUtilities`Private`oldepilog, 
+                    CalculateUtilities`GraphicsUtilities`Private`range, 
+                    CalculateUtilities`GraphicsUtilities`Private`gridlines, 
+                    CalculateUtilities`GraphicsUtilities`Private`oldgridlines,
+                     CalculateUtilities`GraphicsUtilities`Private`\
+neareststyle = OptionValue["Nearest"]}, 
+                    CalculateUtilities`GraphicsUtilities`Private`oldepilog = 
+                    Replace[
+                    ReplaceAll[Epilog, 
+                    Options[CalculateUtilities`GraphicsUtilities`Private`g]], 
+                    Epilog -> Sequence[]]; Switch[
+                    ReplaceAll[{Frame, Axes}, 
+                    Options[
+                    CalculateUtilities`GraphicsUtilities`Private`g]], {True, 
+                    Blank[]}, 
+                    CalculateUtilities`GraphicsUtilities`Private`type = 
+                    Frame; {CalculateUtilities`GraphicsUtilities`Private`b, 
+                    CalculateUtilities`GraphicsUtilities`Private`l, 
+                    CalculateUtilities`GraphicsUtilities`Private`t, 
+                    CalculateUtilities`GraphicsUtilities`Private`r} = 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Frame, 
+                    ReplaceAll[FrameTicks, 
+                    Options[
+                    CalculateUtilities`GraphicsUtilities`Private`g]]], {
+                    Blank[], True}, 
+                    CalculateUtilities`GraphicsUtilities`Private`type = 
+                    Axes; {CalculateUtilities`GraphicsUtilities`Private`b, 
+                    CalculateUtilities`GraphicsUtilities`Private`l} = 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Axes, 
+                    ReplaceAll[Ticks, 
+                    Options[CalculateUtilities`GraphicsUtilities`Private`g]]], 
+                    Blank[], 
+                    CalculateUtilities`GraphicsUtilities`Private`type = None]; 
+                    If[
+                    And[
+                    CalculateUtilities`GraphicsUtilities`Private`type === 
+                    Frame, 
+                    Or[
+                    Not[
+                    Or[
+                    CalculateUtilities`GraphicsUtilities`Private`t === None, 
+                    CalculateUtilities`GraphicsUtilities`Private`b === 
+                    CalculateUtilities`GraphicsUtilities`Private`t]], 
+                    Not[
+                    Or[
+                    CalculateUtilities`GraphicsUtilities`Private`r === None, 
+                    CalculateUtilities`GraphicsUtilities`Private`l === 
+                    CalculateUtilities`GraphicsUtilities`Private`r]]]], 
+                    CalculateUtilities`GraphicsUtilities`Private`type = None]; 
+                    If[
+                    TrueQ[
+                    OptionValue["ReturnInteractiveTypes"]], 
+                    Which[
+                    Or[
+                    CalculateUtilities`GraphicsUtilities`Private`type === 
+                    None, CalculateUtilities`GraphicsUtilities`Private`b === 
+                    None, CalculateUtilities`GraphicsUtilities`Private`l === 
+                    None], {}, 
+                    FreeQ[CalculateUtilities`GraphicsUtilities`Private`g, 
+                    Alternatives[Line, Point]], {}, True, {
+                    "Tooltips", "Coordinates"}], If[
+                    FreeQ[CalculateUtilities`GraphicsUtilities`Private`g, 
+                    Alternatives[Line, Point]], 
+                    Return[CalculateUtilities`GraphicsUtilities`Private`g]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`gg = 
+                    Normal[CalculateUtilities`GraphicsUtilities`Private`g]; 
+                    CalculateUtilities`GraphicsUtilities`Private`pts = 
+                    Partition[
+                    Flatten[
+                    Cases[
+                    Part[CalculateUtilities`GraphicsUtilities`Private`gg, 1], 
+                    Point[
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    Blank[]]] :> 
+                    CalculateUtilities`GraphicsUtilities`Private`a, 
+                    Infinity]], 2]; 
+                    If[Length[
+                    CalculateUtilities`GraphicsUtilities`Private`pts] < 2, 
+                    CalculateUtilities`GraphicsUtilities`Private`lines = Cases[
+                    Part[CalculateUtilities`GraphicsUtilities`Private`gg, 1], 
+                    
+                    Blank[Line], Infinity]; 
+                    If[CalculateUtilities`GraphicsUtilities`Private`lines === \
+{}, 
+                    Return[CalculateUtilities`GraphicsUtilities`Private`g]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`pts = Flatten[
+                    Cases[
+                    CalculateUtilities`GraphicsUtilities`Private`lines, Line[
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    Blank[]]] :> 
+                    CalculateUtilities`GraphicsUtilities`Private`a, Infinity],
+                     1]; If[
+                    CalculateUtilities`GraphicsUtilities`Private`neareststyle === 
+                    Automatic, If[
+                    CalculateUtilities`GraphicsUtilities`Private`orderedLines[
+                    CalculateUtilities`GraphicsUtilities`Private`lines], 
+                    CalculateUtilities`GraphicsUtilities`Private`neareststyle = 
+                    "1D", CalculateUtilities`GraphicsUtilities`Private`\
+neareststyle = "2D"]; Null], 
+                    If[
+                    CalculateUtilities`GraphicsUtilities`Private`neareststyle === 
+                    Automatic, 
+                    CalculateUtilities`GraphicsUtilities`Private`neareststyle = 
+                    "2D"]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`range = 
+                    Replace[
+                    ReplaceAll[PlotRange, 
+                    Options[CalculateUtilities`GraphicsUtilities`Private`g]], 
+                    Except[{{
+                    PatternTest[
+                    Blank[], NumberQ], 
+                    PatternTest[
+                    Blank[], NumberQ]}, {
+                    PatternTest[
+                    Blank[], NumberQ], 
+                    PatternTest[
+                    Blank[], NumberQ]}}] :> {
+                    Through[
+                    {Min, Max}[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pts, All, 
+                    1]]], 
+                    Through[
+                    {Min, Max}[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pts, All, 
+                    2]]]}]; CalculateUtilities`GraphicsUtilities`Private`b = 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+RefineCoordinateFunction[CalculateUtilities`GraphicsUtilities`Private`b, 
+                    First[CalculateUtilities`GraphicsUtilities`Private`range], 
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pts, All, 
+                    1]]; CalculateUtilities`GraphicsUtilities`Private`l = 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+RefineCoordinateFunction[CalculateUtilities`GraphicsUtilities`Private`l, 
+                    Last[CalculateUtilities`GraphicsUtilities`Private`range], 
+                    
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pts, All, 
+                    2]]; CalculateUtilities`GraphicsUtilities`Private`\
+oldgridlines = ReplaceAll[GridLines, 
+                    Options[CalculateUtilities`GraphicsUtilities`Private`g]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`gridlines = 
+                    With[{CalculateUtilities`GraphicsUtilities`Private`gray = 
+                    GrayLevel[0.7]}, 
+                    Replace[
+                    CalculateUtilities`GraphicsUtilities`Private`oldgridlines,\
+ {Pattern[CalculateUtilities`GraphicsUtilities`Private`a, {
+                    Blank[List], 
+                    Blank[List]}] :> Dynamic[
+                    Join[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    Replace[
+                    MousePosition[{"Graphics", Graphics}, None], {
+                    None -> {{}, {}}, {
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`x, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`y, 
+                    Blank[]]} :> {{{
+                    CalculateUtilities`GraphicsUtilities`Private`x, 
+                    CalculateUtilities`GraphicsUtilities`Private`gray}}, {{
+                    CalculateUtilities`GraphicsUtilities`Private`y, 
+                    CalculateUtilities`GraphicsUtilities`Private`gray}}}}], 
+                    2]], {
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    Blank[List]], Automatic} :> 
+                    With[{CalculateUtilities`GraphicsUtilities`Private`\
+divisions = {CalculateUtilities`GraphicsUtilities`Private`a, 
+                    FindDivisions[
+                    Last[CalculateUtilities`GraphicsUtilities`Private`range], 
+                    7]}}, 
+                    Dynamic[
+                    Join[
+                    CalculateUtilities`GraphicsUtilities`Private`divisions, 
+                    Replace[
+                    MousePosition[{"Graphics", Graphics}, None], {
+                    None -> {{}, {}}, {
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`x, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`y, 
+                    Blank[]]} :> {{{
+                    CalculateUtilities`GraphicsUtilities`Private`x, 
+                    CalculateUtilities`GraphicsUtilities`Private`gray}}, {{
+                    CalculateUtilities`GraphicsUtilities`Private`y, 
+                    CalculateUtilities`GraphicsUtilities`Private`gray}}}}], 
+                    2]]], Blank[] -> Dynamic[
+                    
+                    Map[{{#, 
+                    CalculateUtilities`GraphicsUtilities`Private`gray}}& , 
+                    MousePosition[{"Graphics", Graphics}, None]]]}]]; If[
+                    Or[
+                    CalculateUtilities`GraphicsUtilities`Private`type === 
+                    None, CalculateUtilities`GraphicsUtilities`Private`b === 
+                    None, CalculateUtilities`GraphicsUtilities`Private`l === 
+                    None], 
+                    Show[
+                    CalculateUtilities`GraphicsUtilities`Private`g, GridLines -> 
+                    CalculateUtilities`GraphicsUtilities`Private`gridlines, 
+                    If[
+                    MatchQ[
+                    CalculateUtilities`GraphicsUtilities`Private`oldgridlines, 
+                    Alternatives[None, GridLines]], 
+                    Method -> {"GridLinesInFront" -> True}, 
+                    Apply[Sequence, {}]]], 
+                    
+                    With[{CalculateUtilities`GraphicsUtilities`Private`nf = 
+                    If[CalculateUtilities`GraphicsUtilities`Private`\
+neareststyle === "1D", 
+                    
+                    With[{CalculateUtilities`GraphicsUtilities`Private`n = 
+                    Nearest[Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pts, All, 1] -> 
+                    CalculateUtilities`GraphicsUtilities`Private`pts]}, 
+                    CalculateUtilities`GraphicsUtilities`Private`n[
+                    Part[#, 1]]& ], 
+                    
+                    With[{CalculateUtilities`GraphicsUtilities`Private`n = 
+                    Nearest[Transpose[Transpose[
+                    CalculateUtilities`GraphicsUtilities`Private`pts]/Abs[
+                    Apply[
+                    Subtract, 
+                    CalculateUtilities`GraphicsUtilities`Private`range, {
+                    1}]]] -> 
+                    CalculateUtilities`GraphicsUtilities`Private`pts], 
+                    CalculateUtilities`GraphicsUtilities`Private`scale = Abs[
+                    Apply[
+                    Subtract, 
+                    CalculateUtilities`GraphicsUtilities`Private`range, {
+                    1}]]}, CalculateUtilities`GraphicsUtilities`Private`n[#/
+                    CalculateUtilities`GraphicsUtilities`Private`scale]& ]], 
+                    CalculateUtilities`GraphicsUtilities`Private`left = 
+                    CalculateUtilities`GraphicsUtilities`Private`l, 
+                    CalculateUtilities`GraphicsUtilities`Private`bottom = 
+                    CalculateUtilities`GraphicsUtilities`Private`b}, 
+                    Show[
+                    CalculateUtilities`GraphicsUtilities`Private`g, GridLines -> 
+                    CalculateUtilities`GraphicsUtilities`Private`gridlines, 
+                    If[
+                    MatchQ[
+                    CalculateUtilities`GraphicsUtilities`Private`oldgridlines, 
+                    Alternatives[None, GridLines]], 
+                    Method -> {"GridLinesInFront" -> True}, 
+                    Apply[Sequence, {}]], 
+                    Epilog -> {
+                    CalculateUtilities`GraphicsUtilities`Private`oldepilog, 
+                    Dynamic[
+                    
+                    DynamicModule[{
+                    CalculateUtilities`GraphicsUtilities`Private`pt = 
+                    CalculateUtilities`GraphicsUtilities`Private`nf[
+                    MousePosition[{"Graphics", Graphics}, {0, 0}]], 
+                    CalculateUtilities`GraphicsUtilities`Private`scaled = 
+                    MousePosition[{"GraphicsScaled", Graphics}, None]}, 
+                    If[
+                    CalculateUtilities`GraphicsUtilities`Private`scaled === 
+                    None, {}, {
+                    Text[
+                    Style[
+                    Row[{
+                    CalculateUtilities`GraphicsUtilities`Private`bottom[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pt, 1, 1]], 
+                    CalculateUtilities`GraphicsUtilities`Private`left[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pt, 1, 2]]}, 
+                    ","], 12], 
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pt, 1], {
+                    1.5 Sign[Part[
+                    CalculateUtilities`GraphicsUtilities`Private`scaled, 1] - 
+                    0.5], 0}, Background -> White], 
+                    AbsolutePointSize[7], 
+                    Point[CalculateUtilities`GraphicsUtilities`Private`pt], 
+                    White, 
+                    AbsolutePointSize[5], 
+                    Point[
+                    CalculateUtilities`GraphicsUtilities`Private`pt]}]]]}]]]]]\
+, CalculateUtilities`GraphicsUtilities`Private`g]; 
+                    CalculateUtilities`GraphicsUtilities`Private`post$1677764[
+                    
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`g, 
+                    Blank[]], 
+                    BlankNullSequence[]] := 
+                    CalculateUtilities`GraphicsUtilities`Private`g; 
+                    CalculateUtilities`GraphicsUtilities`Private`orderedLines[{
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`l, 
+                    BlankSequence[Line]]}] := 
+                    Module[{
+                    CalculateUtilities`GraphicsUtilities`Private`ordered, 
+                    CalculateUtilities`GraphicsUtilities`Private`intervals}, 
+                    CalculateUtilities`GraphicsUtilities`Private`ordered = 
+                    Apply[And, 
+                    Map[OrderedQ[
+                    Part[#, 1, All, 1]]& , 
+                    Hold[CalculateUtilities`GraphicsUtilities`Private`l]]]; If[
+                    Not[
+                    TrueQ[
+                    CalculateUtilities`GraphicsUtilities`Private`ordered]], 
+                    Return[False]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`intervals = 
+                    Part[{CalculateUtilities`GraphicsUtilities`Private`l}, 
+                    All, 1, {1, -1}, 1]; Length[
+                    Apply[
+                    Interval, 
+                    CalculateUtilities`GraphicsUtilities`Private`intervals]] === 
+                    Length[CalculateUtilities`GraphicsUtilities`Private`\
+intervals]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Frame, 
+                    Alternatives[Automatic, FrameTicks]] = {
+                    Identity, Identity, Identity, Identity}; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Frame, {
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`b, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`l, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`t, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`r, 
+                    Blank[]]}] := 
+                    Map[CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction, {CalculateUtilities`GraphicsUtilities`Private`b, 
+                    CalculateUtilities`GraphicsUtilities`Private`l, 
+                    CalculateUtilities`GraphicsUtilities`Private`t, 
+                    CalculateUtilities`GraphicsUtilities`Private`r}]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Frame, {{
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`l, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`r, 
+                    Blank[]]}, {
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`b, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`t, 
+                    Blank[]]}}] := 
+                    Map[CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction, {CalculateUtilities`GraphicsUtilities`Private`b, 
+                    CalculateUtilities`GraphicsUtilities`Private`l, 
+                    CalculateUtilities`GraphicsUtilities`Private`t, 
+                    CalculateUtilities`GraphicsUtilities`Private`r}]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Frame, 
+                    Blank[]] = {None, None, None, None}; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Axes, 
+                    Alternatives[Automatic, Ticks]] = {Identity, Identity}; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Axes, {
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`h, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`v, 
+                    Blank[]]}] := 
+                    Map[CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction, {CalculateUtilities`GraphicsUtilities`Private`h, 
+                    CalculateUtilities`GraphicsUtilities`Private`v}]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Axes, 
+                    Blank[]] = {None, None}; 
+                    CalculateUtilities`GraphicsUtilities`Private`CDFCleanTicks[
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    Blank[]]] := ReplaceAll[
+                    ReplaceAll[
+                    Part[
+                    DeleteCases[
+                    ReplaceAll[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    Alternatives[Style, NumberForm] -> (#& )], {
+                    Blank[], "", 
+                    BlankNullSequence[]}], All, 
+                    Span[1, 2]], Superscript[
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`b, 
+                    Blank[Integer]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`p, 
+                    Blank[Integer]]] :> 
+                    CalculateUtilities`GraphicsUtilities`Private`b^
+                    CalculateUtilities`GraphicsUtilities`Private`p], Row[{
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    BlankSequence[]]}, "\[Times]"] :> 
+                    Times[CalculateUtilities`GraphicsUtilities`Private`a]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction[
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks$, 
+                    Blank[]]] := 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[
+                    CalculateUtilities`GraphicsUtilities`Private`WACleanTicks[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks$]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction[None] = None; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction[False] = None; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction[True] = None; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction[Automatic] = Identity; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction[All] = Identity; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[Pattern[CalculateUtilities`GraphicsUtilities`Private`func, 
+                    Blank[]] -> 
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    Blank[]]] := Replace[
+                    
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[CalculateUtilities`GraphicsUtilities`Private`ticks], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`f, 
+                    Except[None]] :> 
+                    Composition[
+                    CalculateUtilities`GraphicsUtilities`Private`func, 
+                    CalculateUtilities`GraphicsUtilities`Private`f]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[{}] = None; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, {
+                    Repeated[{
+                    Blank[Integer], 
+                    Blank[String]}]}]] := Which[
+                    Quiet[
+                    MatchQ[
+                    Apply[SameQ, 
+                    Map[Part[
+                    DateList[#], 
+                    Span[2, All]]& , 
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, {
+                    2}], {1}], {
+                    Repeated[True]}]], DateString, 
+                    Apply[And, 
+                    StringMatchQ[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, All, 
+                    2], NumberString]], 
+                    
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[
+                    Transpose[{
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, All, 
+                    1], 
+                    ToExpression[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, All, 
+                    2]]}]], True, None]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, {
+                    Repeated[{
+                    PatternTest[
+                    Blank[], NumericQ], 
+                    PatternTest[
+                    Blank[], NumericQ]}]}]] := Which[
+                    MatchQ[
+                    Apply[
+                    Equal, CalculateUtilities`GraphicsUtilities`Private`ticks,\
+ {1}], {
+                    Repeated[True]}], Identity, 
+                    MatchQ[
+                    
+                    Apply[# == Log[#2]& , 
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, {1}], {
+                    Repeated[True]}], Exp, 
+                    TrueQ[
+                    Quiet[
+                    Apply[Equal, 
+                    Apply[Divide, Transpose[
+                    Rest[CalculateUtilities`GraphicsUtilities`Private`ticks]] - 
+                    Part[CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    1]]]]], 
+                    
+                    With[{CalculateUtilities`GraphicsUtilities`Private`slope = 
+                    Apply[Divide, 
+                    Apply[Subtract, 
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, {-1, 
+                    1}]]]}, 
+                    SetPrecision[(# - Part[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, 1, 
+                    1])/CalculateUtilities`GraphicsUtilities`Private`slope + 
+                    Part[CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    1, 2], 3]& ], True, None]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[
+                    Blank[]] = None; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+RefineCoordinateFunction[
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`type, 
+                    Blank[]], 
+                    BlankNullSequence[]] := 
+                    CalculateUtilities`GraphicsUtilities`Private`type; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+RefineCoordinateFunction[Identity, {
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`min, 
+                    Blank[]], 
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`max, 
+                    Blank[]]}, 
+                    Blank[]] := 
+                    With[{CalculateUtilities`GraphicsUtilities`Private`nf = 
+                    CalculateUtilities`GraphicsUtilities`Private`numberForm, 
+                    CalculateUtilities`GraphicsUtilities`Private`acc = 
+                    Floor[Max[
+                    Ceiling[
+                    FullSimplify[Log[10, 
+                    Max[
+                    
+                    Abs[{CalculateUtilities`GraphicsUtilities`Private`min, 
+                    CalculateUtilities`GraphicsUtilities`Private`max}]]] - 
+                    Log[10, (CalculateUtilities`GraphicsUtilities`Private`max - 
+                    CalculateUtilities`GraphicsUtilities`Private`min)/100]]], 
+                    3] - RealExponent[
+                    Max[
+                    
+                    Abs[{CalculateUtilities`GraphicsUtilities`Private`min, 
+                    CalculateUtilities`GraphicsUtilities`Private`max}]]]]}, 
+                    CalculateUtilities`GraphicsUtilities`Private`nf[#, 
+                    CalculateUtilities`GraphicsUtilities`Private`acc]& ]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+RefineCoordinateFunction[Exp, {
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`min, 
+                    Blank[]], 
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`max, 
+                    Blank[]]}, 
+                    Blank[]] := 
+                    With[{CalculateUtilities`GraphicsUtilities`Private`prec = 
+                    Max[
+                    Ceiling[
+                    FullSimplify[Log[10, 
+                    Max[
+                    
+                    Abs[{CalculateUtilities`GraphicsUtilities`Private`min, 
+                    CalculateUtilities`GraphicsUtilities`Private`max}]]] - 
+                    Log[10, (CalculateUtilities`GraphicsUtilities`Private`max - 
+                    CalculateUtilities`GraphicsUtilities`Private`min)/100]]], 
+                    3]}, Quiet[
+                    RawBoxes[
+                    ToBoxes[
+                    NumberForm[
+                    Exp[#], 
+                    CalculateUtilities`GraphicsUtilities`Private`prec]]]]& ]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+RefineCoordinateFunction[DateString, {
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`min, 
+                    Blank[]], 
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`max, 
+                    Blank[]]}, 
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`pts, 
+                    Blank[]]] := 
+                    Module[{
+                    CalculateUtilities`GraphicsUtilities`Private`dates, 
+                    CalculateUtilities`GraphicsUtilities`Private`spec}, 
+                    CalculateUtilities`GraphicsUtilities`Private`dates = 
+                    Map[DateList, 
+                    CalculateUtilities`GraphicsUtilities`Private`pts]; 
+                    CalculateUtilities`GraphicsUtilities`Private`spec = Switch[
+                    Map[Length, 
+                    Map[Union, 
+                    Transpose[
+                    CalculateUtilities`GraphicsUtilities`Private`dates]]], {
+                    Blank[], 1, 1, 
+                    BlankSequence[]}, {"Year"}, {
+                    Blank[], 
+                    Blank[], 1, 
+                    BlankSequence[]}, {"MonthNameShort", " ", "Year"}, 
+                    Blank[], {
+                    "DayShort", " ", "MonthNameShort", " ", "Year"}]; 
+                    If[(CalculateUtilities`GraphicsUtilities`Private`max - 
+                    CalculateUtilities`GraphicsUtilities`Private`min)/
+                    31536000 > 25, 
+                    CalculateUtilities`GraphicsUtilities`Private`spec = {
+                    "Year"}]; 
+                    With[{CalculateUtilities`GraphicsUtilities`Private`s = 
+                    CalculateUtilities`GraphicsUtilities`Private`spec}, 
+                    DateString[#, 
+                    CalculateUtilities`GraphicsUtilities`Private`s]& ]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`numberForm = 
+                    Function[{
+                    CalculateUtilities`GraphicsUtilities`Private`a, 
+                    CalculateUtilities`GraphicsUtilities`Private`acc}, 
+                    Quiet[
+                    RawBoxes[
+                    ToBoxes[
+                    NumberForm[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    Max[1, 
+                    Ceiling[
+                    RealExponent[
+                    CalculateUtilities`GraphicsUtilities`Private`a] + 
+                    CalculateUtilities`GraphicsUtilities`Private`acc]], 
+                    ExponentFunction -> (Null& ), 
+                    NumberFormat -> (StringReplace[#, StringExpression[
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`s, 
+                    BlankSequence[]], ".", EndOfString] -> 
+                    CalculateUtilities`GraphicsUtilities`Private`s]& )]]]]]]], 
+                   ReleaseHold[
+                    Uncompress[
+                    "1:eJztVm1v0zAQbikw3t/+\
+ARKfkcYQfEKCdWxMGlCS8r232EktXDvYzjb48+Czm6RZu0oxHaAp+XCqz83ju+ceX+7psYzSfq/\
+X09et+SA5Sbdw9cSaoZzlshDk/VmuqNZMivQa7t2xJqZmj3L4QYn33bRmX6oZGL9+g+\
+8DTwoOhn41jDPDqJ4cKMinLNG1Z6TYif3LhMsEOPtJn22/em2fHQ+\
+DsYzAGKqE3mkLmU8VaJr2EOiGNbscxDe/fFwuPxWcx/\
+R7QUVC9UPrHSsgFkYK4JhP8KlXm6l7mJgBQUCRS6fJyXPY9gBtFBPZmM5yfONisrbbAoPKtOfmfsnN\
+OgX58G/hhoxdTN7jknZrR2BYGFeMvvOy+ufcDXD9ti28kqericP83nHkDQw7oXqZzuet6+\
+QZqW6ti37O1WX1l40GeXGXqb9LR0yb5TBetA2Dzo5tjVdrbxn+\
+ZVt4meOtn4v7gTWfvaMEXNUcKsF9lKTg8yiaKQ+\
+8RNunq3Pr8Bh3K75jdIZUsMKJbJzlfXH341EFXk8KMdZusgHpiLoHRDSn1kUct3ssY2Y4BQWJBZ4f1\
+y8v2VjWoQSc2b72TBBmG5gnZN3whOYwXag7mGT65Y+KW8nl3CVD3g+FoRlVa0V/G+\
+ujLLmCjGVgJDEe0NRrMIdVUiNQwbIflCBxDoIhJPtlH/\
+fLby5WAqk6UKgu5VkcuNKchSfRLwt8REVmps0ZO7B1BV9bzCaSp7XqIpami91mc0z3m0w3Tmg29FAS\
+QksS3tC7SaGbFP7qpLA0B3djQjcmdGNCNyZ0Y8L/Oya4iPGr9BshSbjO"]]}; 
+                 Typeset`initDone$$ = True), DynamicModuleValues :> {}, 
+                Deinitialization :> None, 
+                UntrackedVariables :> {Typeset`size$$}, 
+                SynchronousInitialization -> True, 
+                UnsavedVariables :> {Typeset`initDone$$}], "Manipulate", 
+               Deployed -> True, StripOnInput -> False], TraditionalForm], 
+             Manipulate`InterpretManipulate[1]], TraditionalForm]], 
+          "Output", {}]}], 
+       XMLElement["dataformats", {}, {"minput"}]}], 
+     XMLElement["subpod", {"title" -> ""}, {
+       XMLElement["minput", {}, {"Plot[Sin[x]/x, {x, -25, 25}]"}], 
+       XMLElement["cell", {"compressed" -> True, "string" -> False}, {
+         Cell[
+          BoxData[
+           FormBox[
+            TagBox[
+             FormBox[
+              StyleBox[
+               
+               DynamicModuleBox[{
+                CalculateUtilities`GraphicsUtilities`Private`max2571$$ = 0.5, 
+                 CalculateUtilities`GraphicsUtilities`Private`min2570$$ = \
+-0.5, CalculateUtilities`GraphicsUtilities`Private`more$$ = False, 
+                 Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+                 Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, 
+                 Typeset`animvar$$ = 1, Typeset`name$$ = "\"untitled\"", 
+                 Typeset`specs$$ = {{
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`more$$], {
+                    False, True}}, {{
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`min2570$$], \
+-0.5, "min"}, -1, 1}, {{
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`max2571$$], 
+                    0.5, "max"}, -1, 1}, {
+                    Hold[
+                    Style[
+                    Overlay[{
+                    Dynamic[
+                    RawBoxes[
+                    FEPrivate`FrontEndResource[
+                    "WABitmaps", "PodInfoBackground"]]], 
+                    Pane[
+                    Column[{
+                    Grid[{{
+                    Manipulate`Place[1], 
+                    Manipulate`Place[2]}}]}], 
+                    ImageMargins -> {{20, 30}, {10, 10}}]}, {1, 2}, 2, 
+                    Alignment -> {Left, Top}]]], 
+                    Manipulate`Dump`ThisIsNotAControl}}, Typeset`size$$ = 
+                 Automatic, Typeset`update$$ = 0, Typeset`initDone$$ = False, 
+                 Typeset`skipInitDone$$ = False, 
+                 CalculateUtilities`GraphicsUtilities`Private`more$1677851$$ = 
+                 False, CalculateUtilities`GraphicsUtilities`Private`min2570$\
+1677852$$ = 0, CalculateUtilities`GraphicsUtilities`Private`max2571$1677853$$ = 
+                 0}, 
+                DynamicBox[
+                 Manipulate`ManipulateBoxes[
+                 2, TraditionalForm, 
+                  "Variables" :> {
+                   CalculateUtilities`GraphicsUtilities`Private`max2571$$ = 
+                    0.5, CalculateUtilities`GraphicsUtilities`Private`min2570$\
+$ = -0.5, CalculateUtilities`GraphicsUtilities`Private`more$$ = False}, 
+                  "ControllerVariables" :> {
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`more$$, 
+                    CalculateUtilities`GraphicsUtilities`Private`more$1677851$\
+$, False], 
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`min2570$$, 
+                    CalculateUtilities`GraphicsUtilities`Private`min2570$\
+1677852$$, 0], 
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`max2571$$, 
+                    
+                    CalculateUtilities`GraphicsUtilities`Private`max2571$\
+1677853$$, 0]}, "OtherVariables" :> {
+                   Typeset`show$$, Typeset`bookmarkList$$, 
+                    Typeset`bookmarkMode$$, Typeset`animator$$, 
+                    Typeset`animvar$$, Typeset`name$$, Typeset`specs$$, 
+                    Typeset`size$$, Typeset`update$$, Typeset`initDone$$, 
+                    Typeset`skipInitDone$$}, "Body" :> Quiet[
+                    Function[Null, 
+                    CalculateUtilities`GraphicsUtilities`Private`post$1677835[
+                    
+                    Plot[
+                    SlotSequence[1], AspectRatio -> If[
+                    TrueQ[
+                    CalculateUtilities`GraphicsUtilities`Private`aspect], 
+                    Automatic, 1/GoldenRatio]]], HoldAll][
+                    Global`x^(-1) Sin[Global`x], {Global`x, 
+                    If[
+                    NumericQ[
+                    CalculateUtilities`GraphicsUtilities`Private`min2570$$], 
+                    (
+                    Piecewise[{{
+                    0. + 26.868030533803417` Tan[1.5040801783846716` #], # < 
+                    0}}, 0. + 
+                    26.868030533803417` Tan[1.5040801783846716` #]]& )[
+                    CalculateUtilities`GraphicsUtilities`Private`min2570$$], \
+-25.132741228718345`], 
+                    If[
+                    And[
+                    NumericQ[
+                    CalculateUtilities`GraphicsUtilities`Private`min2570$$], 
+                    NumericQ[
+                    CalculateUtilities`GraphicsUtilities`Private`max2571$$]], \
+
+                    (Piecewise[{{
+                    0. + 26.868030533803417` Tan[1.5040801783846716` #], # < 
+                    0}}, 0. + 
+                    26.868030533803417` Tan[1.5040801783846716` #]]& )[
+                    If[
+                    CalculateUtilities`GraphicsUtilities`Private`min2570$$ == 
+                    CalculateUtilities`GraphicsUtilities`Private`max2571$$, 
+                    CalculateUtilities`GraphicsUtilities`Private`min2570$$ + 
+                    0.05026548245743669, 
+                    CalculateUtilities`GraphicsUtilities`Private`max2571$$]], 
+                    25.132741228718345`]}, 
+                    LabelStyle -> {FontFamily -> "Bitstream Charter"}, 
+                    WorkingPrecision -> MachinePrecision, PlotRange -> 
+                    Automatic, LabelStyle -> {}, Ticks -> Automatic, 
+                    ImageSize -> {300.}, AxesLabel -> {
+                    RawBoxes[
+                    FormBox["x", TraditionalForm]], 
+                    RawBoxes[
+                    FormBox["y", TraditionalForm]]}, AxesLabel -> {
+                    RawBoxes[
+                    FormBox["x", TraditionalForm]], None}]], 
+                  "Specifications" :> {{
+                    CalculateUtilities`GraphicsUtilities`Private`more$$, {
+                    False, True}, ControlType -> None}, {{
+                    CalculateUtilities`GraphicsUtilities`Private`min2570$$, \
+-0.5, "min"}, -1, 1, ImageSize -> Tiny, ControlPlacement -> 1}, {{
+                    CalculateUtilities`GraphicsUtilities`Private`max2571$$, 
+                    0.5, "max"}, -1, 1, ImageSize -> Tiny, ControlPlacement -> 
+                    2}, 
+                    Style[
+                    Overlay[{
+                    Dynamic[
+                    RawBoxes[
+                    FEPrivate`FrontEndResource[
+                    "WABitmaps", "PodInfoBackground"]]], 
+                    Pane[
+                    Column[{
+                    Grid[{{
+                    Manipulate`Place[1], 
+                    Manipulate`Place[2]}}]}], 
+                    ImageMargins -> {{20, 30}, {10, 10}}]}, {1, 2}, 2, 
+                    Alignment -> {Left, Top}]]}, 
+                  "Options" :> {
+                   TrackedSymbols -> True, ControlPlacement -> Bottom, 
+                    FrameMargins -> {{0, 0}, {0, 10}}, Paneled -> False, 
+                    AppearanceElements -> {}, 
+                    LabelStyle -> {
+                    "DialogStyle", FontColor -> GrayLevel[0.25]}}, 
+                  "DefaultOptions" :> {}], SingleEvaluation -> True], 
+                Initialization :> ({
+                   ReleaseHold[
+                    Hold[
+                    CalculateUtilities`GraphicsUtilities`Private`WACleanTicks[
+                    
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    Blank[]]] := 
+                    Module[{
+                    CalculateUtilities`GraphicsUtilities`Private`res, 
+                    CalculateUtilities`GraphicsUtilities`Private`unitformat}, 
+                    CalculateUtilities`GraphicsUtilities`Private`res = 
+                    ReplaceAll[
+                    ReplaceAll[
+                    Part[
+                    DeleteCases[
+                    Replace[
+                    ReplaceAll[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    Alternatives[Style, Global`UnitNumberForm, 
+                    NumberForm] -> (#& )], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`t, {
+                    PatternTest[
+                    BlankSequence[], NumberQ]}] :> 
+                    Thread[{CalculateUtilities`GraphicsUtilities`Private`t, 
+                    CalculateUtilities`GraphicsUtilities`Private`t}]], {
+                    Blank[], "", 
+                    BlankNullSequence[]}], All, 
+                    Span[1, 2]], Superscript[
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`b, 
+                    Blank[Integer]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`p, 
+                    Blank[Integer]]] :> 
+                    CalculateUtilities`GraphicsUtilities`Private`b^
+                    CalculateUtilities`GraphicsUtilities`Private`p], Row[{
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    BlankSequence[]]}, "\[Times]"] :> 
+                    Times[CalculateUtilities`GraphicsUtilities`Private`a]]; If[
+                    MatchQ[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`res, All, 2], 
+                    Condition[
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`quants, {
+                    Alternatives[
+                    BlankSequence[Global`ShortQuantity], 
+                    BlankSequence[Quantity]]}], Length[
+                    Union[
+                    Map[
+                    Global`UnitObjectPart, 
+                    CalculateUtilities`GraphicsUtilities`Private`quants]]] == 
+                    1]], CalculateUtilities`GraphicsUtilities`Private`\
+unitformat = Global`ToCDFQuantityFunction[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`res, 1, 2]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`unitformat -> 
+                    Thread[{
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`res, All, 1], 
+                    Global`QuantityPart[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`res, All, 2], 
+                    Global`UnitObjectPart[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`res, 1, 
+                    2]]]}], 
+                    CalculateUtilities`GraphicsUtilities`Private`res]]; 
+                    Options[
+                    CalculateUtilities`GraphicsUtilities`Private`post$1677835]\
+ = {"ReturnInteractiveTypes" -> False, "Nearest" -> Automatic}; 
+                    CalculateUtilities`GraphicsUtilities`Private`post$1677835[
+                    
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`g, 
+                    Blank[Graphics]], 
+                    OptionsPattern[]] := Check[
+                    
+                    Module[{
+                    CalculateUtilities`GraphicsUtilities`Private`lines, 
+                    CalculateUtilities`GraphicsUtilities`Private`pts, 
+                    CalculateUtilities`GraphicsUtilities`Private`gg, 
+                    CalculateUtilities`GraphicsUtilities`Private`type, 
+                    CalculateUtilities`GraphicsUtilities`Private`b, 
+                    CalculateUtilities`GraphicsUtilities`Private`l, 
+                    CalculateUtilities`GraphicsUtilities`Private`t, 
+                    CalculateUtilities`GraphicsUtilities`Private`r, 
+                    CalculateUtilities`GraphicsUtilities`Private`oldepilog, 
+                    CalculateUtilities`GraphicsUtilities`Private`range, 
+                    CalculateUtilities`GraphicsUtilities`Private`gridlines, 
+                    CalculateUtilities`GraphicsUtilities`Private`oldgridlines,
+                     CalculateUtilities`GraphicsUtilities`Private`\
+neareststyle = OptionValue["Nearest"]}, 
+                    CalculateUtilities`GraphicsUtilities`Private`oldepilog = 
+                    Replace[
+                    ReplaceAll[Epilog, 
+                    Options[CalculateUtilities`GraphicsUtilities`Private`g]], 
+                    Epilog -> Sequence[]]; Switch[
+                    ReplaceAll[{Frame, Axes}, 
+                    Options[
+                    CalculateUtilities`GraphicsUtilities`Private`g]], {True, 
+                    Blank[]}, 
+                    CalculateUtilities`GraphicsUtilities`Private`type = 
+                    Frame; {CalculateUtilities`GraphicsUtilities`Private`b, 
+                    CalculateUtilities`GraphicsUtilities`Private`l, 
+                    CalculateUtilities`GraphicsUtilities`Private`t, 
+                    CalculateUtilities`GraphicsUtilities`Private`r} = 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Frame, 
+                    ReplaceAll[FrameTicks, 
+                    Options[
+                    CalculateUtilities`GraphicsUtilities`Private`g]]], {
+                    Blank[], True}, 
+                    CalculateUtilities`GraphicsUtilities`Private`type = 
+                    Axes; {CalculateUtilities`GraphicsUtilities`Private`b, 
+                    CalculateUtilities`GraphicsUtilities`Private`l} = 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Axes, 
+                    ReplaceAll[Ticks, 
+                    Options[CalculateUtilities`GraphicsUtilities`Private`g]]], 
+                    Blank[], 
+                    CalculateUtilities`GraphicsUtilities`Private`type = None]; 
+                    If[
+                    And[
+                    CalculateUtilities`GraphicsUtilities`Private`type === 
+                    Frame, 
+                    Or[
+                    Not[
+                    Or[
+                    CalculateUtilities`GraphicsUtilities`Private`t === None, 
+                    CalculateUtilities`GraphicsUtilities`Private`b === 
+                    CalculateUtilities`GraphicsUtilities`Private`t]], 
+                    Not[
+                    Or[
+                    CalculateUtilities`GraphicsUtilities`Private`r === None, 
+                    CalculateUtilities`GraphicsUtilities`Private`l === 
+                    CalculateUtilities`GraphicsUtilities`Private`r]]]], 
+                    CalculateUtilities`GraphicsUtilities`Private`type = None]; 
+                    If[
+                    TrueQ[
+                    OptionValue["ReturnInteractiveTypes"]], 
+                    Which[
+                    Or[
+                    CalculateUtilities`GraphicsUtilities`Private`type === 
+                    None, CalculateUtilities`GraphicsUtilities`Private`b === 
+                    None, CalculateUtilities`GraphicsUtilities`Private`l === 
+                    None], {}, 
+                    FreeQ[CalculateUtilities`GraphicsUtilities`Private`g, 
+                    Alternatives[Line, Point]], {}, True, {
+                    "Tooltips", "Coordinates"}], If[
+                    FreeQ[CalculateUtilities`GraphicsUtilities`Private`g, 
+                    Alternatives[Line, Point]], 
+                    Return[CalculateUtilities`GraphicsUtilities`Private`g]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`gg = 
+                    Normal[CalculateUtilities`GraphicsUtilities`Private`g]; 
+                    CalculateUtilities`GraphicsUtilities`Private`pts = 
+                    Partition[
+                    Flatten[
+                    Cases[
+                    Part[CalculateUtilities`GraphicsUtilities`Private`gg, 1], 
+                    Point[
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    Blank[]]] :> 
+                    CalculateUtilities`GraphicsUtilities`Private`a, 
+                    Infinity]], 2]; 
+                    If[Length[
+                    CalculateUtilities`GraphicsUtilities`Private`pts] < 2, 
+                    CalculateUtilities`GraphicsUtilities`Private`lines = Cases[
+                    Part[CalculateUtilities`GraphicsUtilities`Private`gg, 1], 
+                    
+                    Blank[Line], Infinity]; 
+                    If[CalculateUtilities`GraphicsUtilities`Private`lines === \
+{}, 
+                    Return[CalculateUtilities`GraphicsUtilities`Private`g]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`pts = Flatten[
+                    Cases[
+                    CalculateUtilities`GraphicsUtilities`Private`lines, Line[
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    Blank[]]] :> 
+                    CalculateUtilities`GraphicsUtilities`Private`a, Infinity],
+                     1]; If[
+                    CalculateUtilities`GraphicsUtilities`Private`neareststyle === 
+                    Automatic, If[
+                    CalculateUtilities`GraphicsUtilities`Private`orderedLines[
+                    CalculateUtilities`GraphicsUtilities`Private`lines], 
+                    CalculateUtilities`GraphicsUtilities`Private`neareststyle = 
+                    "1D", CalculateUtilities`GraphicsUtilities`Private`\
+neareststyle = "2D"]; Null], 
+                    If[
+                    CalculateUtilities`GraphicsUtilities`Private`neareststyle === 
+                    Automatic, 
+                    CalculateUtilities`GraphicsUtilities`Private`neareststyle = 
+                    "2D"]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`range = 
+                    Replace[
+                    ReplaceAll[PlotRange, 
+                    Options[CalculateUtilities`GraphicsUtilities`Private`g]], 
+                    Except[{{
+                    PatternTest[
+                    Blank[], NumberQ], 
+                    PatternTest[
+                    Blank[], NumberQ]}, {
+                    PatternTest[
+                    Blank[], NumberQ], 
+                    PatternTest[
+                    Blank[], NumberQ]}}] :> {
+                    Through[
+                    {Min, Max}[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pts, All, 
+                    1]]], 
+                    Through[
+                    {Min, Max}[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pts, All, 
+                    2]]]}]; CalculateUtilities`GraphicsUtilities`Private`b = 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+RefineCoordinateFunction[CalculateUtilities`GraphicsUtilities`Private`b, 
+                    First[CalculateUtilities`GraphicsUtilities`Private`range], 
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pts, All, 
+                    1]]; CalculateUtilities`GraphicsUtilities`Private`l = 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+RefineCoordinateFunction[CalculateUtilities`GraphicsUtilities`Private`l, 
+                    Last[CalculateUtilities`GraphicsUtilities`Private`range], 
+                    
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pts, All, 
+                    2]]; CalculateUtilities`GraphicsUtilities`Private`\
+oldgridlines = ReplaceAll[GridLines, 
+                    Options[CalculateUtilities`GraphicsUtilities`Private`g]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`gridlines = 
+                    With[{CalculateUtilities`GraphicsUtilities`Private`gray = 
+                    GrayLevel[0.7]}, 
+                    Replace[
+                    CalculateUtilities`GraphicsUtilities`Private`oldgridlines,\
+ {Pattern[CalculateUtilities`GraphicsUtilities`Private`a, {
+                    Blank[List], 
+                    Blank[List]}] :> Dynamic[
+                    Join[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    Replace[
+                    MousePosition[{"Graphics", Graphics}, None], {
+                    None -> {{}, {}}, {
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`x, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`y, 
+                    Blank[]]} :> {{{
+                    CalculateUtilities`GraphicsUtilities`Private`x, 
+                    CalculateUtilities`GraphicsUtilities`Private`gray}}, {{
+                    CalculateUtilities`GraphicsUtilities`Private`y, 
+                    CalculateUtilities`GraphicsUtilities`Private`gray}}}}], 
+                    2]], {
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    Blank[List]], Automatic} :> 
+                    With[{CalculateUtilities`GraphicsUtilities`Private`\
+divisions = {CalculateUtilities`GraphicsUtilities`Private`a, 
+                    FindDivisions[
+                    Last[CalculateUtilities`GraphicsUtilities`Private`range], 
+                    7]}}, 
+                    Dynamic[
+                    Join[
+                    CalculateUtilities`GraphicsUtilities`Private`divisions, 
+                    Replace[
+                    MousePosition[{"Graphics", Graphics}, None], {
+                    None -> {{}, {}}, {
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`x, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`y, 
+                    Blank[]]} :> {{{
+                    CalculateUtilities`GraphicsUtilities`Private`x, 
+                    CalculateUtilities`GraphicsUtilities`Private`gray}}, {{
+                    CalculateUtilities`GraphicsUtilities`Private`y, 
+                    CalculateUtilities`GraphicsUtilities`Private`gray}}}}], 
+                    2]]], Blank[] -> Dynamic[
+                    Map[{{#, 
+                    CalculateUtilities`GraphicsUtilities`Private`gray}}& , 
+                    MousePosition[{"Graphics", Graphics}, None]]]}]]; If[
+                    Or[
+                    CalculateUtilities`GraphicsUtilities`Private`type === 
+                    None, CalculateUtilities`GraphicsUtilities`Private`b === 
+                    None, CalculateUtilities`GraphicsUtilities`Private`l === 
+                    None], 
+                    Show[
+                    CalculateUtilities`GraphicsUtilities`Private`g, GridLines -> 
+                    CalculateUtilities`GraphicsUtilities`Private`gridlines, 
+                    If[
+                    MatchQ[
+                    CalculateUtilities`GraphicsUtilities`Private`oldgridlines, 
+                    Alternatives[None, GridLines]], 
+                    Method -> {"GridLinesInFront" -> True}, 
+                    Apply[Sequence, {}]]], 
+                    
+                    With[{CalculateUtilities`GraphicsUtilities`Private`nf = 
+                    If[CalculateUtilities`GraphicsUtilities`Private`\
+neareststyle === "1D", 
+                    
+                    With[{CalculateUtilities`GraphicsUtilities`Private`n = 
+                    Nearest[Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pts, All, 1] -> 
+                    CalculateUtilities`GraphicsUtilities`Private`pts]}, 
+                    CalculateUtilities`GraphicsUtilities`Private`n[
+                    Part[#, 1]]& ], 
+                    
+                    With[{CalculateUtilities`GraphicsUtilities`Private`n = 
+                    Nearest[Transpose[Transpose[
+                    CalculateUtilities`GraphicsUtilities`Private`pts]/Abs[
+                    Apply[
+                    Subtract, 
+                    CalculateUtilities`GraphicsUtilities`Private`range, {
+                    1}]]] -> 
+                    CalculateUtilities`GraphicsUtilities`Private`pts], 
+                    CalculateUtilities`GraphicsUtilities`Private`scale = Abs[
+                    Apply[
+                    Subtract, 
+                    CalculateUtilities`GraphicsUtilities`Private`range, {
+                    1}]]}, CalculateUtilities`GraphicsUtilities`Private`n[#/
+                    CalculateUtilities`GraphicsUtilities`Private`scale]& ]], 
+                    CalculateUtilities`GraphicsUtilities`Private`left = 
+                    CalculateUtilities`GraphicsUtilities`Private`l, 
+                    CalculateUtilities`GraphicsUtilities`Private`bottom = 
+                    CalculateUtilities`GraphicsUtilities`Private`b}, 
+                    Show[
+                    CalculateUtilities`GraphicsUtilities`Private`g, GridLines -> 
+                    CalculateUtilities`GraphicsUtilities`Private`gridlines, 
+                    If[
+                    MatchQ[
+                    CalculateUtilities`GraphicsUtilities`Private`oldgridlines, 
+                    Alternatives[None, GridLines]], 
+                    Method -> {"GridLinesInFront" -> True}, 
+                    Apply[Sequence, {}]], 
+                    Epilog -> {
+                    CalculateUtilities`GraphicsUtilities`Private`oldepilog, 
+                    Dynamic[
+                    
+                    DynamicModule[{
+                    CalculateUtilities`GraphicsUtilities`Private`pt = 
+                    CalculateUtilities`GraphicsUtilities`Private`nf[
+                    MousePosition[{"Graphics", Graphics}, {0, 0}]], 
+                    CalculateUtilities`GraphicsUtilities`Private`scaled = 
+                    MousePosition[{"GraphicsScaled", Graphics}, None]}, 
+                    If[
+                    CalculateUtilities`GraphicsUtilities`Private`scaled === 
+                    None, {}, {
+                    Text[
+                    Style[
+                    Row[{
+                    CalculateUtilities`GraphicsUtilities`Private`bottom[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pt, 1, 1]], 
+                    CalculateUtilities`GraphicsUtilities`Private`left[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pt, 1, 2]]}, 
+                    ","], 12], 
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`pt, 1], {
+                    1.5 Sign[Part[
+                    CalculateUtilities`GraphicsUtilities`Private`scaled, 1] - 
+                    0.5], 0}, Background -> White], 
+                    AbsolutePointSize[7], 
+                    Point[CalculateUtilities`GraphicsUtilities`Private`pt], 
+                    White, 
+                    AbsolutePointSize[5], 
+                    Point[
+                    CalculateUtilities`GraphicsUtilities`Private`pt]}]]]}]]]]]\
+, CalculateUtilities`GraphicsUtilities`Private`g]; 
+                    CalculateUtilities`GraphicsUtilities`Private`post$1677835[
+                    
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`g, 
+                    Blank[]], 
+                    BlankNullSequence[]] := 
+                    CalculateUtilities`GraphicsUtilities`Private`g; 
+                    CalculateUtilities`GraphicsUtilities`Private`orderedLines[{
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`l, 
+                    BlankSequence[Line]]}] := 
+                    Module[{
+                    CalculateUtilities`GraphicsUtilities`Private`ordered, 
+                    CalculateUtilities`GraphicsUtilities`Private`intervals}, 
+                    CalculateUtilities`GraphicsUtilities`Private`ordered = 
+                    Apply[And, 
+                    Map[OrderedQ[
+                    Part[#, 1, All, 1]]& , 
+                    Hold[CalculateUtilities`GraphicsUtilities`Private`l]]]; If[
+                    Not[
+                    TrueQ[
+                    CalculateUtilities`GraphicsUtilities`Private`ordered]], 
+                    Return[False]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`intervals = 
+                    Part[{CalculateUtilities`GraphicsUtilities`Private`l}, 
+                    All, 1, {1, -1}, 1]; Length[
+                    Apply[
+                    Interval, 
+                    CalculateUtilities`GraphicsUtilities`Private`intervals]] === 
+                    Length[CalculateUtilities`GraphicsUtilities`Private`\
+intervals]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Frame, 
+                    Alternatives[Automatic, FrameTicks]] = {
+                    Identity, Identity, Identity, Identity}; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Frame, {
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`b, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`l, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`t, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`r, 
+                    Blank[]]}] := 
+                    Map[CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction, {CalculateUtilities`GraphicsUtilities`Private`b, 
+                    CalculateUtilities`GraphicsUtilities`Private`l, 
+                    CalculateUtilities`GraphicsUtilities`Private`t, 
+                    CalculateUtilities`GraphicsUtilities`Private`r}]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Frame, {{
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`l, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`r, 
+                    Blank[]]}, {
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`b, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`t, 
+                    Blank[]]}}] := 
+                    Map[CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction, {CalculateUtilities`GraphicsUtilities`Private`b, 
+                    CalculateUtilities`GraphicsUtilities`Private`l, 
+                    CalculateUtilities`GraphicsUtilities`Private`t, 
+                    CalculateUtilities`GraphicsUtilities`Private`r}]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Frame, 
+                    Blank[]] = {None, None, None, None}; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Axes, 
+                    Alternatives[Automatic, Ticks]] = {Identity, Identity}; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Axes, {
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`h, 
+                    Blank[]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`v, 
+                    Blank[]]}] := 
+                    Map[CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction, {CalculateUtilities`GraphicsUtilities`Private`h, 
+                    CalculateUtilities`GraphicsUtilities`Private`v}]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+ScaleCoordinatesToTicks[Axes, 
+                    Blank[]] = {None, None}; 
+                    CalculateUtilities`GraphicsUtilities`Private`CDFCleanTicks[
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    Blank[]]] := ReplaceAll[
+                    ReplaceAll[
+                    Part[
+                    DeleteCases[
+                    ReplaceAll[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    Alternatives[Style, NumberForm] -> (#& )], {
+                    Blank[], "", 
+                    BlankNullSequence[]}], All, 
+                    Span[1, 2]], Superscript[
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`b, 
+                    Blank[Integer]], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`p, 
+                    Blank[Integer]]] :> 
+                    CalculateUtilities`GraphicsUtilities`Private`b^
+                    CalculateUtilities`GraphicsUtilities`Private`p], Row[{
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    BlankSequence[]]}, "\[Times]"] :> 
+                    Times[CalculateUtilities`GraphicsUtilities`Private`a]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction[
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks$, 
+                    Blank[]]] := 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[
+                    CalculateUtilities`GraphicsUtilities`Private`WACleanTicks[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks$]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction[None] = None; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction[False] = None; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction[True] = None; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction[Automatic] = Identity; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+TicksToFunction[All] = Identity; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[Pattern[CalculateUtilities`GraphicsUtilities`Private`func, 
+                    Blank[]] -> 
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    Blank[]]] := Replace[
+                    
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[CalculateUtilities`GraphicsUtilities`Private`ticks], 
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`f, 
+                    Except[None]] :> 
+                    Composition[
+                    CalculateUtilities`GraphicsUtilities`Private`func, 
+                    CalculateUtilities`GraphicsUtilities`Private`f]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[{}] = None; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, {
+                    Repeated[{
+                    Blank[Integer], 
+                    Blank[String]}]}]] := Which[
+                    Quiet[
+                    MatchQ[
+                    Apply[SameQ, 
+                    Map[Part[
+                    DateList[#], 
+                    Span[2, All]]& , 
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, {
+                    2}], {1}], {
+                    Repeated[True]}]], DateString, 
+                    Apply[And, 
+                    StringMatchQ[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, All, 
+                    2], NumberString]], 
+                    
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[
+                    Transpose[{
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, All, 
+                    1], 
+                    ToExpression[
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, All, 
+                    2]]}]], True, None]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, {
+                    Repeated[{
+                    PatternTest[
+                    Blank[], NumericQ], 
+                    PatternTest[
+                    Blank[], NumericQ]}]}]] := Which[
+                    MatchQ[
+                    Apply[
+                    Equal, CalculateUtilities`GraphicsUtilities`Private`ticks,\
+ {1}], {
+                    Repeated[True]}], Identity, 
+                    MatchQ[
+                    
+                    Apply[# == Log[#2]& , 
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, {1}], {
+                    Repeated[True]}], Exp, 
+                    TrueQ[
+                    Quiet[
+                    Apply[Equal, 
+                    Apply[Divide, Transpose[
+                    Rest[CalculateUtilities`GraphicsUtilities`Private`ticks]] - 
+                    Part[CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    1]]]]], 
+                    
+                    With[{CalculateUtilities`GraphicsUtilities`Private`slope = 
+                    Apply[Divide, 
+                    Apply[Subtract, 
+                    Part[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, {-1, 
+                    1}]]]}, 
+                    SetPrecision[(# - Part[
+                    CalculateUtilities`GraphicsUtilities`Private`ticks, 1, 
+                    1])/CalculateUtilities`GraphicsUtilities`Private`slope + 
+                    Part[CalculateUtilities`GraphicsUtilities`Private`ticks, 
+                    1, 2], 3]& ], True, None]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+iTicksToFunction[
+                    Blank[]] = None; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+RefineCoordinateFunction[
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`type, 
+                    Blank[]], 
+                    BlankNullSequence[]] := 
+                    CalculateUtilities`GraphicsUtilities`Private`type; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+RefineCoordinateFunction[Identity, {
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`min, 
+                    Blank[]], 
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`max, 
+                    Blank[]]}, 
+                    Blank[]] := 
+                    With[{CalculateUtilities`GraphicsUtilities`Private`nf = 
+                    CalculateUtilities`GraphicsUtilities`Private`numberForm, 
+                    CalculateUtilities`GraphicsUtilities`Private`acc = 
+                    Floor[Max[
+                    Ceiling[
+                    FullSimplify[Log[10, 
+                    Max[
+                    
+                    Abs[{CalculateUtilities`GraphicsUtilities`Private`min, 
+                    CalculateUtilities`GraphicsUtilities`Private`max}]]] - 
+                    Log[10, (CalculateUtilities`GraphicsUtilities`Private`max - 
+                    CalculateUtilities`GraphicsUtilities`Private`min)/100]]], 
+                    3] - RealExponent[
+                    Max[
+                    
+                    Abs[{CalculateUtilities`GraphicsUtilities`Private`min, 
+                    CalculateUtilities`GraphicsUtilities`Private`max}]]]]}, 
+                    CalculateUtilities`GraphicsUtilities`Private`nf[#, 
+                    CalculateUtilities`GraphicsUtilities`Private`acc]& ]; 
+                    CalculateUtilities`GraphicsUtilities`Private`\
+RefineCoordinateFunction[Exp, {
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`min, 
+                    Blank[]], 
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`max, 
+                    Blank[]]}, 
+                    Blank[]] := 
+                    With[{CalculateUtilities`GraphicsUtilities`Private`prec = 
+                    Max[
+                    Ceiling[
+                    FullSimplify[Log[10, 
+                    Max[
+                    
+                    Abs[{CalculateUtilities`GraphicsUtilities`Private`min, 
+                    CalculateUtilities`GraphicsUtilities`Private`max}]]] - 
+                    Log[10, (CalculateUtilities`GraphicsUtilities`Private`max - 
+                    CalculateUtilities`GraphicsUtilities`Private`min)/100]]], 
+                    3]}, Quiet[
+                    RawBoxes[
+                    ToBoxes[
+                    NumberForm[
+                    Exp[#], 
+                    CalculateUtilities`GraphicsUtilities`Private`prec]]]]& ]; 
+                    
+                    CalculateUtilities`GraphicsUtilities`Private`\
+RefineCoordinateFunction[DateString, {
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`min, 
+                    Blank[]], 
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`max, 
+                    Blank[]]}, 
+                    Pattern[
+                    CalculateUtilities`GraphicsUtilities`Private`pts, 
+                    Blank[]]] := 
+                    Module[{
+                    CalculateUtilities`GraphicsUtilities`Private`dates, 
+                    CalculateUtilities`GraphicsUtilities`Private`spec}, 
+                    CalculateUtilities`GraphicsUtilities`Private`dates = 
+                    Map[DateList, 
+                    CalculateUtilities`GraphicsUtilities`Private`pts]; 
+                    CalculateUtilities`GraphicsUtilities`Private`spec = Switch[
+                    Map[Length, 
+                    Map[Union, 
+                    Transpose[
+                    CalculateUtilities`GraphicsUtilities`Private`dates]]], {
+                    Blank[], 1, 1, 
+                    BlankSequence[]}, {"Year"}, {
+                    Blank[], 
+                    Blank[], 1, 
+                    BlankSequence[]}, {"MonthNameShort", " ", "Year"}, 
+                    Blank[], {
+                    "DayShort", " ", "MonthNameShort", " ", "Year"}]; 
+                    If[(CalculateUtilities`GraphicsUtilities`Private`max - 
+                    CalculateUtilities`GraphicsUtilities`Private`min)/
+                    31536000 > 25, 
+                    CalculateUtilities`GraphicsUtilities`Private`spec = {
+                    "Year"}]; 
+                    With[{CalculateUtilities`GraphicsUtilities`Private`s = 
+                    CalculateUtilities`GraphicsUtilities`Private`spec}, 
+                    DateString[#, 
+                    CalculateUtilities`GraphicsUtilities`Private`s]& ]]; 
+                    CalculateUtilities`GraphicsUtilities`Private`numberForm = 
+                    Function[{
+                    CalculateUtilities`GraphicsUtilities`Private`a, 
+                    CalculateUtilities`GraphicsUtilities`Private`acc}, 
+                    Quiet[
+                    RawBoxes[
+                    ToBoxes[
+                    NumberForm[CalculateUtilities`GraphicsUtilities`Private`a, 
+                    Max[1, 
+                    Ceiling[
+                    RealExponent[
+                    CalculateUtilities`GraphicsUtilities`Private`a] + 
+                    CalculateUtilities`GraphicsUtilities`Private`acc]], 
+                    ExponentFunction -> (Null& ), 
+                    NumberFormat -> (StringReplace[#, StringExpression[
+                    Pattern[CalculateUtilities`GraphicsUtilities`Private`s, 
+                    BlankSequence[]], ".", EndOfString] -> 
+                    CalculateUtilities`GraphicsUtilities`Private`s]& )]]]]]]], 
+                   ReleaseHold[
+                    Uncompress[
+                    "1:eJztVm1v0zAQbikw3t/+ARKfkQYV4wsSoxtj0oCSlO/\
+1kkti4drBdrbBnwef3STN2lWK6QBN6YdTfWke3z333PWeHosg6fd6PXXdmA+\
+CxckWnp4YMxKzXBQ83j/LJShFBU+u4bM7xoSg94CRHxA7301j3gs5I9qd3+D7hEUFIxq+\
+asqopqCmB5LkGY1U7RlLemJ+MmUiIoz+hGfbr3Z2Xg+\
+HDgZjGROtQXL1si1knkmiIOkh0A1j3jHCv7nj4/L4qWAshO8F8AjUQ+\
+OdSBIbGMEJw3y8b73aTN3DxDThMZHxpdNk5Tlqe4HSkvJ0ArMc37iYrO22wESmynFzv+RmnYJc+\
+LfwgQhtTM5jk7ZnS6BfGFeMvvOy+ufcDfD8ti28FKericP8dhnyRjQ9AbVM5/\
+PWdXKMVF1ro59zdVnzZaNBXjxl6v+\
+lI6r0chgv2oYBs2NT49XaW4YftoUXOXb9XNwPjPnsHCXgquFQCe6jiAs2j6KZ8sBJtH26KjcOh3G34\
+jtEp08FK5zAxFn2i+\
+2PRxV4vSmEWLvpBqTD6xkQQA7GFVtu92hK9SgjkkQGeH5dv2yyiahD8bizfe0pj6kZYI6QdcsTmsNk\
+oe5ER9mXPypuJZdzTYa8H3INKci1or+\
+N9ZGGXB5PhGckIV7Q1Ks3h1VSYyK9ZT8oQcKccIqQ9Jf52G/\
+u4WIlkKoDieqSjsWBLc2ZfxL9ssBHwFOdNXdsz9Hl3baYTSBOa9UFNEkWp83mmO43mW7c0BzoviT4l\
+sR/oHebQrcp/NVNYWkP7taEbk3o1oRuTejWhP93TbAR47/Sb6dvuMY="]]}; 
+                 Typeset`initDone$$ = True), DynamicModuleValues :> {}, 
+                Deinitialization :> None, 
+                UntrackedVariables :> {Typeset`size$$}, 
+                SynchronousInitialization -> True, 
+                UnsavedVariables :> {Typeset`initDone$$}], "Manipulate", 
+               Deployed -> True, StripOnInput -> False], TraditionalForm], 
+             Manipulate`InterpretManipulate[1]], TraditionalForm]], 
+          "Output", {}]}], 
+       XMLElement["dataformats", {}, {"minput"}]}]}], Typeset`aux1$$ = {
+   True, False, {False}, True}, Typeset`aux2$$ = {True, False, {False}, True},
+    Typeset`asyncpods$$ = {}, Typeset`nonpods$$ = {}, Typeset`initdone$$ = 
+   True, Typeset`queryinfo$$ = {
+   "success" -> "true", "error" -> "false", "numpods" -> "2", "datatypes" -> 
+    "Plot", "timedout" -> "", "timedoutpods" -> "", "timing" -> "0.732", 
+    "parsetiming" -> "0.379", "parsetimedout" -> "false", "recalculate" -> "",
+     "id" -> "MSPa149722a844hfh9eb2ca800005gh9dchdc50ci8c9", "host" -> 
+    "http://www3.wolframalpha.com", "server" -> "37", "related" -> 
+    "http://www3.wolframalpha.com/api/v2/relatedQueries.jsp?id=\
+MSPa149822a844hfh9eb2ca800002567c4b7g2ca8e06&s=37", "version" -> "2.6", 
+    "profile" -> "EnterDoQuery:0.,StartWrap:0.731597"}, 
+   Typeset`sessioninfo$$ = {
+   "TimeZone" -> 2., 
+    "Date" -> {2016, 4, 20, 0, 45, 40.109049`8.355817343074946}, "Line" -> 3, 
+    "SessionID" -> 24052332241614295057}, Typeset`showpods$$ = {1, 2}, 
+   Typeset`failedpods$$ = {}, Typeset`chosen$$ = {
+   "Plot", "Plots", 1, 2, "Input", "Plot[Sin[x]/x, {x, -9.4, 9.4}]"}, 
+   Typeset`open$$ = False, Typeset`newq$$ = "plot(sin(x)/x)"}, 
+   DynamicBox[ToBoxes[
+     AlphaIntegration`FormatAlphaResults[
+      Dynamic[{
+       1, {Typeset`pod1$$, Typeset`pod2$$}, {Typeset`aux1$$, Typeset`aux2$$}, 
+        Typeset`chosen$$, Typeset`open$$, Typeset`elements$$, Typeset`q$$, 
+        Typeset`opts$$, Typeset`nonpods$$, Typeset`queryinfo$$, 
+        Typeset`sessioninfo$$, Typeset`showpods$$, Typeset`failedpods$$, 
+        Typeset`newq$$}]], StandardForm],
+    ImageSizeCache->{286., {49., 21.}},
+    TrackedSymbols:>{Typeset`showpods$$, Typeset`failedpods$$}],
+   DynamicModuleValues:>{},
+   Initialization:>If[
+     Not[Typeset`initdone$$], Null; 
+     WolframAlphaClient`Private`doAsyncUpdates[
+       Hold[{Typeset`pod1$$, Typeset`pod2$$}], Typeset`asyncpods$$, 
+       Dynamic[Typeset`failedpods$$]]; Typeset`asyncpods$$ = {}; 
+     Typeset`initdone$$ = True],
+   SynchronousInitialization->False],
+  BaseStyle->{Deployed -> True},
+  DeleteWithContents->True,
+  Editable->False,
+  SelectWithContents->True]], "WolframAlphaShortInput"],
+
+Cell[BoxData[
+ GraphicsBox[{{}, {}, 
+   {RGBColor[0.368417, 0.506779, 0.709798], AbsoluteThickness[1.6], Opacity[
+    1.], LineBox[CompressedData["
+1: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
+f5/j/wCBKJxO
+     "]]}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesLabel->{None, None},
+  AxesOrigin->{0, 0},
+  DisplayFunction->Identity,
+  Frame->{{False, False}, {False, False}},
+  FrameLabel->{{None, None}, {None, None}},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  GridLines->{None, None},
+  GridLinesStyle->Directive[
+    GrayLevel[0.5, 0.4]],
+  Method->{
+   "DefaultBoundaryStyle" -> Automatic, "DefaultMeshStyle" -> 
+    AbsolutePointSize[6], "ScalingFunctions" -> None},
+  PlotRange->{{-9.4, 9.4}, {-0.21723355368664857`, 0.9999996512465955}},
+  PlotRangeClipping->True,
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.05], 
+     Scaled[0.05]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{
+  3.6700947435275784`*^9},ImageCache->GraphicsData["CompressedBitmap", "\<\
+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
+Z897tw==\
+\>"]]
+}, Open  ]]
+},
+WindowSize->{808, 897},
+WindowMargins->{{555, Automatic}, {Automatic, 7}},
+FrontEndVersion->"10.3 for Linux ARM (32-bit) (January 18, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[582, 22, 12608, 312, 70, "WolframAlphaShortInput"],
+Cell[13193, 336, 95, 2, 47, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13325, 343, 95582, 1831, 87, "WolframAlphaShortInput"],
+Cell[108910, 2176, 25095, 425, 238, 17602, 300, "CachedBoxData", "BoxData", \
+"Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+
