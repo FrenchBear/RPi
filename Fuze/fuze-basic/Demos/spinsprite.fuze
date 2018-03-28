@@ -1,0 +1,17 @@
+CLS 
+Sp1 = newSprite (1)
+loadSprite ("fuzelogo.png", Sp1, 0)
+setSpriteTrans (Sp1, 255, 255, 255)
+setSpriteOrigin (Sp1, getSpriteW (Sp1) / 2, getSpriteH (Sp1) / 2)
+CYCLE 
+  FOR a = 0 TO 360 STEP 4 CYCLE 
+    x = gWidth / 2 * COS (a) + gWidth / 2
+    y = gHeight / 2 * SIN (a) + gHeight / 2
+    setSpriteAngle (Sp1, a)
+    setSpriteSize (Sp1, 120 * SIN (a))
+    setSpriteAngle (Sp1, a)
+    plotSprite (Sp1, x, y, 0)
+    UPDATE 
+  REPEAT 
+REPEAT 
+END 

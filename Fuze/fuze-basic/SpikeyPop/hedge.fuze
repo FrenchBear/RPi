@@ -1,0 +1,334 @@
+REM Spikey POP
+PROC setup
+PROC sprites
+CYCLE 
+  PROC intro
+  level = 1
+  hhLives = 3
+  hhScore = 0
+  CYCLE 
+    PROC newLevel
+    UNTIL hhLives <= 0 OR levelComplete CYCLE 
+      framestart = TIME
+      PROC displayInfo
+      PROC hedgeHog
+      PROC balloon
+      plotSprite (tramp, MOUSEX, trampY, 0)
+      UPDATE 
+      timetaken = TIME - framestart
+      WAIT (0.0166 - (timetaken / 1000))
+    REPEAT 
+    IF hhLives <= 0 THEN BREAK 
+    level = level + 1
+  REPEAT 
+  INK = Red
+  PROC hideSprites
+  CLS 
+  text1$ = "GAME OVER!"
+  printAt (tWidth / 2 - LEN (text1$) / 2, tHeight / 2);  text1$;  
+  UPDATE 
+  WAIT (2)
+REPEAT 
+END 
+DEF PROC newLevel
+balloons = maxBalloons
+metalCount = level - 1
+IF metalCount >= 5 THEN metalCount = 5
+PROC newLifeVariables
+PROC hideSprites
+plotImage (back, 0, -20)
+levelComplete = 0
+PROC setupBalloons
+ENDPROC 
+DEF PROC newLifeVariables
+hhSplat = 0
+hhX = gWidth / 2
+hhY = gHeight / 2.8
+hhYspeed = 1
+hhAngle = 0
+hXdiff = 0
+bounceXpower = 0
+bounceYpower = .6 // .51
+hhGravity = 0
+hhXdirection = 1
+hhYdirection = 0
+trampX = gWidth / 2
+ENDPROC 
+DEF PROC hedgeHog
+hhGravity = ((gHeight - hhY / bounceYpower) / 100 * 3) + hhYspeed
+hhW = getSpriteW (hhID)
+hhH = getSpriteH (hhID)
+hCollide = spriteCollidePP (hhID, 1)
+IF hCollide >= b(0, 0) AND hCollide <= b(maxBalloons, 0) THEN 
+  IF  NOT b(hCollide, bPop) THEN 
+    IF ABS (b(hCollide, bX) - hhX) > 20 THEN 
+      bounceXpower = (b(hCollide, bX) - hhX) / 10
+      bounceXpower =  - bounceXpower
+    ENDIF 
+    hhYdirection =  NOT hhYdirection
+    b(hCollide, bPop) = 1
+    IF hCollide >= 0 AND hCollide <= 19 THEN 
+      hhYspeed = hhYspeed + 0.1 + level / 10
+      hhScore = hhScore + 200
+    ENDIF 
+    IF hCollide >= 20 AND hCollide <= 39 THEN 
+      hhYspeed = hhYspeed + 0.1 + level / 20
+      hhScore = hhScore + 100
+    ENDIF 
+    IF hCollide >= 40 AND hCollide <= 59 THEN 
+      hhYspeed = hhYspeed + 0.1
+      hhScore = hhScore + 50
+    ENDIF 
+    balloons = balloons - 1
+    IF balloons <= 0 THEN levelComplete = 1
+  ENDIF 
+ENDIF 
+IF hCollide >= metalB(0, 0) AND hCollide <= metalB(metalCount, 0) THEN 
+  bounceXpower =  - bounceXpower
+  hhYdirection =  NOT hhYdirection
+ENDIF 
+IF hhYdirection = 0 THEN 
+  hhY = hhY - hhGravity
+  IF hCollide = tramp THEN 
+    hhYdirection = 1
+    hXdiff = (hhX - MOUSEX) / 3
+    IF ABS (hXdiff) > trampWidth / 8 THEN 
+      bounceYpower = .51
+      hhYspeed = 1
+      hXdiff = 0
+      bounceXpower = 1
+    ENDIF 
+    bounceYpower = bounceYpower + .05
+    bounceXpower = bounceXpower + hXdiff / 5
+    hhAngle = hXdiff
+    setSpriteAngle (hhID, hhAngle)
+  ENDIF 
+ENDIF 
+IF hhYdirection = 1 THEN 
+  hhY = hhY + hhGravity
+  IF hhGravity <= .5 OR hhY >= gHeight THEN hhYdirection = 0
+ENDIF 
+IF hhY <= 0 THEN 
+  hhLives = hhLives - 1
+  PROC newLifeVariables
+  FOR n = 0 TO 10 CYCLE 
+    hideSprite (hhID)
+    UPDATE 
+    plotSprite (hhID, hhX, hhY, 0)
+    UPDATE 
+  REPEAT 
+  WAIT (.3)
+ENDIF 
+IF bounceYpower >= 1.8 THEN bounceYpower = 1.8
+hhAngle = hhAngle + hXdiff
+setSpriteAngle (hhID, hhAngle)
+IF hhX <= hhW / 2 OR hhX >= gWidth - hhW / 2 THEN bounceXpower =  - bounceXpower
+hhX = hhX + bounceXpower
+plotSprite (hhID, hhX, hhY, 0)
+ENDPROC 
+DEF PROC balloon
+bAnimIndex = bAnimIndex + bAnimDir
+IF bAnimIndex >= 6 OR bAnimIndex <= 0 THEN bAnimDir =  - bAnimDir
+FOR count = 0 TO maxBalloons CYCLE 
+  IF b(count, bPop) = 1 THEN 
+    b(count, bSize) = b(count, bSize) - 1
+    b(count, bY) = b(count, bY) - 5
+    b(count, bAngle) = b(count, bAngle) + 10
+    setSpriteSize (b(count, bID), b(count, bSize) * 16)
+    setSpriteAngle (b(count, bID), b(count, bAngle))
+    IF b(count, bSize) <= 0 THEN 
+      hideSprite (b(count, bID))
+      b(count, bActive) = 0
+    ENDIF 
+  ENDIF 
+  IF b(count, bActive) THEN 
+    plotSprite (b(count, bID), b(count, bX), b(count, bY), bAnimIndex)
+    b(count, bX) = b(count, bX) + b(count, bSpeed)
+    IF b(count, bSpeed) < 0 THEN 
+      IF b(count, bX) <= bMinX THEN b(count, bX) = bMaxX
+    ENDIF 
+    IF b(count, bSpeed) > 0 THEN 
+      IF b(count, bX) >= bMaxX THEN b(count, bX) = bMinX
+    ENDIF 
+  ENDIF 
+  IF count <= metalCount THEN 
+    IF metalB(count, bActive) THEN plotSprite (metalB(count, bID), metalB(count, bX), metalB(count, bY), bAnimIndex)
+  ENDIF 
+REPEAT 
+ENDPROC 
+DEF PROC displayInfo
+INK = Yellow
+printAt (0, 0);  "Score ";  
+INK = Red
+PRINT hhScore
+INK = Yellow
+printAt (tWidth - 10, 0);  "Lives ";  
+INK = Red
+PRINT hhLives
+INK = Yellow
+printAt (tWidth / 2 - 4, 0);  "Level ";  
+INK = Red
+PRINT level
+ENDPROC 
+DEF PROC setupBalloons
+bCount = 20
+bMinX =  - bW * 2
+bMaxX = gWidth + bW * 2
+bStep = (bMaxX - bMinX) / 20
+counter = 0
+FOR n = bMinX TO bMaxX - bW STEP bStep CYCLE 
+  b(counter, bY) = gHeight - bH
+  b(counter + 20, bY) = gHeight - bH * 2.5
+  b(counter + 40, bY) = gHeight - bH * 4
+  b(counter, bX) = n
+  b(counter + 20, bX) = n
+  b(counter + 40, bX) = n
+  b(counter, bSpeed) = 6
+  b(counter + 20, bSpeed) = -4
+  b(counter + 40, bSpeed) = 2
+  b(counter, bScore) = 200
+  b(counter + 20, bScore) = 100
+  b(counter + 40, bScore) = 50
+  b(counter, bSize) = 10
+  b(counter + 20, bSize) = 10
+  b(counter + 40, bSize) = 10
+  b(counter, bActive) = 1
+  b(counter + 20, bActive) = 1
+  b(counter + 40, bActive) = 1
+  b(counter, bPop) = 0
+  b(counter + 20, bPop) = 0
+  b(counter + 40, bPop) = 0
+  plotSprite (b(counter, bID), b(counter, bX), b(counter, bY), 0)
+  plotSprite (b(counter + 20, bID), b(counter + 20, bX), b(counter + 20, bY), 0)
+  plotSprite (b(counter + 40, bID), b(counter + 40, bX), b(counter + 40, bY), 0)
+  counter = counter + 1
+  UPDATE 
+REPEAT 
+IF level < 6 THEN 
+  mBgap = gWidth / level
+ELSE 
+  mBgap = gWidth / 6
+ENDIF 
+IF level > 1 THEN 
+  FOR num = 0 TO metalCount CYCLE 
+    metalB(num, bY) = gHeight / 2
+    metalB(num, bX) = mBgap * num
+    metalB(num, bSpeed) = 0
+    metalB(num, bScore) = 1000
+    metalB(num, bSize) = 10
+    metalB(num, bPop) = 0
+    IF num > 0 THEN metalB(num, bActive) = 1
+  REPEAT 
+ENDIF 
+ENDPROC 
+DEF PROC setup
+setMode (1024, 600)
+updateMode = 0
+mouseOff 
+maxBalloons = 60
+back = loadImage ("back1.png")
+DIM b(maxBalloons, 10)
+DIM metalB(6, 10)
+bID = 0
+bActive = 1
+bX = 2
+bY = 3
+bSpeed = 4
+bAngle = 5
+bSize = 6
+bScore = 7
+bPop = 8
+balloon = 0
+bAnimIndex = 0
+bAnimDir = 1
+ENDPROC 
+DEF PROC sprites
+FOR n = 0 TO maxBalloons CYCLE 
+  b(n, bID) = newSprite (7)
+  FOR nn = 1 TO 7 CYCLE 
+    num$ = STR$ (nn)
+    IF n >= 0 AND n <= 19 THEN loadSprite ("spe" + num$ + ".png", b(n, bID), nn - 1)
+    IF n >= 20 AND n <= 39 THEN loadSprite ("spc" + num$ + ".png", b(n, bID), nn - 1)
+    IF n >= 40 AND n <= 59 THEN loadSprite ("spd" + num$ + ".png", b(n, bID), nn - 1)
+  REPEAT 
+  setSpriteTrans (b(n, bID), 255, 0, 255)
+  setSpriteOrigin (b(n, bID), getSpriteW (b(n, bID)) / 2, getSpriteH (b(n, bID)) / 2)
+REPEAT 
+FOR n = 0 TO 6 CYCLE 
+  metalB(n, bID) = newSprite (7)
+  FOR nn = 1 TO 7 CYCLE 
+    num$ = STR$ (nn)
+    loadSprite ("spb" + num$ + ".png", metalB(n, bID), nn - 1)
+  REPEAT 
+  setSpriteTrans (metalB(n, bID), 255, 0, 255)
+  setSpriteOrigin (metalB(n, bID), getSpriteW (metalB(n, bID)) / 2, getSpriteH (metalB(n, bID)) / 2)
+REPEAT 
+bH = getSpriteH (b(0, 0))
+bW = getSpriteH (b(0, 0))
+tramp = newSprite (1)
+loadSprite ("tramps.png", tramp, 0)
+setSpriteTrans (tramp, 255, 0, 255)
+setSpriteOrigin (tramp, getSpriteW (tramp) / 2, 0)
+trampY = -5
+trampHeight = 20
+trampWidth = getSpriteW (tramp)
+trampLeft = trampWidth / 2
+trampRight = gWidth - trampWidth / 2
+hhID = newSprite (1)
+loadSprite ("hedge.png", hhID, 0)
+setSpriteTrans (hhID, 255, 0, 255)
+setSpriteOrigin (hhID, getSpriteW (hhID) / 2, getSpriteH (hhID) / 2)
+setSpriteSize (hhID, 110)
+spikey = newSprite (3)
+FOR n = 1 TO 3 CYCLE 
+  num$ = STR$ (n)
+  loadSprite ("spikey" + num$ + ".png", spikey, n - 1)
+REPEAT 
+setSpriteTrans (spikey, 255, 0, 255)
+setSpriteOrigin (spikey, getSpriteW (spikey) / 2, getSpriteH (spikey) / 2)
+pop = newSprite (1)
+loadSprite ("pop.png", pop, 0)
+setSpriteTrans (pop, 255, 0, 255)
+setSpriteOrigin (pop, getSpriteW (pop) / 2, getSpriteH (pop) / 2)
+ENDPROC 
+DEF PROC intro
+angle = 0
+anglestep = 2
+sID = 0
+scale = 100
+scaleDir = 1
+text1$ = "Click mouse to play - use mouse to control"
+CYCLE 
+  getMouse (a, b, mousebutton)
+  setSpriteAngle (spikey, angle - 30)
+  plotSprite (spikey, gWidth / 2, gHeight / 2, sID)
+  plotSprite (pop, gWidth / 2 + getSpriteW (pop) / 2, gHeight / 2 - getSpriteH (pop), 0)
+  sID = sID + 1
+  IF sID > 2 THEN sID = 0
+  scale = scale + scaleDir
+  IF scale <= 96 OR scale >= 104 THEN scaleDir =  - scaleDir
+  setSpriteSize (pop, scale)
+  INK = RND (16)
+  printAt (tWidth / 2 - LEN (text1$) / 2, tHeight - 1);  text1$;  
+  angle = angle + anglestep
+  IF angle < 0 OR angle > 10 THEN anglestep =  - anglestep
+  UPDATE 
+REPEAT UNTIL mousebutton
+CLS 
+hideSprite (spikey)
+hideSprite (pop)
+ENDPROC 
+DEF PROC hideSprites
+FOR n = 0 TO metalCount CYCLE 
+  setSpriteSize (metalB(n, bID), 100)
+  setSpriteAngle (metalB(n, bID), 0)
+  hideSprite (metalB(n, bID))
+REPEAT 
+FOR n = 0 TO maxBalloons CYCLE 
+  setSpriteSize (b(n, bID), 100)
+  setSpriteAngle (b(n, bID), 0)
+  hideSprite (b(n, bID))
+REPEAT 
+hideSprite (tramp)
+hideSprite (hhID)
+ENDPROC 

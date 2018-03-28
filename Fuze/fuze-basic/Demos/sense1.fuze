@@ -1,0 +1,16 @@
+CYCLE 
+  x = 3 + INT (SenseGyroX)
+  y = 3 + INT (SenseGyroY)
+  SenseCLS 
+  senseRgbColour (0, 255, 0)
+
+  senseRect (0, y, 7, 1, 1)
+  senseRect (x, 0, 1, 7, 1)
+
+  IF x = 3 AND y = 3 THEN 
+    senseRgbColour (255, 0, 0)
+    senseRect (2, 2, 3, 3, 0)
+  ENDIF 
+  WAIT (0.001)
+REPEAT 
+END 

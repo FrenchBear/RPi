@@ -1,0 +1,9 @@
+CLS 
+penDown 
+COLOUR = Purple
+FOR i = 2 TO gWidth CYCLE 
+  move (i)
+  right (92)
+  WAIT (0)
+REPEAT 
+END 

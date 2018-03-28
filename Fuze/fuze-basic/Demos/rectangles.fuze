@@ -1,0 +1,16 @@
+//
+// Draw Rectangles
+//
+CLS 
+CYCLE 
+  COLOUR = RND (16)
+  x = RND (gWidth)
+  y = RND (gHeight)
+  w = RND (gWidth / 4)
+  h = RND (gHeight / 4)
+  f = RND (2)
+  RECT (x, y, w, h, f)
+  UPDATE 
+  IF INKEY <> -1 THEN BREAK 
+REPEAT 
+END 

@@ -1,0 +1,147 @@
+setMode (1024, 600)
+FULLSCREEN = 1
+PROC setupVariables
+CLS 
+CYCLE 
+  CLS2 
+ boxNo = 0
+  PROC calcBox(boxNo)
+  polyStart 
+  polyPlot (boxXY(boxNo, 0), boxXY(boxNo, 1))
+  polyPlot (boxXY(boxNo, 2), boxXY(boxNo, 3))
+  polyPlot (boxXY(boxNo, 6), boxXY(boxNo, 7))
+  polyPlot (boxXY(boxNo, 4), boxXY(boxNo, 5))
+  polyEnd 
+  polyStart 
+  polyPlot (boxXY(boxNo, 2), boxXY(boxNo, 3))
+  polyPlot (boxXY(boxNo, 10), boxXY(boxNo, 11))
+  polyPlot (boxXY(boxNo, 14), boxXY(boxNo, 15))
+  polyPlot (boxXY(boxNo, 6), boxXY(boxNo, 7))
+  polyEnd 
+  polyStart 
+  polyPlot (boxXY(boxNo, 12), boxXY(boxNo, 13))
+  polyPlot (boxXY(boxNo, 14), boxXY(boxNo, 15))
+  polyPlot (boxXY(boxNo, 6), boxXY(boxNo, 7))
+  polyPlot (boxXY(boxNo, 4), boxXY(boxNo, 5))
+  polyEnd 
+  polyStart 
+  polyPlot (boxXY(boxNo, 10), boxXY(boxNo, 11))
+  polyPlot (boxXY(boxNo, 8), boxXY(boxNo, 9))
+  polyPlot (boxXY(boxNo, 12), boxXY(boxNo, 13))
+  polyPlot (boxXY(boxNo, 14), boxXY(boxNo, 15))
+  polyEnd 
+  polyStart 
+  polyPlot (boxXY(boxNo, 8), boxXY(boxNo, 9))
+  polyPlot (boxXY(boxNo, 0), boxXY(boxNo, 1))
+  polyPlot (boxXY(boxNo, 4), boxXY(boxNo, 5))
+  polyPlot (boxXY(boxNo, 12), boxXY(boxNo, 13))
+  polyEnd 
+  polyStart 
+  polyPlot (boxXY(boxNo, 8), boxXY(boxNo, 9))
+  polyPlot (boxXY(boxNo, 10), boxXY(boxNo, 11))
+  polyPlot (boxXY(boxNo, 2), boxXY(boxNo, 3))
+  polyPlot (boxXY(boxNo, 0), boxXY(boxNo, 1))
+  polyEnd 
+  COLOUR = 14
+  LINE (boxXY(boxNo, 0), boxXY(boxNo, 1), boxXY(boxNo, 2), boxXY(boxNo, 3))
+  LINE (boxXY(boxNo, 4), boxXY(boxNo, 5), boxXY(boxNo, 6), boxXY(boxNo, 7))
+  LINE (boxXY(boxNo, 8), boxXY(boxNo, 9), boxXY(boxNo, 10), boxXY(boxNo, 11))
+  LINE (boxXY(boxNo, 12), boxXY(boxNo, 13), boxXY(boxNo, 14), boxXY(boxNo, 15))
+  LINE (boxXY(boxNo, 0), boxXY(boxNo, 1), boxXY(boxNo, 4), boxXY(boxNo, 5))
+  LINE (boxXY(boxNo, 4), boxXY(boxNo, 5), boxXY(boxNo, 12), boxXY(boxNo, 13))
+  LINE (boxXY(boxNo, 12), boxXY(boxNo, 13), boxXY(boxNo, 8), boxXY(boxNo, 9))
+  LINE (boxXY(boxNo, 8), boxXY(boxNo, 9), boxXY(boxNo, 0), boxXY(boxNo, 1))
+  LINE (boxXY(boxNo, 2), boxXY(boxNo, 3), boxXY(boxNo, 6), boxXY(boxNo, 7))
+  LINE (boxXY(boxNo, 6), boxXY(boxNo, 7), boxXY(boxNo, 14), boxXY(boxNo, 15))
+  LINE (boxXY(boxNo, 14), boxXY(boxNo, 15), boxXY(boxNo, 10), boxXY(boxNo, 11))
+  LINE (boxXY(boxNo, 10), boxXY(boxNo, 11), boxXY(boxNo, 2), boxXY(boxNo, 3))
+  box(boxNo, 7) = box(boxNo, 7) + box(boxNo, 15)
+  box(boxNo, 8) = box(boxNo, 8) + box(boxNo, 16)
+  IF box(boxNo, 7) > gWidth + i THEN box(boxNo, 7) =  - i
+  IF box(boxNo, 7) <  - i THEN box(boxNo, 7) = gWidth + i
+  IF box(boxNo, 8) > gHeight + i THEN box(boxNo, 8) =  - i
+  IF box(boxNo, 8) <  - i THEN box(boxNo, 8) = gHeight + i
+  UPDATE 
+REPEAT 
+END 
+//
+DEF PROC setupVariables
+i = 80
+DIM x(7)
+DIM y(7)
+DIM z(7)
+x(0) = i
+y(0) = i
+z(0) =  - i
+x(1) = i
+y(1) = i
+z(1) = i
+x(2) = i
+y(2) =  - i
+z(2) =  - i
+x(3) = i
+y(3) =  - i
+z(3) = i
+x(4) =  - i
+y(4) = i
+z(4) =  - i
+x(5) =  - i
+y(5) = i
+z(5) = i
+x(6) =  - i
+y(6) =  - i
+z(6) =  - i
+x(7) =  - i
+y(7) =  - i
+z(7) = i
+maxBox = 20
+DIM box(maxBox, 16)
+DIM boxXY(maxBox, 16)
+n = 0
+box(n, 0) = 0 // ID
+box(n, 1) = 1 // size
+box(n, 2) = .4 // scale
+box(n, 3) = 128 // RGB R
+box(n, 4) = 128 // RGB G
+box(n, 5) = 128 // RGB B
+box(n, 6) = 0 // point distance from centre
+box(n, 7) = gWidth / 2
+box(n, 8) = gHeight / 2
+box(n, 9) = RND (360) // Point Angle X
+box(n, 10) = RND (360) // Point Angle Y
+box(n, 11) = RND (360) // Point Angle Z
+box(n, 12) = RND (8) - 4 // Point Pivot X
+box(n, 13) = RND (8) - 4 // Point Pivot Y
+box(n, 14) = RND (8) - 4 // Point Pivot Z
+box(n, 15) = 0 //(RND (2.5) * 2.5) - 2.5 // X direction
+box(n, 16) = 0 //(RND (2.5) * 2.5) - 2.5 // Y direction
+//
+ENDPROC 
+//
+DEF PROC calcBox(ID)
+box(ID, 9) = box(ID, 9) + box(ID, 12)
+box(ID, 10) = box(ID, 10) + box(ID, 13)
+box(ID, 11) = box(ID, 11) + box(ID, 14)
+FOR point = 0 TO 7 CYCLE 
+  XD = x(point) - box(ID, 12)
+  YD = y(point) - box(ID, 13)
+  ZD = z(point) - box(ID, 14)
+  ZX = XD * COS (box(ID, 11)) - YD * SIN (box(ID, 11)) - XD
+  ZY = XD * SIN (box(ID, 11)) + YD * COS (box(ID, 11)) - YD
+  YX = (XD + ZX) * COS (box(ID, 10)) - ZD * SIN (box(ID, 10)) - (XD + ZX)
+  YZ = (XD + ZX) * SIN (box(ID, 10)) + ZD * COS (box(ID, 10)) - ZD
+  XY = (YD + ZY) * COS (box(ID, 9)) - (ZD + YZ) * SIN (box(ID, 9)) - (YD + ZY)
+  XZ = (YD + ZY) * SIN (box(ID, 9)) + (ZD + YZ) * COS (box(ID, 9)) - (ZD + YZ)
+  xrotoffset = YX + ZX
+  yrotoffset = ZY + XY
+  zrotoffset = ZX + YZ
+  x = (x(point) + xrotoffset) / box(ID, 2) + box(ID, 7)
+  y = (y(point) + yrotoffset) / box(ID, 2) + box(ID, 8)
+  boxXY(ID, point * 2) = x
+  boxXY(ID, (point * 2) + 1) = y
+REPEAT 
+rgbColour (box(ID, 3), box(ID, 4), box(ID, 5))
+//
+ENDPROC 
+//
+//

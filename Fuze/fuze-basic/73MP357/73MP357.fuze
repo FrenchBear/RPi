@@ -1,0 +1,1181 @@
+//
+debugKeys = FALSE
+xres = 640
+yres = 480
+maxxres = 1920
+maxyres = 1080
+targetfps = 60
+//
+//
+minfps = targetfps - 5
+maxfps = targetfps + 5
+isMaxResolution = FALSE
+totalFrames = 0
+updateMode = 0
+setMode (xres, yres)
+fontScale (4, 4)
+PaperOff 
+DIM stars(1000)
+DIM starsSpeed(1000)
+DIM starsDist(1000)
+starX = 0
+starY = 0
+laserX = 0
+laserY = 0
+laserX2 = 0
+laserY2 = 0
+laserX3 = 0
+laserY3 = 0
+laserX4 = 0
+laserY4 = 0
+frames = 0
+oldTime = 0
+maxLasers = 10
+totalFrames = 0
+laserReload = INT (targetfps / 2)
+laserCount = 0
+DIM laserDist(maxLasers)
+DIM laserAngle(maxLasers)
+DIM laserSide(maxLasers)
+particleLaserSide = 0
+maxEnemies = 5
+numEnemies = 0
+enemyX = 0
+enemyY = 0
+enemyDelay = INT (targetfps * 4)
+enemyCount = enemyDelay
+DIM enemyAngle(maxEnemies)
+DIM enemyDist(maxEnemies)
+DIM enemyMove(maxEnemies)
+DIM enemyHealth(maxEnemies)
+playerAngle = 0
+oldPlayerAngle = playerAngle
+oneTimeInit = TRUE
+score = 0
+enemies = TRUE
+debugDelay = INT (targetfps / 2)
+debugCount = 0
+messageCount = 0
+message$ = ""
+oldScore = 0
+scoreTime = 0
+scoreBoost = 1
+DIM oldPowerupColour(3)
+oldPowerupColour(0) = 255
+oldPowerupColour(1) = 255
+oldPowerupColour(2) = 255
+DIM powerupColour(3)
+powerupColour(0) = 255
+powerupColour(1) = 255
+powerupColour(2) = 255
+powerupFade = 0
+starNum = 0
+DIM sfx(9)
+sfx(0) = loadSample ("sfx/Enemy Destroyed_Close.wav")
+sfx(1) = loadSample ("sfx/Enemy Destroyed_Distant.wav")
+sfx(2) = loadSample ("sfx/Enemy Destroyed_Med.wav")
+sfx(3) = loadSample ("sfx/Particle Lazer Last shot.wav")
+sfx(4) = loadSample ("sfx/Particle Lazer Loop.wav")
+sfx(5) = loadSample ("sfx/Player Death Explosion.wav")
+sfx(6) = loadSample ("sfx/Single Lazer Shot.wav")
+sfx(7) = loadSample ("sfx/warp.wav")
+sfx(8) = loadSample ("sfx/powerup.wav")
+synthVortex = loadMusic ("sfx/SyntheticVortex.mp3")
+playMusic (synthVortex, -1)
+highscores = openUp ("highscores.txt")
+highscore = 0
+input# highscores, highscore
+maxdebris = 1000
+DIM debris(maxdebris)
+DIM debrisX(maxdebris)
+DIM debrisY(maxdebris)
+DIM debrisSpeedX(maxdebris)
+DIM debrisSpeedY(maxdebris)
+lives = 3
+level = 1
+playerTurn = 0
+destroyed = FALSE
+WHILE starNum < 1000 CYCLE 
+  stars(starNum) = RND (360)
+  starsSpeed(starNum) = RND (300 / targetfps) + 1
+  starsDist(starNum) = RND (gHeight)
+  starNum = starNum + 1
+REPEAT 
+centerX = gWidth / 2
+centerY = gHeight / 2
+centerX2 = centerX
+centerY2 = centerY
+starsCenterX = centerX
+starsCenterY = centerY
+i = 0
+logosize = 10
+logo = newSprite (1)
+loadSprite ("logo.png", logo, 0)
+setSpriteTrans (logo, 0, 0, 0)
+setSpriteSize (logo, (gWidth / getSpriteW (logo)) * logosize)
+advance = 5
+CYCLE 
+  CLS2 
+  IF logosize < 90 THEN 
+    logosize = INT (logosize + 60 / targetfps)
+    setSpriteSize (logo, (gWidth / getSpriteW (logo)) * logosize)
+  ENDIF 
+  i = i + (240 / targetfps)
+  plotSprite (logo, (gWidth / 2) - (getSpriteW (logo) / 2), (gHeight / 2) - (getSpriteH (logo) / 2), 0)
+  IF scanKeyboard (scanSpace) THEN 
+    hideSprite (logo)
+    PROC setup
+    BREAK 
+  ENDIF 
+  maxStars = gHeight / 5
+  COLOUR = White
+  WHILE starNum < maxStars CYCLE 
+    starX = starsDist(starNum) * COS (stars(starNum))
+    starX = starsCenterX + starX
+    starY = starsDist(starNum) * SIN (stars(starNum))
+    starY = starsCenterY + starY
+    starsDist(starNum) = starsDist(starNum) + starsSpeed(starNum)
+    IF starX < 0 THEN 
+      starsDist(starNum) = RND (15) + 5
+    ENDIF 
+    IF starX > gWidth THEN 
+      starsDist(starNum) = RND (15) + 5
+    ENDIF 
+    IF starY < 0 THEN 
+      starsDist(starNum) = RND (15) + 5
+    ENDIF 
+    IF starY > gHeight THEN 
+      starsDist(starNum) = RND (15) + 5
+    ENDIF 
+    PLOT (starX, starY)
+    starNum = starNum + 1
+  REPEAT 
+  starNum = 0
+  UPDATE 
+  frames = frames + 1
+  IF TIME - 1000 > oldTime THEN 
+    IF frames < minfps THEN 
+      yres = yres - ((10 * (minfps - frames)) * (yres / xres))
+      xres = xres - (10 * (minfps - frames))
+      setMode (xres, yres)
+      fontScale (4, 4)
+      centerX = gWidth / 2
+      centerY = gHeight / 2
+      centerX2 = centerX
+      centerY2 = centerY
+      starsCenterX = centerX
+      starsCenterY = centerY
+      setSpriteSize (logo, (gWidth / getSpriteW (logo)) * logosize)
+    ENDIF 
+    IF frames > maxfps THEN 
+      IF yres < maxyres THEN 
+        yres = yres + ((10 * (frames - maxfps)) * (yres / xres))
+        IF yres > maxyres THEN 
+          yres = maxyres
+        ENDIF 
+      ENDIF 
+      IF xres < maxxres THEN 
+        xres = xres + (10 * (frames - maxfps))
+        IF xres > maxxres THEN 
+          xres = maxxres
+        ENDIF 
+      ENDIF 
+      IF isMaxResolution = FALSE THEN 
+        setMode (xres, yres)
+        fontScale (4, 4)
+        centerX = gWidth / 2
+        centerY = gHeight / 2
+        centerX2 = centerX
+        centerY2 = centerY
+        starsCenterX = centerX
+        starsCenterY = centerY
+        setSpriteSize (logo, (gWidth / getSpriteW (logo)) * logosize)
+        IF xres = maxxres THEN 
+          IF yres = maxyres THEN 
+            isMaxResolution = TRUE
+            FULLSCREEN = TRUE
+          ELSE 
+            FULLSCREEN = TRUE
+          ENDIF 
+        ELSE 
+          FULLSCREEN = FALSE
+        ENDIF 
+      ENDIF 
+    ENDIF 
+    frames = 0
+    oldTime = TIME
+  ENDIF 
+  totalFrames = totalFrames + 1
+REPEAT 
+CYCLE 
+  CLS2 
+  IF warp = FALSE THEN 
+    IF scanKeyboard (scanRight) OR scanKeyboard (scanD) THEN 
+      IF moveCount = 0 THEN 
+        oldPlayerAngle = playerAngle
+        playerAngle = playerAngle + gap
+        moveCount = moveDelay
+        IF playerAngle > 360 THEN 
+          playerAngle = gap / 2
+        ENDIF 
+      ELSE 
+        IF playerTurn > -45 THEN 
+          playerTurn = playerTurn - 5
+        ENDIF 
+      ENDIF 
+    ENDIF 
+    IF scanKeyboard (scanLeft) OR scanKeyboard (scanA) THEN 
+      IF moveCount = 0 THEN 
+        oldPlayerAngle = playerAngle
+        playerAngle = playerAngle - gap
+        moveCount = moveDelay
+        IF playerAngle < 0 THEN 
+          playerAngle = 360 - (gap / 2)
+        ENDIF 
+      ELSE 
+        IF playerTurn < 45 THEN 
+          playerTurn = playerTurn + 5
+        ENDIF 
+      ENDIF 
+    ENDIF 
+  ENDIF 
+  IF scanKeyboard (scanQ) THEN 
+    CLS2 
+    printAt (0, 0)
+    PRINT "Average fps: ";  
+    PRINT INT (totalFrames / (TIME / 1000))
+    BREAK 
+  ENDIF 
+  IF scanKeyboard (scanSpace) OR scanKeyboard (scanReturn) THEN 
+    IF laserCount = 0 THEN 
+      IF numLasers < maxLasers THEN 
+        FOR i = 0 TO maxLasers CYCLE 
+          IF laserDist(i) = radius2 THEN 
+            laserDist(i) = SQRT (((centerX - playerX) * (centerX - playerX)) + ((centerY - playerY) * (centerY - playerY)))
+            laserAngle(i) = playerAngle
+            laserSide(i) = particleLaserSide
+            IF particleLaserSide = 0 THEN 
+              particleLaserSide = 1
+            ELSE 
+              particleLaserSide = 0
+            ENDIF 
+            IF particleLaser = TRUE THEN 
+              playSample (sfx(4), particleLaserSide + 1, 0)
+            ELSE 
+              playSample (sfx(6), 1, 0)
+            ENDIF 
+            numLasers = numLasers + 1
+            laserCount = laserReload
+            BREAK 
+          ENDIF 
+        REPEAT 
+      ENDIF 
+    ENDIF 
+  ENDIF 
+  IF debugKeys = TRUE THEN 
+    IF debugCount > 0 THEN 
+      debugCount = debugCount - 1
+    ENDIF 
+    IF debugCount = 0 THEN 
+      IF scanKeyboard (scanP) THEN 
+        powerupAngle = (RND (vertices - 1) * gap) + (gap / 2)
+        powerupDist = radius2
+        debugCount = debugDelay
+      ENDIF 
+      IF scanKeyboard (scanS) THEN 
+        IF enemies = TRUE THEN 
+          enemies = FALSE
+        ELSE 
+          enemies = TRUE
+        ENDIF 
+        debugCount = debugDelay
+      ENDIF 
+      IF scanKeyboard (scanL) THEN 
+        IF particleLaser = TRUE THEN 
+          particleLaser = FALSE
+        ELSE 
+          particleLaser = TRUE
+        ENDIF 
+        debugCount = debugDelay
+      ENDIF 
+      IF scanKeyboard (scanR) THEN 
+        warp = TRUE
+        debugCount = debugDelay
+      ENDIF 
+    ENDIF 
+  ENDIF 
+  maxStars = gHeight / 5
+  maxdebris = gHeight / 50
+  IF powerupDist = radius THEN 
+    IF RND (200) = 1 THEN 
+      powerupAngle = (RND (vertices - 1) * gap) + (gap / 2)
+      powerupDist = radius2
+      oldPowerupColour(0) = powerupColour(0)
+      oldPowerupColour(1) = powerupColour(1)
+      oldPowerupColour(2) = powerupColour(2)
+      powerupColour(0) = RND (200) + 55
+      powerupColour(1) = RND (200) + 55
+      powerupColour(2) = RND (200) + 55
+      powerupFade = 0
+    ENDIF 
+  ENDIF 
+  IF powerupDist < radius THEN 
+    powerupDist = powerupDist + (radius / 80)
+  ENDIF 
+  IF powerupDist > radius THEN 
+    IF powerupAngle > playerAngle - (gap / 2) THEN 
+      IF powerupAngle < playerAngle + (gap / 2) THEN 
+        playSample (sfx(8), 3, 0)
+        IF particleLaser = FALSE THEN 
+          particleLaser = TRUE
+          message$ = "Particle Laser!"
+          messageCount = targetfps
+          laserCount = laserReload
+        ELSE 
+          IF RND (4) = 1 THEN 
+            lives = lives + 1
+            message$ = "Extra Life!"
+            messageCount = targetfps
+          ELSE 
+            scoreBoost = scoreBoost + 1
+            score = score + (10 * scoreBoost)
+            scoreTime = 1
+            message$ = "Score Boost!"
+            messageCount = targetfps
+          ENDIF 
+        ENDIF 
+      ENDIF 
+    ENDIF 
+    powerupDist = radius
+  ENDIF 
+  IF warp = TRUE THEN 
+    radius = radius + (gHeight / 20)
+    radius2 = radius2 + (gHeight / 60)
+    IF radius2 > gHeight THEN 
+      PROC setup
+    ENDIF 
+  ENDIF 
+  IF particleLaser = FALSE THEN 
+    IF laserCount > 0 THEN 
+      laserCount = INT (laserCount / 1.05)
+    ENDIF 
+  ELSE 
+    IF laserCount > 0 THEN 
+      laserCount = INT (laserCount / 1.5)
+    ENDIF 
+  ENDIF 
+  IF warp = FALSE THEN 
+    IF enemies = TRUE THEN 
+      IF enemyCount > 0 THEN 
+        enemyCount = enemyCount - 1
+      ELSE 
+        IF enemyCount = 0 THEN 
+          IF numEnemies < maxEnemies THEN 
+            FOR i = 0 TO maxEnemies CYCLE 
+              IF enemyDist(i) = radius THEN 
+                enemyDist(i) = radius2
+                enemyAngle(i) = (RND (vertices - 1) * gap) + (gap / 2)
+                enemyHealth(i) = 100
+                numEnemies = numEnemies + 1
+                enemyCount = enemyDelay
+                BREAK 
+              ENDIF 
+            REPEAT 
+          ENDIF 
+        ENDIF 
+      ENDIF 
+    ENDIF 
+  ENDIF 
+  COLOUR = White
+  WHILE starNum < maxStars CYCLE 
+    starX = starsDist(starNum) * COS (stars(starNum))
+    starX = starsCenterX + starX
+    starY = starsDist(starNum) * SIN (stars(starNum))
+    starY = starsCenterY + starY
+    starsDist(starNum) = starsDist(starNum) + starsSpeed(starNum)
+    IF starX < 0 THEN 
+      starsDist(starNum) = RND (15) + 5
+    ENDIF 
+    IF starX > gWidth THEN 
+      starsDist(starNum) = RND (15) + 5
+    ENDIF 
+    IF starY < 0 THEN 
+      starsDist(starNum) = RND (15) + 5
+    ENDIF 
+    IF starY > gHeight THEN 
+      starsDist(starNum) = RND (15) + 5
+    ENDIF 
+    PLOT (starX, starY)
+    starNum = starNum + 1
+  REPEAT 
+  starNum = 0
+  COLOUR = Blue
+  WHILE angle < 360 CYCLE 
+    x = radius * COS (angle)
+    x = centerX + x
+    y = radius * SIN (angle)
+    y = centerY + y
+    x2 = radius2 * COS (angle)
+    x2 = centerX2 + x2
+    y2 = radius2 * SIN (angle)
+    y2 = centerY2 + y2
+    LINE (x, y, x2, y2)
+    LINE (x, y, oldX, oldY)
+    LINE (x2, y2, oldX2, oldY2)
+    oldX = x
+    oldY = y
+    oldX2 = x2
+    oldY2 = y2
+    angle = angle + gap
+  REPEAT 
+  COLOUR = Yellow
+  IF lives > 0 THEN 
+    u = gHeight / 160
+    FOR i = 1 TO lives CYCLE 
+      lx = gWidth - ((u * 16) * i)
+      ly = gHeight - (u * 8)
+      polyStart 
+      polyPlot (u * 5 + lx, u * 5 + ly)
+      polyPlot (u * 5 + lx, 0 + ly)
+      polyPlot (0 + lx, u * -2 + ly)
+      polyPlot (u * -5 + lx, 0 + ly)
+      polyPlot (u * -5 + lx, u * 5 + ly)
+      polyPlot (u * -7 + lx, 0 + ly)
+      polyPlot (0 + lx, u * -4 + ly)
+      polyPlot (u * 7 + lx, 0 + ly)
+      polyEnd 
+    REPEAT 
+  ENDIF 
+  IF playerAngle - oldPlayerAngle < ((0 - 360) + gap) + 1 THEN 
+    tmpPlayerAngle = FN lerp(playerAngle + 360, oldPlayerAngle, moveCount / moveDelay)
+  ELSE 
+    IF playerAngle - oldPlayerAngle > (360 - gap) - 1 THEN 
+      tmpPlayerAngle = FN lerp(playerAngle, oldPlayerAngle + 360, moveCount / moveDelay)
+    ELSE 
+      tmpPlayerAngle = FN lerp(playerAngle, oldPlayerAngle, moveCount / moveDelay)
+    ENDIF 
+  ENDIF 
+  IF warp = FALSE THEN 
+    playerX = (((radius * COS (tmpPlayerAngle - (gap / 2))) + centerX) + ((radius * COS (tmpPlayerAngle + (gap / 2))) + centerX)) / 2
+    playerY = (((radius * SIN (tmpPlayerAngle - (gap / 2))) + centerY) + ((radius * SIN (tmpPlayerAngle + (gap / 2))) + centerY)) / 2
+  ENDIF 
+  angle = 0
+  IF moveCount > 0 THEN 
+    moveCount = moveCount - 1
+  ENDIF 
+  IF playerX + (120 / targetfps) < gWidth / 2 THEN 
+    IF centerX < (gWidth / 2) + (gWidth / 20) THEN 
+      centerX = centerX + (240 / targetfps)
+      centerX2 = centerX2 + (120 / targetfps)
+    ENDIF 
+  ENDIF 
+  IF playerX - (120 / targetfps) > gWidth / 2 THEN 
+    IF centerX > (gWidth / 2) - (gWidth / 20) THEN 
+      centerX = centerX - (240 / targetfps)
+      centerX2 = centerX2 - (120 / targetfps)
+    ENDIF 
+  ENDIF 
+  IF playerY + (120 / targetfps) < gHeight / 2 THEN 
+    IF centerY < (gHeight / 2) + (gHeight / 20) THEN 
+      centerY = centerY + (240 / targetfps)
+      centerY2 = centerY2 + (120 / targetfps)
+    ENDIF 
+  ENDIF 
+  IF playerY - (120 / targetfps) > gHeight / 2 THEN 
+    IF centerY > (gHeight / 2) - (gHeight / 20) THEN 
+      centerY = centerY - (240 / targetfps)
+      centerY2 = centerY2 - (120 / targetfps)
+    ENDIF 
+  ENDIF 
+  IF warp = FALSE THEN 
+    IF powerupDist < radius THEN 
+      powerupFade = powerupFade + (6 / targetfps)
+      rgbColour (FN lerp(oldPowerupColour(0), powerupColour(0), powerupFade), FN lerp(oldPowerupColour(1), powerupColour(1), powerupFade), FN lerp(oldPowerupColour(2), powerupColour(2), powerupFade))
+      IF powerupFade = 1 THEN 
+        oldPowerupColour(0) = powerupColour(0)
+        oldPowerupColour(1) = powerupColour(1)
+        oldPowerupColour(2) = powerupColour(2)
+        powerupColour(0) = RND (200) + 55
+        powerupColour(1) = RND (200) + 55
+        powerupColour(2) = RND (200) + 55
+        powerupFade = 0
+      ENDIF 
+      cX = FN lerp(centerX2, centerX, powerupDist / radius)
+      cY = FN lerp(centerY2, centerY, powerupDist / radius)
+      powerupX = (((powerupDist * COS (powerupAngle - (gap / 2))) + cX) + ((powerupDist * COS (powerupAngle + (gap / 2))) + cX)) / 2
+      powerupY = (((powerupDist * SIN (powerupAngle - (gap / 2))) + cY) + ((powerupDist * SIN (powerupAngle + (gap / 2))) + cY)) / 2
+      u = powerupDist / 8
+      CIRCLE (powerupX, powerupY, u, TRUE)
+    ENDIF 
+    COLOUR = Aqua
+    FOR i = 0 TO maxLasers CYCLE 
+      IF laserDist(i) > radius2 THEN 
+        cX = FN lerp(centerX2, centerX, laserDist(i) / radius)
+        cY = FN lerp(centerY2, centerY, laserDist(i) / radius)
+        IF particleLaser = FALSE THEN 
+          laserX = ((laserDist(i) * 0.9) * COS (laserAngle(i))) + cX
+          laserY = ((laserDist(i) * 0.9) * SIN (laserAngle(i))) + cY
+          laserX2 = ((laserDist(i)) * COS (laserAngle(i) + 5)) + cX
+          laserY2 = ((laserDist(i)) * SIN (laserAngle(i) + 5)) + cY
+          laserX3 = ((laserDist(i) * 1.1) * COS (laserAngle(i))) + cX
+          laserY3 = ((laserDist(i) * 1.1) * SIN (laserAngle(i))) + cY
+          laserX4 = ((laserDist(i)) * COS (laserAngle(i) - 5)) + cX
+          laserY4 = ((laserDist(i)) * SIN (laserAngle(i) - 5)) + cY
+        ELSE 
+          IF laserSide(i) = 0 THEN 
+            laserX = ((laserDist(i) * 0.95) * COS (laserAngle(i) - (gap / 4))) + cX
+            laserY = ((laserDist(i) * 0.95) * SIN (laserAngle(i) - (gap / 4))) + cY
+            laserX2 = ((laserDist(i)) * COS (laserAngle(i) + 1 - (gap / 4))) + cX
+            laserY2 = ((laserDist(i)) * SIN (laserAngle(i) + 1 - (gap / 4))) + cY
+            laserX3 = ((laserDist(i) * 1.05) * COS (laserAngle(i) - (gap / 4))) + cX
+            laserY3 = ((laserDist(i) * 1.05) * SIN (laserAngle(i) - (gap / 4))) + cY
+            laserX4 = ((laserDist(i)) * COS (laserAngle(i) - 1 - (gap / 4))) + cX
+            laserY4 = ((laserDist(i)) * SIN (laserAngle(i) - 1 - (gap / 4))) + cY
+          ELSE 
+            laserX = ((laserDist(i) * 0.95) * COS (laserAngle(i) + (gap / 4))) + cX
+            laserY = ((laserDist(i) * 0.95) * SIN (laserAngle(i) + (gap / 4))) + cY
+            laserX2 = ((laserDist(i)) * COS (laserAngle(i) + 1 + (gap / 4))) + cX
+            laserY2 = ((laserDist(i)) * SIN (laserAngle(i) + 1 + (gap / 4))) + cY
+            laserX3 = ((laserDist(i) * 1.05) * COS (laserAngle(i) + (gap / 4))) + cX
+            laserY3 = ((laserDist(i) * 1.05) * SIN (laserAngle(i) + (gap / 4))) + cY
+            laserX4 = ((laserDist(i)) * COS (laserAngle(i) - 1 + (gap / 4))) + cX
+            laserY4 = ((laserDist(i)) * SIN (laserAngle(i) - 1 + (gap / 4))) + cY
+          ENDIF 
+        ENDIF 
+        polyStart 
+        polyPlot (laserX, laserY)
+        polyPlot (laserX2, laserY2)
+        polyPlot (laserX3, laserY3)
+        polyPlot (laserX4, laserY4)
+        polyEnd 
+        laserDist(i) = laserDist(i) - (radius / (targetfps * 1.5))
+        FOR e = 0 TO maxEnemies CYCLE 
+          IF laserDist(i) < radius THEN 
+            IF laserDist(i) < enemyDist(e) THEN 
+              IF laserAngle(i) < enemyAngle(e) + (gap / 2) THEN 
+                IF laserAngle(i) > enemyAngle(e) - (gap / 2) THEN 
+                  IF enemyDist(e) = radius THEN 
+                  ELSE 
+                    IF enemyDist(e) > radius THEN 
+                      IF playerTurn < 0 AND enemyAngle(e) > playerAngle THEN 
+                      ELSE 
+                        IF playerTurn > 0 AND enemyAngle(e) < playerAngle THEN 
+                        ELSE 
+                          CONTINUE 
+                        ENDIF 
+                      ENDIF 
+                    ENDIF 
+                    laserDist(i) = radius2
+                    numLasers = numLasers - 1
+                    IF particleLaser = TRUE THEN 
+                      enemyHealth(e) = enemyHealth(e) - 50
+                    ELSE 
+                      enemyHealth(e) = enemyHealth(e) - 100
+                    ENDIF 
+                    IF enemyHealth(e) < 1 THEN 
+                      FOR w = 0 TO maxdebris CYCLE 
+                        IF debris(w) = 0 THEN 
+                          debris(w) = targetfps * 0.6
+                          cX = FN lerp(centerX2, centerX, enemyDist(e) / radius)
+                          cY = FN lerp(centerY2, centerY, enemyDist(e) / radius)
+                          enemyX = (((enemyDist(e) * COS (enemyAngle(e) - (gap / 2))) + cX) + ((enemyDist(e) * COS (enemyAngle(e) + (gap / 2))) + cX)) / 2
+                          enemyY = (((enemyDist(e) * SIN (enemyAngle(e) - (gap / 2))) + cY) + ((enemyDist(e) * SIN (enemyAngle(e) + (gap / 2))) + cY)) / 2
+                          debrisX(w) = enemyX
+                          debrisY(w) = enemyY
+                          debrisSpeedX(w) = RND (gHeight / (targetfps * 1.5)) - gHeight / (targetfps * 3)
+                          debrisSpeedY(w) = RND (gHeight / (targetfps * 1.5)) - gHeight / (targetfps * 3)
+                        ENDIF 
+                      REPEAT 
+                      enemyDist(e) = radius
+                      numEnemies = numEnemies - 1
+                      progress = progress + 1
+                      oldScore = score
+                      scoreTime = 1
+                      score = score + (10 * scoreBoost)
+                      IF enemyDist(e) < (radius - radius2) / 3 THEN 
+                        playSample (sfx(1), 0, 0)
+                      ELSE 
+                        IF enemyDist(e) > ((radius - radius2) / 3) * 2 THEN 
+                          playSample (sfx(0), 0, 0)
+                        ELSE 
+                          playSample (sfx(2), 0, 0)
+                        ENDIF 
+                      ENDIF 
+                      IF enemyDelay > targetfps / 3 THEN 
+                        enemyDelay = enemyDelay - 240 / targetfps
+                      ENDIF 
+                      BREAK 
+                    ENDIF 
+                  ENDIF 
+                ENDIF 
+              ENDIF 
+            ENDIF 
+          ENDIF 
+        REPEAT 
+      ENDIF 
+      IF laserDist(i) < radius2 THEN 
+        laserDist(i) = radius2
+        numLasers = numLasers - 1
+      ENDIF 
+    REPEAT 
+    COLOUR = Red
+    IF warp = FALSE THEN 
+      FOR i = 0 TO maxEnemies CYCLE 
+        IF enemyDist(i) = radius THEN 
+        ELSE 
+          cX = FN lerp(centerX2, centerX, enemyDist(i) / radius)
+          cY = FN lerp(centerY2, centerY, enemyDist(i) / radius)
+          enemyX = (((enemyDist(i) * COS (enemyAngle(i) - (gap / 2))) + cX) + ((enemyDist(i) * COS (enemyAngle(i) + (gap / 2))) + cX)) / 2
+          enemyY = (((enemyDist(i) * SIN (enemyAngle(i) - (gap / 2))) + cY) + ((enemyDist(i) * SIN (enemyAngle(i) + (gap / 2))) + cY)) / 2
+          c = COS (enemyAngle(i) + 90)
+          s = SIN (enemyAngle(i) + 90)
+          u = enemyDist(i) / 20
+          polyStart 
+          polyPlot ((u * -5 * c) - (u * 1.5 * s) + enemyX, (u * -5 * s) + (u * 1.5 * c) + enemyY)
+          polyPlot (0 - (u * 0.5 * s) + enemyX, (u * 0.5 * c) + enemyY)
+          polyPlot ((u * 5 * c) - (u * 1.5 * s) + enemyX, (u * 5 * s) + (u * 1.5 * c) + enemyY)
+          polyPlot (u * c + enemyX, u * s + enemyY)
+          polyPlot ((u * 5 * c) - (u * -1.5 * s) + enemyX, (u * 5 * s) + (u * -1.5 * c) + enemyY)
+          polyPlot (0 - (u * -0.5 * s) + enemyX, (u * -0.5 * c) + enemyY)
+          polyPlot ((u * -5 * c) - (u * -1.5 * s) + enemyX, (u * -5 * s) + (u * -1.5 * c) + enemyY)
+          polyPlot ((u * -1 * c) + enemyX, (u * -1 * s) + enemyY)
+          polyEnd 
+        ENDIF 
+        IF enemyDist(i) < radius THEN 
+          enemyDist(i) = enemyDist(i) + (radius / (targetfps * 3))
+        ENDIF 
+        IF enemyDist(i) > radius THEN 
+          IF enemyAngle(i) > playerAngle - (gap / 4) THEN 
+            IF enemyAngle(i) < playerAngle + (gap / 4) THEN 
+              u = gHeight / 160
+              lx = gWidth - ((u * 16) * lives)
+              ly = gHeight - (u * 8)
+              FOR w = 0 TO maxdebris / 2 CYCLE 
+                IF debris(w) = 0 THEN 
+                  debris(w) = targetfps * 0.6
+                  debrisX(w) = lx
+                  debrisY(w) = ly
+                  debrisSpeedX(w) = RND (gHeight / (targetfps * 1.5)) - gHeight / (targetfps * 3)
+                  debrisSpeedY(w) = RND (gHeight / (targetfps * 1.5)) - gHeight / (targetfps * 3)
+                ENDIF 
+              REPEAT 
+              FOR w = 0 TO maxdebris CYCLE 
+                IF debris(w) = 0 THEN 
+                  debris(w) = targetfps * 0.6
+                  debrisX(w) = playerX
+                  debrisY(w) = playerY
+                  debrisSpeedX(w) = RND (gHeight / (targetfps * 1.5)) - gHeight / (targetfps * 3)
+                  debrisSpeedY(w) = RND (gHeight / (targetfps * 1.5)) - gHeight / (targetfps * 3)
+                ENDIF 
+              REPEAT 
+              destroyed = TRUE
+              IF lives < 1 THEN 
+                stopMusic 
+                playSample (sfx(5), 3, 0)
+                printAt (tWidth / 2 - 5, tHeight / 2 - 1)
+                PRINT "Game Over!"
+                printAt (tWidth / 2 - 5, tHeight / 2 + 1)
+                PRINT "Score: ";  
+                PRINT score
+                printAt (tWidth / 2 - 5, tHeight / 2 + 3)
+                IF score > highscore THEN 
+                  PRINT "NEW HIGH SCORE!"
+                  rewind (highscores)
+                  print# (highscores), score
+                ELSE 
+                  PRINT "high score: ";  
+                  PRINT highscore
+                ENDIF 
+                UPDATE 
+                WAIT (2)
+                PaperOn 
+                END 
+              ENDIF 
+              lives = lives - 1
+              warp = TRUE
+            ENDIF 
+          ENDIF 
+          IF enemyAngle(i) < playerAngle THEN 
+            enemyAngle(i) = enemyAngle(i) + (60 / targetfps)
+          ELSE 
+            enemyAngle(i) = enemyAngle(i) - (60 / targetfps)
+          ENDIF 
+          IF enemyAngle(i) > 360 THEN 
+            enemyAngle(i) = enemyAngle(i) - 360
+          ENDIF 
+          IF enemyAngle(i) < 0 THEN 
+            enemyAngle(i) = 360 + enemyAngle(i)
+          ENDIF 
+        ENDIF 
+      REPEAT 
+    ENDIF 
+  ENDIF 
+  IF destroyed = FALSE THEN 
+    COLOUR = Yellow
+    c = COS (tmpPlayerAngle + 90 + playerTurn)
+    s = SIN (tmpPlayerAngle + 90 + playerTurn)
+    u = gHeight / 80
+    polyStart 
+    polyPlot ((u * 5 * c) - (u * 5 * s) + playerX, (u * 5 * s) + (u * 5 * c) + playerY)
+    polyPlot ((u * 5 * c) - 0 + playerX, (u * 5 * s) + playerY)
+    polyPlot (0 - (u * -2 * s) + playerX, (u * -2 * c) + playerY)
+    polyPlot ((u * -5 * c) - 0 + playerX, (u * -5 * s) + playerY)
+    polyPlot ((u * -5 * c) - (u * 5 * s) + playerX, (u * -5 * s) + (u * 5 * c) + playerY)
+    polyPlot ((u * -7 * c) - 0 + playerX, (u * -7 * s) + playerY)
+    polyPlot (0 - (u * -4 * s) + playerX, (u * -4 * c) + playerY)
+    polyPlot ((u * 7 * c) - 0 + playerX, (u * 7 * s) + playerY)
+    polyEnd 
+  ENDIF 
+  IF progress = advance THEN 
+    playSample (sfx(7), 4, 0)
+    oldScore = score
+    score = score + (10 * scoreBoost)
+    scoreTime = 1
+    level = level + 1
+    warp = TRUE
+    advance = advance + 1
+    enemyDelay = enemyDelay + 240 / targetfps
+  ENDIF 
+  COLOUR = Red
+  FOR i = 0 TO maxdebris CYCLE 
+    IF debris(i) > 0 THEN 
+      debris(i) = debris(i) - 1
+      debrisX(i) = debrisX(i) + debrisSpeedX(i)
+      debrisY(i) = debrisY(i) + debrisSpeedY(i)
+      CIRCLE (debrisX(i), debrisY(i), debris(i) / 6, TRUE)
+    ENDIF 
+  REPEAT 
+  IF frames MOD (targetfps / 5) = 0 THEN 
+    INK = RND (29) + 1
+  ENDIF 
+  printAt (0, 0)
+  IF scoreTime > 0.1 THEN 
+    scoreTime = scoreTime - 0.1
+  ENDIF 
+  PRINT "Score: ";  INT (FN lerp(score, oldScore, scoreTime))
+  IF frames MOD (targetfps / 5) = 0 THEN 
+    INK = RND (29) + 1
+  ENDIF 
+  IF messageCount > 0 THEN 
+    fontScale (6, 6)
+    printAt (tWidth / 2 - 7, tHeight / 2)
+    PRINT message$
+    IF frames MOD (targetfps / 5) = 0 THEN 
+      INK = RND (29) + 1
+    ENDIF 
+    messageCount = messageCount - 1
+    fontScale (4, 4)
+  ENDIF 
+  printAt (0, 1)
+  PRINT "Level: ";  level
+  UPDATE 
+  frames = frames + 1
+  IF TIME - 1000 > oldTime THEN 
+    IF frames < minfps THEN 
+      yres = yres - ((10 * (minfps - frames)) * (yres / xres))
+      xres = xres - (10 * (minfps - frames))
+      setMode (xres, yres)
+      fontScale (4, 4)
+      centerX = gWidth / 2
+      centerY = gHeight / 2
+      centerX2 = centerX
+      centerY2 = centerY
+      starsCenterX = centerX
+      starsCenterY = centerY
+      oldRadius = radius
+      oldRadius2 = radius2
+      radius = gHeight / 2 - 50
+      radius2 = gHeight / 8
+      powerupDist = (oldRadius / powerupDist) * radius
+      enemyCount = enemyDelay
+      messageCount = 0
+      FOR i = 0 TO maxLasers CYCLE 
+        IF laserDist(i) = oldRadius2 THEN 
+          laserDist(i) = radius2
+        ENDIF 
+      REPEAT 
+      FOR i = 0 TO maxEnemies CYCLE 
+        IF enemyDist(i) = oldRadius THEN 
+          enemyDist(i) = radius
+        ENDIF 
+        IF enemyDist(i) = oldRadius + 1 THEN 
+          enemyDist(i) = radius + 1
+        ENDIF 
+      REPEAT 
+    ENDIF 
+    IF frames > maxfps THEN 
+      IF yres < maxyres THEN 
+        yres = yres + ((10 * (frames - maxfps)) * (yres / xres))
+        IF yres > maxyres THEN 
+          yres = maxyres
+        ENDIF 
+      ENDIF 
+      IF xres < maxxres THEN 
+        xres = xres + (10 * (frames - maxfps))
+        IF xres > maxxres THEN 
+          xres = maxxres
+        ENDIF 
+      ENDIF 
+      IF isMaxResolution = FALSE THEN 
+        setMode (xres, yres)
+        fontScale (4, 4)
+        centerX = gWidth / 2
+        centerY = gHeight / 2
+        centerX2 = centerX
+        centerY2 = centerY
+        starsCenterX = centerX
+        starsCenterY = centerY
+        oldRadius = radius
+        oldRadius2 = radius2
+        radius = gHeight / 2 - 50
+        radius2 = gHeight / 8
+        powerupDist = (oldRadius / powerupDist) * radius
+        enemyCount = enemyDelay
+        messageCount = 0
+        IF powerupDist = oldRadius THEN 
+          powerupDist = radius
+        ENDIF 
+        enemyCount = enemyDelay
+        FOR i = 0 TO maxLasers CYCLE 
+          IF laserDist(i) = oldRadius2 THEN 
+            laserDist(i) = radius2
+          ENDIF 
+        REPEAT 
+        FOR i = 0 TO maxEnemies CYCLE 
+          IF enemyDist(i) = oldRadius THEN 
+            enemyDist(i) = radius
+          ENDIF 
+          IF enemyDist(i) = oldRadius + 1 THEN 
+            enemyDist(i) = radius + 1
+          ENDIF 
+        REPEAT 
+        IF xres = maxxres THEN 
+          IF yres = maxyres THEN 
+            isMaxResolution = TRUE
+            FULLSCREEN = TRUE
+          ELSE 
+            FULLSCREEN = FALSE
+          ENDIF 
+        ELSE 
+          FULLSCREEN = FALSE
+        ENDIF 
+      ENDIF 
+    ENDIF 
+    frames = 0
+    oldTime = TIME
+  ENDIF 
+  totalFrames = totalFrames + 1
+  IF scanKeyboard (scanQ) THEN 
+    printAt (0, 0)
+    fontScale (2, 2)
+    PaperOn 
+    PRINT "Average fps: ";  
+    PRINT INT (totalFrames / (TIME / 1000))
+    BREAK 
+  ENDIF 
+REPEAT 
+END 
+//
+DEF PROC setup
+warp = FALSE
+x = 0
+y = 0
+x2 = 0
+y2 = 0
+oldX = 0
+oldY = 0
+oldX2 = 0
+oldY2 = 0
+angle = 0
+particleLaser = FALSE
+destroyed = FALSE
+powerupAngle = 0
+powerupDist = 0
+progress = 0
+WHILE playerAngle > 360 CYCLE 
+  playerAngle = playerAngle - 360
+REPEAT 
+WHILE playerAngle < 0 CYCLE 
+  playerAngle = 360 + playerAngle
+REPEAT 
+FOR i = 0 TO maxdebris CYCLE 
+  debris(i) = 0
+REPEAT 
+IF oneTimeInit = FALSE THEN 
+  oldPlayerAngle = playerAngle
+  playerAngle = playerAngle - (gap / 2)
+  oldCenterX = centerX
+  oldCenterY = centerY
+ELSE 
+  oldCenterX = gWidth / 2
+  oldCenterY = gHeight / 2
+ENDIF 
+centerX = gWidth / 2
+centerY = gHeight / 2
+centerX2 = centerX
+centerY2 = centerY
+starsCenterX = centerX
+starsCenterY = centerY
+radius = gHeight / 2 - 50
+radius2 = gHeight / 8
+vertices = RND (9) + 4
+gap = 360 / vertices
+IF oneTimeInit = TRUE THEN 
+  playerAngle = gap / 2
+  oneTimeInit = FALSE
+ELSE 
+  playerAngle = gap * INT (playerAngle / gap)
+  playerAngle = playerAngle + (gap / 2)
+ENDIF 
+intro = 0
+intro2 = 0
+playerX = 0
+playerY = 0
+numEnemies = 0
+moveDelay = INT ((1.2 * targetfps) / vertices)
+moveCount = 0
+powerupDist = radius + 1
+numLasers = 0
+FOR i = 0 TO maxLasers CYCLE 
+  laserDist(i) = radius2
+  laserAngle(i) = 0
+REPEAT 
+FOR i = 0 TO maxEnemies CYCLE 
+  enemyDist(i) = radius
+  enemyAngle(i) = 0
+  enemyHealth(i) = 100
+REPEAT 
+WHILE intro < radius CYCLE 
+  CLS2 
+  tmpCenterX = oldCenterX + (intro / radius) * (centerX - oldCenterX)
+  tmpCenterY = oldCenterY + (intro / radius) * (centerY - oldCenterY)
+  oldX = intro * COS (angle - gap)
+  oldX = centerX + oldX
+  oldY = intro * SIN (angle - gap)
+  oldY = centerY + oldY
+  oldX2 = intro2 * COS (angle - gap)
+  oldX2 = centerX + oldX2
+  oldY2 = intro2 * SIN (angle - gap)
+  oldY2 = centerY + oldY2
+  maxStars = gHeight / 5
+  COLOUR = White
+  WHILE starNum < maxStars CYCLE 
+    starX = starsDist(starNum) * COS (stars(starNum))
+    starX = starsCenterX + starX
+    starY = starsDist(starNum) * SIN (stars(starNum))
+    starY = starsCenterY + starY
+    starsDist(starNum) = starsDist(starNum) + starsSpeed(starNum)
+    IF starX < 0 THEN 
+      starsDist(starNum) = 10
+    ENDIF 
+    IF starX > gWidth THEN 
+      starsDist(starNum) = 10
+    ENDIF 
+    IF starY < 0 THEN 
+      starsDist(starNum) = 10
+    ENDIF 
+    IF starY > gHeight THEN 
+      starsDist(starNum) = 10
+    ENDIF 
+    PLOT (starX, starY)
+    starNum = starNum + 1
+  REPEAT 
+  starNum = 0
+  IF lives > 0 THEN 
+    COLOUR = Yellow
+    u = gHeight / 160
+    FOR i = 1 TO lives CYCLE 
+      lx = gWidth - ((u * 16) * i)
+      ly = gHeight - (u * 8)
+      polyStart 
+      polyPlot (u * 5 + lx, u * 5 + ly)
+      polyPlot (u * 5 + lx, 0 + ly)
+      polyPlot (0 + lx, u * -2 + ly)
+      polyPlot (u * -5 + lx, 0 + ly)
+      polyPlot (u * -5 + lx, u * 5 + ly)
+      polyPlot (u * -7 + lx, 0 + ly)
+      polyPlot (0 + lx, u * -4 + ly)
+      polyPlot (u * 7 + lx, 0 + ly)
+      polyEnd 
+    REPEAT 
+  ENDIF 
+  COLOUR = Blue
+  WHILE angle < 360 CYCLE 
+    x = intro * COS (angle)
+    x = centerX + x
+    y = intro * SIN (angle)
+    y = centerY + y
+    x2 = intro2 * COS (angle)
+    x2 = centerX2 + x2
+    y2 = intro2 * SIN (angle)
+    y2 = centerY2 + y2
+    LINE (x, y, x2, y2)
+    LINE (x, y, oldX, oldY)
+    LINE (x2, y2, oldX2, oldY2)
+    oldX = x
+    oldY = y
+    oldX2 = x2
+    oldY2 = y2
+    angle = angle + gap
+  REPEAT 
+  angle = 0
+  intro = intro + (radius / targetfps)
+  intro2 = intro2 + (radius2 / targetfps)
+  tmpPlayerAngle = FN lerp(oldPlayerAngle, playerAngle, intro / radius)
+  COLOUR = Yellow
+  playerX = (((radius * COS (tmpPlayerAngle - (gap / 2))) + tmpCenterX) + ((radius * COS (tmpPlayerAngle + (gap / 2))) + tmpCenterX)) / 2
+  playerY = (((radius * SIN (tmpPlayerAngle - (gap / 2))) + tmpCenterY) + ((radius * SIN (tmpPlayerAngle + (gap / 2))) + tmpCenterY)) / 2
+  c = COS (tmpPlayerAngle + 90 + playerTurn)
+  s = SIN (tmpPlayerAngle + 90 + playerTurn)
+  u = gHeight / 80
+  polyStart 
+  polyPlot ((u * 5 * c) - (u * 5 * s) + playerX, (u * 5 * s) + (u * 5 * c) + playerY)
+  polyPlot ((u * 5 * c) - (0 * s) + playerX, (u * 5 * s) + (0 * c) + playerY)
+  polyPlot ((0 * c) - (u * -2 * s) + playerX, (0 * s) + (u * -2 * c) + playerY)
+  polyPlot ((u * -5 * c) - (0 * s) + playerX, (u * -5 * s) + (0 * c) + playerY)
+  polyPlot ((u * -5 * c) - (u * 5 * s) + playerX, (u * -5 * s) + (u * 5 * c) + playerY)
+  polyPlot ((u * -7 * c) - (0 * s) + playerX, (u * -7 * s) + (0 * c) + playerY)
+  polyPlot ((0 * c) - (u * -4 * s) + playerX, (0 * s) + (u * -4 * c) + playerY)
+  polyPlot ((u * 7 * c) - (0 * s) + playerX, (u * 7 * s) + (0 * c) + playerY)
+  polyEnd 
+  COLOUR = Red
+  FOR i = 0 TO maxdebris CYCLE 
+    IF debris(i) > 0 THEN 
+      debris(i) = debris(i) - 1
+      debrisX(i) = debrisX(i) + debrisSpeedX(i)
+      debrisY(i) = debrisY(i) + debrisSpeedY(i)
+      PLOT (debrisX(i), debrisY(i))
+    ENDIF 
+  REPEAT 
+  IF frames MOD 5 = 0 THEN 
+    INK = RND (29) + 1
+  ENDIF 
+  printAt (0, 0)
+  PRINT "Score: ";  score
+  IF messageCount > 0 THEN 
+    fontScale (6, 6)
+    printAt (tWidth / 2 - 7, tHeight / 2)
+    PRINT message$
+    messageCount = messageCount - 1
+    fontScale (4, 4)
+  ENDIF 
+  printAt (0, 1)
+  PRINT "Level: ";  level
+  UPDATE 
+  frames = frames + 1
+  IF TIME - 1000 > oldTime THEN 
+    IF frames < minfps THEN 
+      yres = yres - ((10 * (minfps - frames)) * (yres / xres))
+      xres = xres - (10 * (minfps - frames))
+      setMode (xres, yres)
+      fontScale (4, 4)
+      centerX = gWidth / 2
+      centerY = gHeight / 2
+      centerX2 = centerX
+      centerY2 = centerY
+      starsCenterX = centerX
+      starsCenterY = centerY
+      oldRadius = radius
+      oldRadius2 = radius2
+      radius = gHeight / 2 - 50
+      radius2 = gHeight / 8
+      FOR i = 0 TO maxLasers CYCLE 
+        IF laserDist(i) = oldRadius2 THEN 
+          laserDist(i) = radius2
+        ENDIF 
+      REPEAT 
+      enemyCount = enemyDelay
+      FOR i = 0 TO maxLasers CYCLE 
+        IF laserDist(i) = oldRadius2 THEN 
+          laserDist(i) = radius2
+        ENDIF 
+      REPEAT 
+      FOR i = 0 TO maxEnemies CYCLE 
+        IF enemyDist(i) = oldRadius THEN 
+          enemyDist(i) = radius
+        ENDIF 
+        IF enemyDist(i) = oldRadius + 1 THEN 
+          enemyDist(i) = radius + 1
+        ENDIF 
+      REPEAT 
+    ENDIF 
+    IF frames > maxfps THEN 
+      IF yres < maxyres THEN 
+        yres = yres + ((10 * (frames - maxfps)) * (yres / xres))
+        IF yres > maxyres THEN 
+          yres = maxyres
+        ENDIF 
+      ENDIF 
+      IF xres < maxxres THEN 
+        xres = xres + (10 * (frames - maxfps))
+        IF xres > maxxres THEN 
+          xres = maxxres
+        ENDIF 
+      ENDIF 
+      IF isMaxResolution = FALSE THEN 
+        setMode (xres, yres)
+        fontScale (4, 4)
+        centerX = gWidth / 2
+        centerY = gHeight / 2
+        centerX2 = centerX
+        centerY2 = centerY
+        starsCenterX = centerX
+        starsCenterY = centerY
+        oldRadius = radius
+        oldRadius2 = radius2
+        radius = gHeight / 2 - 50
+        radius2 = gHeight / 8
+        FOR i = 0 TO maxLasers CYCLE 
+          IF laserDist(i) = oldRadius2 THEN 
+            laserDist(i) = radius2
+          ENDIF 
+        REPEAT 
+        enemyCount = enemyDelay
+        FOR i = 0 TO maxLasers CYCLE 
+          IF laserDist(i) = oldRadius2 THEN 
+            laserDist(i) = radius2
+          ENDIF 
+        REPEAT 
+        FOR i = 0 TO maxEnemies CYCLE 
+          IF enemyDist(i) = oldRadius THEN 
+            enemyDist(i) = radius
+          ENDIF 
+          IF enemyDist(i) = oldRadius + 1 THEN 
+            enemyDist(i) = radius + 1
+          ENDIF 
+        REPEAT 
+        IF xres = maxxres THEN 
+          IF yres = maxyres THEN 
+            isMaxResolution = TRUE
+            FULLSCREEN = TRUE
+          ELSE 
+            FULLSCREEN = FALSE
+          ENDIF 
+        ELSE 
+          FULLSCREEN = FALSE
+        ENDIF 
+      ENDIF 
+    ENDIF 
+    frames = 0
+    oldTime = TIME
+  ENDIF 
+  totalFrames = totalFrames + 1
+REPEAT 
+x = 0
+y = 0
+x2 = 0
+y2 = 0
+oldX = radius * COS (angle - gap)
+oldX = centerX + oldX
+oldY = radius * SIN (angle - gap)
+oldY = centerY + oldY
+oldX2 = radius2 * COS (angle - gap)
+oldX2 = centerX2 + oldX2
+oldY2 = radius2 * SIN (angle - gap)
+oldY2 = centerY2 + oldY2
+CLS2 
+ENDPROC 
+//
+DEF FN lerp(a, b, c)
+result = a + c * (b - a)
+ = result

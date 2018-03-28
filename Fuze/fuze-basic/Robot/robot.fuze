@@ -1,0 +1,302 @@
+// comment robot
+//
+REM remarkable
+//
+PROC setup
+CYCLE 
+  PROC doMouse
+  PROC checkButtons
+  PROC drawButtons
+REPEAT 
+END 
+//
+DEF PROC checkButtons
+mseCol = spriteCollide (mse)
+IF mb = 1 AND mseCol = gripSPup THEN 
+  armGripper (1)
+  gruID = 1
+  PROC drawButtons
+  PROC waitButton
+  armGripper (0)
+  gruID = 0
+ELSE 
+  IF mb = 4 AND mseCol = gripSPup THEN 
+    gruX = mx - 40
+    gruY = my
+  ENDIF 
+ENDIF 
+IF mb = 1 AND mseCol = gripSPdn THEN 
+  armGripper (-1)
+  grdID = 1
+  PROC drawButtons
+  PROC waitButton
+  armGripper (0)
+  grdID = 0
+ELSE 
+  IF mb = 4 AND mseCol = gripSPdn THEN 
+    grdX = mx - 40
+    grdY = my
+  ENDIF 
+ENDIF 
+IF mb = 1 AND mseCol = baseSPup THEN 
+  armBody (1)
+  bsuID = 1
+  PROC drawButtons
+  PROC waitButton
+  armBody (0)
+  bsuID = 0
+ELSE 
+  IF mb = 4 AND mseCol = baseSPup THEN 
+    bsuX = mx - 40
+    bsuY = my
+  ENDIF 
+ENDIF 
+IF mb = 1 AND mseCol = baseSPdn THEN 
+  armBody (-1)
+  bsdID = 1
+  PROC drawButtons
+  PROC waitButton
+  armBody (0)
+  bsdID = 0
+ELSE 
+  IF mb = 4 AND mseCol = baseSPdn THEN 
+    bsdX = mx - 40
+    bsdY = my
+  ENDIF 
+ENDIF 
+IF mb = 1 AND mseCol = shoulderSPup THEN 
+  armShoulder (-1)
+  shuID = 1
+  PROC drawButtons
+  PROC waitButton
+  armShoulder (0)
+  shuID = 0
+ELSE 
+  IF mb = 4 AND mseCol = shoulderSPup THEN 
+    shuX = mx - 40
+    shuY = my
+  ENDIF 
+ENDIF 
+IF mb = 1 AND mseCol = shoulderSPdn THEN 
+  armShoulder (1)
+  shdID = 1
+  PROC drawButtons
+  PROC waitButton
+  armShoulder (0)
+  shdID = 0
+ELSE 
+  IF mb = 4 AND mseCol = shoulderSPdn THEN 
+    shdX = mx - 40
+    shdY = my
+  ENDIF 
+ENDIF 
+IF mb = 1 AND mseCol = elbowSPup THEN 
+  armElbow (1)
+  eluID = 1
+  PROC drawButtons
+  PROC waitButton
+  armElbow (0)
+  eluID = 0
+ELSE 
+  IF mb = 4 AND mseCol = elbowSPup THEN 
+    eluX = mx - 40
+    eluY = my
+  ENDIF 
+ENDIF 
+IF mb = 1 AND mseCol = elbowSPdn THEN 
+  armElbow (-1)
+  eldID = 1
+  PROC drawButtons
+  PROC waitButton
+  armElbow (0)
+  eldID = 0
+ELSE 
+  IF mb = 4 AND mseCol = elbowSPdn THEN 
+    eldX = mx - 40
+    eldY = my
+  ENDIF 
+ENDIF 
+IF mb = 1 AND mseCol = wristSPup THEN 
+  armWrist (1)
+  wruID = 1
+  PROC drawButtons
+  PROC waitButton
+  armWrist (0)
+  wruID = 0
+ELSE 
+  IF mb = 4 AND mseCol = wristSPup THEN 
+    wruX = mx - 40
+    wruY = my
+  ENDIF 
+ENDIF 
+IF mb = 1 AND mseCol = wristSPdn THEN 
+  armWrist (-1)
+  wrdID = 1
+  PROC drawButtons
+  PROC waitButton
+  armWrist (0)
+  wrdID = 0
+ELSE 
+  IF mb = 4 AND mseCol = wristSPdn THEN 
+    wrdX = mx - 40
+    wrdY = my
+  ENDIF 
+ENDIF 
+IF mb = 1 AND mseCol = lightSP THEN 
+  light =  NOT light
+  armLight (light)
+  lgtID =  NOT lgtID
+  PROC drawButtons
+  WAIT (0.1)
+ELSE 
+  IF mb = 4 AND mseCol = lightSP THEN 
+    lgtX = mx - 40
+    lgtY = my
+  ENDIF 
+ENDIF 
+ENDPROC 
+//
+DEF PROC waitButton
+WHILE mb CYCLE 
+  getMouse (xx, yy, mb)
+REPEAT 
+ENDPROC 
+//
+DEF PROC drawButtons
+plotSprite (lightSP, lgtX, lgtY, lgtID)
+plotSprite (gripSPup, gruX, gruY, gruID)
+plotSprite (gripSPdn, grdX, grdY, grdID)
+plotSprite (baseSPup, bsuX, bsuY, bsuID)
+plotSprite (baseSPdn, bsdX, bsdY, bsdID)
+plotSprite (shoulderSPup, shuX, shuY, shuID)
+plotSprite (shoulderSPdn, shdX, shdY, shdID)
+plotSprite (elbowSPup, eluX, eluY, eluID)
+plotSprite (elbowSPdn, eldX, eldY, eldID)
+plotSprite (wristSPup, wruX, wruY, wruID)
+plotSprite (wristSPdn, wrdX, wrdY, wrdID)
+UPDATE 
+ENDPROC 
+//
+DEF PROC doMouse
+getMouse (mx, my, mb)
+IF mb = 1 OR mb = 4 THEN 
+  mseID = 1
+ELSE 
+  mseID = 0
+ENDIF 
+plotSprite (mse, mx, my, mseID)
+ENDPROC 
+//
+DEF PROC setup
+setMode (1280, 720)
+FULLSCREEN = 0
+mouseOff 
+PROC vars
+PROC graphics
+PROC resetArm
+ENDPROC 
+//
+DEF PROC vars
+gw = gWidth
+gwStep = gw / 11
+gwMid = gw / 2
+gh = gHeight
+ghMid = gh / 2
+mseID = 0
+lgtX = 0
+lgtY = ghMid
+lgtID = 0
+light = 0
+gruX = gwStep * 1
+gruY = ghMid
+gruID = 0
+grdX = gwStep * 2
+grdY = ghMid
+grdID = 0
+bsuX = gwStep * 3
+bsuY = ghMid
+bsuID = 0
+bsdX = gwStep * 4
+bsdY = ghMid
+bsdID = 0
+shuX = gwStep * 5
+shuY = ghMid
+shuID = 0
+shdX = gwStep * 6
+shdY = ghMid
+shdID = 0
+eluX = gwStep * 7
+eluY = ghMid
+eluID = 0
+eldX = gwStep * 8
+eldY = ghMid
+eldID = 0
+wruX = gwStep * 9
+wruY = ghMid
+wruID = 0
+wrdX = gwStep * 10
+wrdY = ghMid
+wrdID = 0
+ENDPROC 
+//
+DEF PROC graphics
+display = loadImage ("robot.png")
+plotImage (display, 0, 0)
+gripSPup = newSprite (2)
+loadSprite ("butROT1off_PUR.png", gripSPup, 0)
+loadSprite ("butROT1on_PUR.png", gripSPup, 1)
+setSpriteTrans (gripSPup, 255, 0, 255)
+gripSPdn = newSprite (2)
+loadSprite ("butROT2off_PUR.png", gripSPdn, 0)
+loadSprite ("butROT2on_PUR.png", gripSPdn, 1)
+setSpriteTrans (gripSPdn, 255, 0, 255)
+baseSPup = newSprite (2)
+loadSprite ("butROT1off_YEL.png", baseSPup, 0)
+loadSprite ("butROT1on_YEL.png", baseSPup, 1)
+setSpriteTrans (baseSPup, 255, 0, 255)
+baseSPdn = newSprite (2)
+loadSprite ("butROT2off_YEL.png", baseSPdn, 0)
+loadSprite ("butROT2on_YEL.png", baseSPdn, 1)
+setSpriteTrans (baseSPdn, 255, 0, 255)
+shoulderSPup = newSprite (2)
+loadSprite ("butLEFTOff_RED.png", shoulderSPup, 0)
+loadSprite ("butLEFTOn_RED.png", shoulderSPup, 1)
+setSpriteTrans (shoulderSPup, 255, 0, 255)
+shoulderSPdn = newSprite (2)
+loadSprite ("butRIGHTOff_RED.png", shoulderSPdn, 0)
+loadSprite ("butRIGHTOn_RED.png", shoulderSPdn, 1)
+setSpriteTrans (shoulderSPdn, 255, 0, 255)
+elbowSPup = newSprite (2)
+loadSprite ("butUPoff_BLU.png", elbowSPup, 0)
+loadSprite ("butUPon_BLU.png", elbowSPup, 1)
+setSpriteTrans (elbowSPup, 255, 0, 255)
+elbowSPdn = newSprite (2)
+loadSprite ("butDOWNoff_BLU.png", elbowSPdn, 0)
+loadSprite ("butDOWNon_BLU.png", elbowSPdn, 1)
+setSpriteTrans (elbowSPdn, 255, 0, 255)
+wristSPup = newSprite (2)
+loadSprite ("butUPoff_GRE.png", wristSPup, 0)
+loadSprite ("butUPon_GRE.png", wristSPup, 1)
+setSpriteTrans (wristSPup, 255, 0, 255)
+wristSPdn = newSprite (2)
+loadSprite ("butDOWNoff_GRE.png", wristSPdn, 0)
+loadSprite ("butDOWNon_GRE.png", wristSPdn, 1)
+setSpriteTrans (wristSPdn, 255, 0, 255)
+lightSP = newSprite (2)
+loadSprite ("butLIGHToff_GRE.png", lightSP, 0)
+loadSprite ("butLIGHTon_GRE.png", lightSP, 1)
+setSpriteTrans (lightSP, 255, 0, 255)
+mse = newSprite (2)
+loadSprite ("hand1.png", mse, 0)
+loadSprite ("hand2.png", mse, 1)
+setSpriteTrans (mse, 255, 0, 255)
+ENDPROC 
+//
+DEF PROC resetArm
+armShoulder (0)
+armBody (0)
+armElbow (0)
+armWrist (0)
+armGripper (0)
+armLight (0)
+ENDPROC 

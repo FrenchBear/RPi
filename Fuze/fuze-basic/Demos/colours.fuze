@@ -1,0 +1,45 @@
+REM Colour test program
+//
+DIM c$(29)
+CLS 
+fontSize (1)
+FOR i = 0 TO 29 CYCLE 
+  READ c$(i)
+REPEAT 
+//
+CLS 
+//
+PRINT "Colour test program"
+PRINT "==================="
+//
+FOR bg = 0 TO 29 CYCLE 
+  FOR i = 0 TO 1 CYCLE 
+    PAPER = 0
+    INK = bg
+    PRINT c$(bg);  
+    FOR fg = 0 TO 29 CYCLE 
+      PROC testcolour(fg, bg)
+    REPEAT 
+    hTab = 0
+    vTab = vTab + 1
+  REPEAT 
+REPEAT 
+INK = White
+PAPER = Black
+PRINT 
+END 
+//
+// Procedure to print some text in the colours supplied
+//
+DEF PROC testcolour(f, b)
+INK = f
+PAPER = b
+PRINT c$(f);  
+ENDPROC 
+//
+DATA " Black  ", " Dark Grey ", " Grey ", " Silver ", " Light Grey "
+DATA " White ", " Maroon ", " Red ", " Purple ", " Raspberry ", " Pink "
+DATA " Light Pink ", " Dark Green ", " Green ", " Bright green ", " Olive "
+DATA " Lime ", " Light green ", " Navy ", " Blue ", " Teal ", " Cyan "
+DATA " Aqua ", " Light blue ", " Brown ", " Light brown ", " Orange "
+DATA " Gold ", " Yellow ", " Light yellow "

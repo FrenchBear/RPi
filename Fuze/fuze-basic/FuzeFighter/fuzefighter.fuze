@@ -1,0 +1,472 @@
+setMode (800, 400)
+main = loadmusic( "miss.mp3" )
+intro = loadmusic( "robottrack.mp3" )
+start = loadsample( "goeStart.wav" )
+thud = loadsample( "thud1.wav" )
+words = newsprite( 2 )
+loadsprite( "ready.png", words, 0 )
+loadsprite( "fight.png", words, 1 )
+redNinja = newSprite (16)
+loadSprite ("red_ninja-death.png", redNinja, 0)
+loadSprite ("red_ninja-kick1.png", redNinja, 1)
+loadSprite ("red_ninja-kick2.png", redNinja, 2)
+loadSprite ("red_ninja-kick3.png", redNinja, 3)
+loadSprite ("red_ninja-run1.png", redNinja, 4)
+loadSprite ("red_ninja-run2.png", redNinja, 5)
+loadSprite ("red_ninja-run3.png", redNinja, 6)
+loadSprite ("red_ninja-run4.png", redNinja, 7)
+loadSprite ("red_ninja-run5.png", redNinja, 8)
+loadSprite ("red_ninja-run6.png", redNinja, 9)
+loadSprite ("red_ninja-sword1.png", redNinja, 10)
+loadSprite ("red_ninja-sword2.png", redNinja, 11)
+loadSprite ("red_ninja-sword3.png", redNinja, 12)
+loadSprite ("red_ninja-sword4.png", redNinja, 13)
+loadSprite ("red_ninja-sword5.png", redNinja, 14)
+loadSprite ("red_ninja-sword6.png", redNinja, 15)
+blueNinja = newSprite (16)
+loadSprite ("blue_ninja-death.png", blueNinja, 0)
+loadSprite ("blue_ninja-kick1.png", blueNinja, 1)
+loadSprite ("blue_ninja-kick2.png", blueNinja, 2)
+loadSprite ("blue_ninja-kick3.png", blueNinja, 3)
+loadSprite ("blue_ninja-run1.png", blueNinja, 4)
+loadSprite ("blue_ninja-run2.png", blueNinja, 5)
+loadSprite ("blue_ninja-run3.png", blueNinja, 6)
+loadSprite ("blue_ninja-run4.png", blueNinja, 7)
+loadSprite ("blue_ninja-run5.png", blueNinja, 8)
+loadSprite ("blue_ninja-run6.png", blueNinja, 9)
+loadSprite ("blue_ninja-punch1.png", blueNinja, 10)
+loadSprite ("blue_ninja-punch2.png", blueNinja, 11)
+loadSprite ("blue_ninja-punch3.png", blueNinja, 12)
+loadSprite ("blue_ninja-punch4.png", blueNinja, 13)
+loadSprite ("blue_ninja-punch5.png", blueNinja, 14)
+loadSprite ("blue_ninja-punch6.png", blueNinja, 15)
+redNinjaState = 11
+redNinjaX = 0
+redNinjaY = 50
+redNinjaDir$ = "right"
+redNinjaJump = 0
+redNinjaAtk = 0
+redNinjaHp = 100
+blueNinjaState = 11
+blueNinjaX = 736
+blueNinjaY = 50
+blueNinjaDir$ = "left"
+blueNinjaJump = 0
+blueNinjaAtk = 0
+blueNinjaHp = 100
+setSpriteTrans (redNinja, 255, 0, 255)
+setSpriteTrans (blueNinja, 255, 0, 255)
+setspritetrans( words, 255, 0, 255 )
+levelName$ = "desert"
+fontscale( 1, 1 )
+playmusic( intro, -1 )
+cls2
+printat( 20, 0 )
+print "______              ______ _       _     _            "  
+printat( 20, 1 )        
+print "|  ___|             |  ___(_)     | |   | |           "
+printat( 20, 2 )
+print "| |_ _   _ _______  | |_   _  __ _| |__ | |_ ___ _ __ "
+printat( 20, 3 )
+print "|  _| | | |_  / _ \ |  _| | |/ _` | '_ \| __/ _ \ '__|"
+printat( 20, 4 )
+print "| | | |_| |/ /  __/ | |   | | (_| | | | | ||  __/ |   "
+printat( 20, 5 )
+print "\_|  \__,_/___\___| \_|   |_|\__, |_| |_|\__\___|_|   "
+printat( 20, 6 )
+print "                              __/ |                   "
+printat( 20, 7 )
+print "                             |___/                    "
+fontscale( 2, 2 )	
+
+cycle
+k=scankeyboard( scanreturn ) 
+update
+repeat until k = false
+
+
+cycle
+	if levelName$ = "desert" then
+		printat( 10, 6 )
+		print "desert                swamp "
+		printat( 10, 7 )
+		print "  /\                        "
+		printat( 10, 8 )
+		print " /  \                       "
+		printat( 10, 9 )
+		print "|_  _|                      "
+		printat( 10, 10 )
+		print "  ||                        "
+		printat( 10, 11 )
+		print "  ||                        "
+		printat( 10, 12 )
+		print "  ||                        "
+	endif
+	if levelName$ = "swamp" then
+		printat( 10, 6 )
+		print "desert                swamp "
+		printat( 10, 7 )
+		print "                        /\  "
+		printat( 10, 8 )
+		print "                       /  \ "
+		printat( 10, 9 )
+		print "                      |_  _|"
+		printat( 10, 10 )
+		print "                        ||  "
+		printat( 10, 11 )
+		print "                        ||  "
+		printat( 10, 12 )
+		print "                        ||  "
+	endif
+	if scankeyboard( scan1 ) then
+		levelName$ = "desert"
+	endif
+	if scankeyboard( scan2 ) then
+		levelName$ = "swamp"
+	endif
+	if scankeyboard( scanreturn ) then
+		break
+	endif
+repeat
+IF levelName$ = "swamp" THEN 
+	bg = loadimage( "swamp.png" )
+else
+	bg = loadimage( "desert.png" )
+ENDIF 
+plotimage( bg, 0, 0 )
+plotsprite( words, 200, 100, 0 )
+update
+wait( 2 )
+plotsprite( words, 200, 100, 1 )
+update
+playsample( start, 1, 0 )
+wait( 1 )
+hidesprite( words )
+stopmusic
+playmusic( main, -1 )
+CYCLE 
+  IF scanKeyboard (scanD) THEN 
+    redNinjaDir$ = "right"
+    IF redNinjaY = 50 THEN 
+      redNinjaX = redNinjaX + 20
+      IF redNinjaState < 4 THEN 
+        redNinjaState = 4
+      ELSE 
+        IF redNinjaState > 8 THEN 
+          redNinjaState = 4
+        ELSE 
+          redNinjaState = redNinjaState + 1
+        ENDIF 
+      ENDIF 
+    ENDIF 
+  ELSE 
+    IF scanKeyboard (scanA) THEN 
+      redNinjaDir$ = "left"
+      IF redNinjaY = 50 THEN 
+        redNinjaX = redNinjaX - 20
+        IF redNinjaState < 4 THEN 
+          redNinjaState = 4
+        ELSE 
+          IF redNinjaState > 8 THEN 
+            redNinjaState = 4
+          ELSE 
+            redNinjaState = redNinjaState + 1
+          ENDIF 
+        ENDIF 
+      ENDIF 
+    ELSE 
+      redNinjaState = 11
+    ENDIF 
+  ENDIF 
+  //
+  IF scanKeyboard (scanW) THEN 
+    IF redNinjaY = 50 THEN 
+      redNinjaJump = 10
+    ENDIF 
+  ENDIF 
+  //
+  if redNinjaAtk > 0 then
+  	if redNinjaAtk < 6 then
+  		redNinjaAtk = redNinjaAtk + 1
+  	else
+  		redNinjaAtk = 0
+  	endif
+  endif
+  
+  IF scanKeyboard (scanS) THEN 
+  	if redNinjaAtk = 0 then
+    	IF redNinjaY > 60 THEN 
+      	redNinjaAtk = -1
+    	else
+    		redNinjaAtk = 1
+    	ENDIF 
+    endif
+  ENDIF 
+  
+  IF scanKeyboard (scanl) THEN 
+    blueNinjaDir$ = "right"
+    IF blueNinjaY = 50 THEN 
+      blueNinjaX = blueNinjaX + 20
+      IF blueNinjaState < 4 THEN 
+        blueNinjaState = 4
+      ELSE 
+        IF blueNinjaState > 8 THEN 
+          blueNinjaState = 4
+        ELSE 
+          blueNinjaState = blueNinjaState + 1
+        ENDIF 
+      ENDIF 
+    ENDIF 
+  ELSE 
+    IF scanKeyboard (scanj) THEN 
+      blueNinjaDir$ = "left"
+      IF blueNinjaY = 50 THEN 
+        blueNinjaX = blueNinjaX - 20
+        IF blueNinjaState < 4 THEN 
+          blueNinjaState = 4
+        ELSE 
+          IF blueNinjaState > 8 THEN 
+            blueNinjaState = 4
+          ELSE 
+            blueNinjaState = blueNinjaState + 1
+          ENDIF 
+        ENDIF 
+      ENDIF 
+    ELSE 
+      blueNinjaState = 11
+    ENDIF 
+  ENDIF 
+  //
+  IF scanKeyboard (scani) THEN 
+    IF blueNinjaY = 50 THEN 
+      blueNinjaJump = 10
+    ENDIF 
+  ENDIF 
+  //
+  if blueNinjaAtk > 0 then
+  	if blueNinjaAtk < 6 then
+  		blueNinjaAtk = blueNinjaAtk + 1
+  	else
+  		blueNinjaAtk = 0
+  	endif
+  endif
+  
+  IF scanKeyboard (scank) THEN 
+    if blueNinjaAtk = 0 then
+    	IF blueNinjaY > 60 THEN 
+      	blueNinjaAtk = -1
+    	else
+    		blueNinjaAtk = 1
+    	ENDIF 
+    endif
+  ENDIF 
+  //
+  IF redNinjaDir$ = "right" THEN 
+    setSpriteFlip (redNinja, 0)
+    IF redNinjaY > 50 THEN 
+      redNinjaX = redNinjaX + 10
+    ENDIF 
+  ENDIF 
+  //
+  IF redNinjaDir$ = "left" THEN 
+    setSpriteFlip (redNinja, 1)
+    IF redNinjaY > 50 THEN 
+      redNinjaX = redNinjaX - 10
+    ENDIF 
+  ENDIF 
+  
+  IF blueNinjaDir$ = "right" THEN 
+    setSpriteFlip (blueNinja, 0)
+    IF blueNinjaY > 50 THEN 
+      blueNinjaX = blueNinjaX + 10
+    ENDIF 
+  ENDIF 
+  //
+  IF blueNinjaDir$ = "left" THEN 
+    setSpriteFlip (blueNinja, 1)
+    IF blueNinjaY > 50 THEN 
+      blueNinjaX = blueNinjaX - 10
+    ENDIF 
+  ENDIF 
+  //
+  IF redNinjaY > 50 THEN 
+    IF redNinjaAtk = 0 THEN 
+      redNinjaState = 4
+    ELSE 
+      redNinjaState = 3
+      redNinjaAtk = redNinjaAtk - 1
+    ENDIF
+  else
+  	if redNinjaAtk > 0 then
+  		redNinjaState = redNinjaAtk + 9
+  	endif 
+  ENDIF 
+  //
+  IF blueNinjaY > 50 THEN 
+    IF blueNinjaAtk = 0 THEN 
+      blueNinjaState = 4
+    ELSE 
+      blueNinjaState = 3
+      blueNinjaAtk = blueNinjaAtk - 1
+    ENDIF
+  else
+  	if blueNinjaAtk > 0 then
+  		blueNinjaState = blueNinjaAtk + 9
+  	endif 
+  ENDIF 
+  
+  if redNinjaY = 200 then
+  	redNinjaJump = 0
+  	redNinjaY = 190
+  endif
+  
+  IF redNinjaJump = 0 THEN 
+    IF redNinjaY > 50 THEN 
+      IF redNinjaY < 200 THEN 
+        redNinjaY = redNinjaY - 10
+      ENDIF 
+    ENDIF 
+  ENDIF
+  
+  IF redNinjaJump > 0 THEN 
+    redNinjaY = redNinjaY + redNinjaJump
+  ENDIF  
+  
+  if blueNinjaY = 200 then
+  	blueNinjaJump = 0
+  	blueNinjaY = 190
+  endif
+  
+  IF blueNinjaJump = 0 THEN 
+    IF blueNinjaY > 50 THEN 
+      IF blueNinjaY < 200 THEN 
+        blueNinjaY = blueNinjaY - 10
+      ENDIF 
+    ENDIF 
+  ENDIF
+  
+  IF blueNinjaJump > 0 THEN 
+    blueNinjaY = blueNinjaY + blueNinjaJump
+  ENDIF  
+  //
+  IF redNinjaAtk = -5 THEN 
+    redNinjaAtk = 0
+  ENDIF 
+  
+  IF blueNinjaAtk = -5 THEN 
+    blueNinjaAtk = 0
+  ENDIF 
+  
+  if redNinjaAtk = 1 then
+  	if spritecollide( redNinja ) = blueNinja then
+  		playsample( thud, 2, 0 )
+  		blueNinjaHp = blueNinjaHp - 10
+  	endif
+  endif
+  
+  if blueNinjaAtk = 1 then
+  	if spritecollide( blueNinja ) = redNinja then
+  		playsample( thud, 2, 0 )
+  		redNinjaHp = redNinjaHp - 10
+  	endif
+  endif
+  
+  colour = grey
+  rect( 5, 375, 110, 20, true )
+  rect( 685, 375, 110, 20, true )
+  colour = red
+  rect( 10, 380, redNinjaHp, 10, true )
+  rect( 790 - blueNinjaHp, 380, blueNinjaHp, 10, true )
+  
+  IF redNinjaX < 0 THEN 
+    redNinjaX = 0
+  ELSE 
+    IF redNinjaX > 736 THEN 
+      redNinjaX = 736
+    ENDIF 
+  ENDIF 
+  
+  IF blueNinjaX < 0 THEN 
+    blueNinjaX = 0
+  ELSE 
+    IF blueNinjaX > 736 THEN 
+      blueNinjaX = 736
+    ENDIF 
+  ENDIF 
+  
+  if redNinjaHp = 0 then
+  	redNinjaState = 0
+  	printat( 12, 10 )
+  	print "Player Two Wins The Round!"
+  	plotSprite (redNinja, redNinjaX, redNinjaY, redNinjaState)
+  	update
+  	wait( 1 )
+  	cls2
+  	plotimage( bg, 0, 0 )
+  	redNinjaState = 11
+		redNinjaX = 0
+		redNinjaY = 50
+		redNinjaDir$ = "right"
+		redNinjaJump = 0
+		redNinjaAtk = 0
+		redNinjaHp = 100
+		redNinjaSuper = 0
+		blueNinjaState = 11
+		blueNinjaX = 736
+		blueNinjaY = 50
+		blueNinjaDir$ = "left"
+		blueNinjaJump = 0
+		blueNinjaAtk = 0
+		blueNinjaHp = 100
+		blueNinjaSuper = 0
+		plotsprite( words, 200, 100, 0 )
+		update
+		wait( 2 )
+		plotsprite( words, 200, 100, 1 )
+		update
+		playsample( start, 1, 0 )
+		wait( 1 )
+		hidesprite( words )
+  endif
+  
+  if blueNinjaHp = 0 then
+  	blueNinjaState = 0
+  	printat( 12, 10 )
+  	print "Player One Wins The Round!"
+  	plotSprite (blueNinja, blueNinjaX, blueNinjaY, blueNinjaState)
+  	update
+  	playsample( start, 1, 0 )
+  	wait( 1 )
+  	cls2
+  	plotimage( bg, 0, 0 )
+  	redNinjaState = 11
+		redNinjaX = 0
+		redNinjaY = 50
+		redNinjaDir$ = "right"
+		redNinjaJump = 0
+		redNinjaAtk = 0
+		redNinjaHp = 100
+		redNinjaSuper = 0
+		blueNinjaState = 11
+		blueNinjaX = 736
+		blueNinjaY = 50
+		blueNinjaDir$ = "left"
+		blueNinjaJump = 0
+		blueNinjaAtk = 0
+		blueNinjaHp = 100
+		blueNinjaSuper = 0
+		plotsprite( words, 200, 100, 0 )
+		update
+		wait( 2 )
+		plotsprite( words, 200, 100, 1 )
+		update
+		wait( 1 )
+		hidesprite( words )
+  endif
+  
+  plotSprite (redNinja, redNinjaX, redNinjaY, redNinjaState)
+  plotSprite (blueNinja, blueNinjaX, blueNinjaY, blueNinjaState)
+  UPDATE
+  wait( 0.05 )
+REPEAT 
+END 

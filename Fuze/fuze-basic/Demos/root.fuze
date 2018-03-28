@@ -1,0 +1,54 @@
+CLS 
+tX = 0
+fontSize (3)
+//
+printAt (0, 0);  "FUZE Micro Computer T2 edition"
+fontSize (2)
+printAt (0, 2);  "FUZE BASIC V3.3 - 768MB RAM available"
+fontSize (3)
+printAt (0, 3);  "Ready"
+PROC printText("accessing file system", 0, 4, Green, 0)
+PROC printText("...", tEnd, 4, Green, 6)
+PROC printText("access denied root password required", 0, 5, Green, 0)
+PROC printText("enter password", 0, 6, Green, 0)
+PROC printText("?", 0, 7, Green, 0)
+WAIT (0.3)
+PROC printText("* * * *", tEnd, 7, White, 5)
+PROC printText("access granted", 0, 8, Green, 0)
+WAIT (0.3)
+PROC printText(" yay!", tEnd, 8, Red, 0)
+WAIT (0.3)
+PROC printText("load 'FUZEnano_Pitch'", 0, 9, White, 3)
+PROC printText("loading", 0, 10, Red, 1)
+PROC printText(" .....", tEnd, 10, Red, 5)
+PROC printText("Ready_", 0, 11, White, 1)
+WAIT (0.5)
+PROC printText("run", 0, 12, White, 5)
+PROC printText("Are you sure?", 0, 13, Green, 0)
+WAIT (0.3)
+PROC printText(" yes get on with it", tEnd, 13, White, 3)
+PROC printText("now now, don't forget who's in control here", 0, 14, Green, 0)
+WAIT (0.5)
+PROC printText("SUPER USER: ", 0, 15, Yellow, 5)
+//
+PROC printText("RUN", tEnd, 15, White, 5)
+WAIT (0.5)
+PROC printText("that's so unfair...", 0, 16, Green, 0)
+WAIT (0.5)
+PROC printText("running", 0, 17, Red, 0)
+WAIT (0.5)
+PROC printText(" :-(", tEnd, 17, Red, 10)
+//
+WHILE INKEY = -1 CYCLE 
+  UPDATE 
+REPEAT 
+END 
+//
+DEF PROC printText(text$, tX, tY, tCol, tSpeed)
+FOR num = 0 TO LEN (text$) - 1 CYCLE 
+  INK = tCol
+  printAt (tX + num, tY);  MID$ (text$, num, 1)
+  WAIT (tSpeed / 20)
+REPEAT 
+tEnd = num + 1
+ENDPROC 

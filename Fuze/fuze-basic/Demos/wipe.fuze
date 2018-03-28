@@ -1,0 +1,112 @@
+PROC setup
+blockStep = 6
+strength = 12
+speed = 8
+border = 20
+CYCLE 
+  PROC wipe(wipeRight, speed, blockStep, strength, border, RND (255), RND (255), RND (255), RND (16))
+  PROC wipe(wipeUp, speed, blockStep, strength, border, RND (255), RND (255), RND (255), RND (16))
+  PROC wipe(wipeLeft, speed, blockStep, strength, border, RND (255), RND (255), RND (255), RND (16))
+  PROC wipe(wipeDown, speed, blockStep, strength, border, RND (255), RND (255), RND (255), RND (16))
+REPEAT 
+END 
+//
+DEF PROC wipe(dir, speed, blockStep, strength, border, colR, colG, colB, borderCol)
+curve = 0
+bend = 3
+curvestep = 2
+bendstep = .1
+SWITCH (dir)
+  CASE 0 // wipeLeft
+    x1 = gWidth
+    WHILE x1 >  - (strength * speed) CYCLE 
+      curve = curve + curvestep
+      IF curve <  - strength OR curve > strength THEN curvestep =  - curvestep
+      bend = bend + bendstep
+      IF bend < 1 OR bend > 5 THEN bendstep =  - bendstep
+      x1 = x1 - speed
+      FOR y = 0 TO gHeight STEP blockStep CYCLE 
+        cx = curve + (COS (y * bend / 2) * curve)
+        rgbColour (colR, colG, colB)
+        RECT (x1 - cx, y, cx + (strength * speed), blockStep, 1)
+        COLOUR = borderCol
+        RECT (x1 - cx, y, border, blockStep, 1)
+      REPEAT 
+      UPDATE 
+    REPEAT 
+  ENDCASE 
+  CASE 1 // wipeUp
+    x1 = gWidth
+    y1 = 0
+    y2 = y1 - strength * blockStep
+    WHILE y1 < (gHeight + strength * blockStep) CYCLE 
+      curve = curve + curvestep
+      IF curve <  - strength OR curve > strength THEN curvestep =  - curvestep
+      bend = bend + bendstep
+      IF bend < 1 OR bend > 5 THEN bendstep =  - bendstep
+      y1 = y1 + speed
+      y2 = y2 + speed
+      FOR x = 0 TO x1 STEP blockStep CYCLE 
+        cy = curve + (SIN (x * bend / 2) * curve)
+        rgbColour (colR, colG, colB)
+        RECT (x, y2, blockStep, y1 - y2 + cy, 1)
+        COLOUR = borderCol
+        RECT (x, y1 + cy, blockStep, border, 1)
+      REPEAT 
+      UPDATE 
+    REPEAT 
+  ENDCASE 
+  CASE 2 // wipeRight
+    x1 = 0
+    x2 = x1 - strength * blockStep
+    WHILE x1 < (gWidth + strength * blockStep) CYCLE 
+      curve = curve + curvestep
+      IF curve <  - strength OR curve > strength THEN curvestep =  - curvestep
+      bend = bend + bendstep
+      IF bend < 1 OR bend > 5 THEN bendstep =  - bendstep
+      x1 = x1 + speed
+      x2 = x2 + speed
+      FOR y = 0 TO gHeight STEP blockStep CYCLE 
+        cx = curve + (COS (y * bend / 2) * curve)
+        rgbColour (colR, colG, colB)
+        RECT (x2, y, x1 - x2 + cx, blockStep, 1)
+        COLOUR = borderCol
+        RECT (x1 + cx, y, border, blockStep, 1)
+      REPEAT 
+      UPDATE 
+    REPEAT 
+  ENDCASE 
+  CASE 3 // wipeDown
+    x1 = gWidth
+    y1 = gHeight
+    y2 = y1 + strength * blockStep
+    WHILE y1 >  - (strength * blockStep) CYCLE 
+      curve = curve + curvestep
+      IF curve <  - strength OR curve > strength THEN curvestep =  - curvestep
+      bend = bend + bendstep
+      IF bend < 1 OR bend > 5 THEN bendstep =  - bendstep
+      y1 = y1 - speed
+      y2 = y2 - speed
+      FOR x = 0 TO x1 STEP blockStep CYCLE 
+        cy = curve + (SIN (x * bend / 2) * curve)
+        rgbColour (colR, colG, colB)
+        RECT (x, y1 - cy, blockStep, y2 - y1, 1)
+        COLOUR = borderCol
+        RECT (x, y1 - cy, blockStep, border, 1)
+      REPEAT 
+      UPDATE 
+    REPEAT 
+  ENDCASE 
+ENDSWITCH 
+ENDPROC 
+//
+DEF PROC setup
+setMode (1024, 600)
+updateMode = 0
+PAPER = 0
+INK = 15
+wipeLeft = 0
+wipeUp = 1
+wipeRight = 2
+wipeDown = 3
+ENDPROC 

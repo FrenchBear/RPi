@@ -1,0 +1,827 @@
+PROC variables
+PROC sounds
+PROC sprites
+CYCLE 
+  PROC attractScreen
+  PROC screen
+  PROC initialiseSprites
+  setMouse (0, 0)
+  px = lmax
+  WHILE  NOT gameOver CYCLE 
+    PROC silvaders
+    PROC silvFireDraw
+    PROC player
+    PROC silvFireDraw
+    PROC playerFire
+    PROC silvaders
+    PROC silvFire
+    PROC silvFireDraw
+    PROC ufo
+    PROC updateInfo
+    UPDATE 
+    IF invCount < 0 THEN 
+      PROC resetPlayerMissile
+      PROC clearEverything
+      PROC nextLevel
+    ENDIF 
+    IF  NOT extra AND score >= 1500 THEN PROC extraLife
+  REPEAT 
+  PROC gameover
+  PROC resetVariables
+REPEAT 
+END 
+//
+DEF PROC player
+getMouse (px, y, pb)
+IF px <= slmax THEN px = slmax
+IF px >= srmax THEN px = srmax
+IF  NOT but THEN 
+  IF pb THEN but = 1
+  IF pb AND  NOT shot THEN 
+    fire = 1
+    shot = 1
+    pfx = px + 18
+    playSample (sndShipFire, 0, 0)
+  ELSE 
+    IF pb AND shot THEN fire = 0
+  ENDIF 
+ENDIF 
+IF  NOT pb THEN but = 0
+shipCol = spriteCollide (ship)
+IF shipCol > 59 THEN 
+  playSample (sndShipHit, 0, 0)
+  plotSprite (shipCol, -250, 0, 4)
+  PROC loseLife
+  WAIT (0.5)
+ENDIF 
+plotSprite (ship, px, py, 0)
+ENDPROC 
+//
+DEF PROC loseLife
+IF lives >= 0 THEN 
+  FOR i = 0 TO 10 CYCLE 
+    plotSprite (ship, px, py, 1 + boo)
+    UPDATE 
+    WAIT (.03)
+    boo =  NOT boo
+    plotSprite (ship, px, py, 1 + boo)
+    UPDATE 
+    WAIT (.03)
+  REPEAT 
+  lives = lives - 1
+  PROC drawLives
+  PROC clearEverything
+ENDIF 
+IF lives <= 0 THEN gameOver = 1
+setMouse (0, 0)
+px = lmax
+ENDPROC 
+//
+DEF PROC playerFire
+IF shot AND  NOT pMissCount THEN 
+  plotSprite (pMissile, pfx, pfy, 0)
+  pfy = pfy + 8
+  IF pfy >= gh - 64 THEN 
+    pMissx = pfx - 8
+    pMissy = gh - 80
+    pMissID = 0
+    pMissCount = 10
+    points = 0
+    PROC resetPlayerMissile
+  ENDIF 
+ENDIF 
+hit = spriteCollide (pMissile)
+IF hit >= 0 AND hit <= 54 THEN PROC resetPlayerMissile
+IF hit > 60 THEN PROC resetPlayerMissile
+IF hit = 56 THEN 
+  PROC resetPlayerMissile
+  ufoHit = 1
+  usv = 1
+  hit = -1
+ENDIF 
+IF ufoHit THEN 
+  playSample (sndUfoHit, 0, 0)
+  PROC ufoExplode
+ENDIF 
+IF pMissCount > 0 THEN 
+  plotSprite (pMiss, pMissx, pMissy, pMissID)
+  pMissCount = pMissCount - 1
+ENDIF 
+IF pMissCount <= 0 THEN 
+  plotSprite (pMiss, -50, 0, 0)
+ENDIF 
+PFX = pfx
+PFY = pfy + 18
+PC0 = getPixel (PFX, PFY)
+PC1 = getPixel (PFX + 1, PFY)
+PC2 = getPixel (PFX + 2, PFY)
+IF PC0 = BrightGreen OR PC1 = BrightGreen OR PC2 = BrightGreen THEN PROC pMissBase
+ENDPROC 
+//
+DEF PROC resetPlayerMissile
+plotSprite (pMissile, -100, 0, 0)
+plotSprite (pMiss, -185, 0, 0)
+IF hit >= 0 AND hit <= 54 THEN 
+  playSample (sndInvHit, 2, 0)
+  IF hit < 11 THEN points = 30
+  IF hit > 10 AND hit < 33 THEN points = 20
+  IF hit > 32 AND hit < 55 THEN points = 10
+  pMissx = silv(hit, 2) + 4
+  pMissy = silv(hit, 3) + 5
+  pMissID = 1
+  pMissCount = 10
+  score = score + points
+  silv(hit, 4) = 0
+  silv(hit, 5) = 0
+  plotSprite (hit, -200, silv(hit, 3), silv(hit, 1))
+  invSpeed = invSpeed - .3
+  invCount = invCount - 1
+ENDIF 
+IF hit >= 60 THEN 
+  pMissx = pfx - 3
+  pMissy = pfy - 3
+  sFireID = hit - 59
+  pMissID = 0
+  pMissCount = 10
+  IF RND (10) < 4 THEN 
+    sFire(sFireID, 4) = 0
+    sFire(sFireID, 5) = 0
+    plotSprite (sFire(sFireID, 0), -240, 100, 0)
+  ENDIF 
+ENDIF 
+pfy = 64
+shot = 0
+fire = 0
+hit = -1
+ENDPROC 
+//
+DEF PROC silvFireDraw
+boo =  NOT boo
+IF sFire(si, 4) AND sFire(si, 3) >= ground THEN 
+  sFireType = sFire(si, 1) + boo
+  sFire(si, 3) = sFire(si, 3) - 16
+ENDIF 
+IF sFire(si, 4) AND sFire(si, 3) <= ground AND sFire(si, 6) < sFireDelay THEN 
+  sFire(si, 4) = 1
+  sFireType = 4
+  sFire(si, 3) = ground
+  sFire(si, 6) = sFire(si, 6) + 1
+ENDIF 
+IF sFire(si, 6) >= sFireDelay AND sFire(si, 4) THEN 
+  sFire(si, 4) = 0
+  sFire(si, 6) = 0
+  plotSprite (sFire(si, 0), -300, sFire(si, 3), 4)
+ENDIF 
+IF sFire(si, 4) THEN plotSprite (sFire(si, 0), sFire(si, 2), sFire(si, 3), sFireType)
+SF(si, 0) = getPixel (sFire(si, 2), sFire(si, 3))
+SF(si, 1) = getPixel (sFire(si, 2) + 1, sFire(si, 3))
+SF(si, 2) = getPixel (sFire(si, 2) + 2, sFire(si, 3))
+IF  NOT baseHit AND sFire(si, 4) AND SF(si, 0) = BrightGreen OR SF(si, 1) = BrightGreen OR SF(si, 2) = BrightGreen THEN 
+  baseHit = 1
+  PROC sFireBase
+  sFire(si, 2) = -400
+ENDIF 
+si = si + 1
+IF si > 54 THEN si = 0
+ENDPROC 
+//
+DEF PROC silvFire
+FOR sid = 0 TO 10 CYCLE 
+  IF silv(sid + 44, 4) THEN 
+    silv(sid + 44, 5) = 1
+    silv(sid + 33, 5) = 0
+    silv(sid + 22, 5) = 0
+    silv(sid + 11, 5) = 0
+    silv(sid, 5) = 0
+  ELSE 
+    IF silv(sid + 33, 4) THEN 
+      silv(sid + 33, 5) = 1
+      silv(sid + 22, 5) = 0
+      silv(sid + 11, 5) = 0
+      silv(sid, 5) = 0
+    ELSE 
+      IF silv(sid + 22, 4) THEN 
+        silv(sid + 22, 5) = 1
+        silv(sid + 11, 5) = 0
+        silv(sid, 5) = 0
+      ELSE 
+        IF silv(sid + 11, 4) THEN 
+          silv(sid + 11, 5) = 1
+          silv(sid, 5) = 0
+        ELSE 
+          IF silv(sid, 4) THEN 
+            silv(sid, 5) = 1
+          ENDIF 
+        ENDIF 
+      ENDIF 
+    ENDIF 
+  ENDIF 
+REPEAT 
+IF silv(sfc, 5) AND  NOT sFire(sfc, 4) THEN 
+  IF INT (RND (25 - level * 3)) <= 1 THEN 
+    sFire(sfc, 4) = 1
+    sFire(sfc, 2) = silv(sfc, 2) + 16
+    sFire(sfc, 3) = silv(sfc, 3) - 16
+    IF INT (RND (10)) >= 5 THEN sFire(sfc, 1) = 0
+  ELSE 
+    sFire(sfc, 1) = 2
+  ENDIF 
+ENDIF 
+sfc = sfc + 1
+IF sfc > 54 THEN sfc = 0
+ENDPROC 
+//
+DEF PROC silvaders
+invDelay = invDelay + 1
+IF invDelay >= invSpeed THEN 
+  invStep = invStep + 1
+  IF invStep > 3 THEN invStep = 0
+  playSample (sndInv(invStep), 1, 0)
+  FOR i = 0 TO 54 CYCLE 
+    IF silv(i, 4) THEN 
+      oldPos(i) = silv(i, 2)
+      silv(i, 2) = silv(i, 2) + invDir
+      IF silv(i, 2) <= lmax OR silv(i, 2) >= rmax THEN drop = 1
+      plotSprite (silv(i, 0), silv(i, 2), silv(i, 3), invID)
+    ENDIF 
+  REPEAT 
+  IF drop THEN 
+    invDir =  - invDir
+    FOR i = 54 TO 0 STEP -1 CYCLE 
+      IF silv(i, 4) THEN 
+        silv(i, 3) = silv(i, 3) - iydrop
+        silv(i, 2) = oldPos(i)
+        plotSprite (silv(i, 0), silv(i, 2), silv(i, 3), invID)
+        IF silv(i, 3) < 60 THEN gameOver = 1
+      ENDIF 
+    REPEAT 
+    drop = 0
+  ENDIF 
+  invDelay = 0
+  invID =  NOT invID
+ENDIF 
+ENDPROC 
+//
+DEF PROC resetVariables
+gameOver = 0
+px = 0
+py = 40
+ufo = 0
+ufoDir = 0
+ufx = lmax - 44
+ufy = gh - 96
+ufoCount = 0
+usv = 0
+ufoHit = 0
+invnum = 0
+invDir = 4
+invID = 0
+invDelay = 0
+invCount = 54
+ixstep = 44
+ixstart = gw / 2 - (ixstep * 11 / 2)
+ix = ixstart
+iystep = 40
+iydrop = 20
+iy = iymax - level * 20
+drop = 0
+invSpeed = invCount - level * 6
+fire = 0
+shot = 0
+pfx = px + 17
+pfy = 60
+sfc = 0
+sFireID = 0
+si = 0
+scc = 0
+boo = 0
+sFireState = off
+sFireType = 0
+pMissCount = 0
+setMouse (0, 0)
+px = lmax
+ENDPROC 
+//
+DEF PROC sFireBase
+sFire(si, 4) = 0
+sFire(si, 6) = 0
+COLOUR = 0
+plotSprite (sFire(si, 0), -500, sFire(si, 3), 4)
+FOR ns = sFire(si, 2) - 4 TO sFire(si, 2) + 10 STEP 3 CYCLE 
+  FOR nns = sFire(si, 3) - 14 TO sFire(si, 3) + 14 STEP 3 CYCLE 
+    IF RND (10) < 6 THEN 
+      RECT (ns, nns, 3, 3, 1)
+    ENDIF 
+  REPEAT 
+REPEAT 
+SF(si, 0) = 0
+SF(si, 1) = 0
+SF(si, 2) = 0
+baseHit = 0
+ENDPROC 
+//
+DEF PROC pMissBase
+PROC resetPlayerMissile
+COLOUR = 0
+FOR n = PFX - 4 TO PFX + 8 STEP 3 CYCLE 
+  FOR nn = PFY - 8 TO PFY + 14 STEP 3 CYCLE 
+    IF RND (10) < 4 THEN 
+      RECT (n, nn, 3, 3, 1)
+    ENDIF 
+  REPEAT 
+REPEAT 
+ENDPROC 
+//
+DEF PROC nextLevel
+PROC resetVariables
+level = level + 1
+IF level >= 5 THEN level = 5
+iy = iymax - level * 20
+PROC screen
+PROC initialiseSprites
+setMouse (0, 0)
+px = lmax
+ENDPROC 
+//
+DEF PROC updateInfo
+spCheck = 0
+FOR i = 0 TO 54 CYCLE 
+  IF silv(i, 4) THEN spCheck = spCheck + 1
+REPEAT 
+invSpeed = spCheck / (level / 2)
+score$ = STR$ (score)
+sclen = LEN (score$)
+IF score > 9990 THEN score = 0
+IF sclen = 1 THEN score$ = "000" + score$
+IF sclen = 2 THEN score$ = "00" + score$
+IF sclen = 3 THEN score$ = "0" + score$
+IF score > hiScore THEN 
+  hiScore = score
+  hiscore$ = score$
+ENDIF 
+printAt ((tw / 2 / 2) + 2, 2);  score$;  "         ";  hiscore$;  
+ENDPROC 
+//
+DEF PROC drawLives
+rgbColour (0, 0, 0)
+RECT (0, 0, gw, 30, 1)
+COLOUR = BrightGreen
+hvTab (tw / 2 / 2, th)
+PRINT lives;  
+UPDATE 
+IF lives > 0 THEN 
+  FOR lx = 0 TO lives - 1 CYCLE 
+    y = 2
+    x = (slmax + 50) + lx * 50
+    polyStart 
+    polyPlot (x, y)
+    polyPlot (x, y + 10)
+    polyPlot (x + 2, y + 10)
+    polyPlot (x + 2, y + 12)
+    polyPlot (x + 14, y + 12)
+    polyPlot (x + 14, y + 16)
+    polyPlot (x + 17, y + 16)
+    polyPlot (x + 17, y + 18)
+    polyPlot (x + 20, y + 18)
+    polyPlot (x + 20, y + 16)
+    polyPlot (x + 23, y + 16)
+    polyPlot (x + 23, y + 12)
+    polyPlot (x + 34, y + 12)
+    polyPlot (x + 34, y + 10)
+    polyPlot (x + 36, y + 10)
+    polyPlot (x + 36, y)
+    polyPlot (x, y)
+    polyEnd 
+  REPEAT 
+ENDIF 
+ENDPROC 
+//
+DEF PROC extraLife
+extra = 1
+lives = lives + 1
+playSample (sndExtraLife, 2, 0)
+PROC drawLives
+ENDPROC 
+//
+DEF PROC ufoExplode
+IF usv THEN 
+  PROC ufoScoreValue
+  score = score + ufoScore
+ENDIF 
+ufoCount = ufoCount + 1
+IF ufoCount < 10 THEN plotSprite (ufoID, ufx, ufy, 2)
+IF ufoCount >= 10 AND ufoCount < 50 THEN 
+  plotSprite (ufoID, ufx, ufy, ufoExpID)
+ENDIF 
+IF ufoCount >= 50 THEN 
+  ufo = 0
+  plotSprite (ufoID, -100, ufy, ufoExpID)
+  ufoCount = 0
+  ufoHit = 0
+ENDIF 
+ENDPROC 
+//
+DEF PROC ufoScoreValue
+uScore = INT (RND (100))
+IF uScore < 30 THEN 
+  ufoScore = 50
+  ufoExpID = 3
+ENDIF 
+IF uScore >= 30 AND uScore < 60 THEN 
+  ufoScore = 100
+  ufoExpID = 4
+ENDIF 
+IF uScore >= 60 AND uScore < 80 THEN 
+  ufoScore = 150
+  ufoExpID = 5
+ENDIF 
+IF uScore >= 80 THEN 
+  ufoScore = 300
+  ufoExpID = 6
+ENDIF 
+usv = 0
+ENDPROC 
+//
+DEF PROC ufo
+IF  NOT ufo THEN 
+  IF INT (RND (1000)) < 2 THEN 
+    ufo = 1
+    ufoDir = INT (RND (2))
+    IF ufoDir THEN 
+      ufx = lmax - 48
+    ELSE 
+      ufx = rmax + 48
+    ENDIF 
+  ENDIF 
+ENDIF 
+IF  NOT ufoCount THEN 
+  IF ufo AND ufoDir THEN ufx = ufx + 2
+  IF ufo AND  NOT ufoDir THEN ufx = ufx - 2
+  IF ufo THEN 
+    playSample (sndUfo, 3, 0)
+    //
+    plotSprite (ufoID, ufx, ufy, INT (RND (2)))
+  ENDIF 
+  IF ufo AND ufx > rmax + 48 OR ufx < lmax - 48 THEN 
+    plotSprite (ufoID, -100, ufy, 0)
+    ufo = 0
+  ENDIF 
+ENDIF 
+ENDPROC 
+//
+DEF PROC sprites
+FOR i = 0 TO 10 CYCLE 
+  silv(i, 0) = newSprite (2)
+  loadSprite ("block_inv3a.png", silv(i, 0), 0)
+  loadSprite ("block_inv3b.png", silv(i, 0), 1)
+  setSpriteTrans (silv(i, 0), 255, 0, 255)
+REPEAT 
+FOR i = 11 TO 32 CYCLE 
+  silv(i, 0) = newSprite (2)
+  loadSprite ("block_inv2a.png", silv(i, 0), 0)
+  loadSprite ("block_inv2b.png", silv(i, 0), 1)
+  setSpriteTrans (silv(i, 0), 255, 0, 255)
+REPEAT 
+FOR i = 33 TO 54 CYCLE 
+  silv(i, 0) = newSprite (2)
+  loadSprite ("block_inv1a.png", silv(i, 0), 0)
+  loadSprite ("block_inv1b.png", silv(i, 0), 1)
+  setSpriteTrans (silv(i, 0), 255, 0, 255)
+REPEAT 
+pMissile = newSprite (1)
+loadSprite ("block_player_fire.png", pMissile, 0)
+ufoID = newSprite (7)
+loadSprite ("block_ufoa.png", ufoID, 0)
+loadSprite ("block_ufob.png", ufoID, 1)
+loadSprite ("ufoexp.png", ufoID, 2)
+loadSprite ("ufo50.png", ufoID, 3)
+loadSprite ("ufo100.png", ufoID, 4)
+loadSprite ("ufo150.png", ufoID, 5)
+loadSprite ("ufo300.png", ufoID, 6)
+setSpriteTrans (ufoID, 255, 0, 255)
+ship = newSprite (3)
+loadSprite ("block_player.png", ship, 0)
+loadSprite ("shipExpa.png", ship, 1)
+loadSprite ("shipExpb.png", ship, 2)
+setSpriteTrans (ship, 255, 0, 220)
+pMiss = newSprite (2)
+loadSprite ("player_miss_exp.png", pMiss, 0)
+loadSprite ("silv_killb.png", pMiss, 1)
+setSpriteTrans (pMiss, 255, 0, 255)
+FOR sf = 0 TO 54 CYCLE 
+  sFire(sf, 0) = newSprite (5)
+  loadSprite ("silv_fire1a.png", sFire(sf, 0), 0)
+  loadSprite ("silv_fire1b.png", sFire(sf, 0), 1)
+  loadSprite ("silv_fire2a.png", sFire(sf, 0), 2)
+  loadSprite ("silv_fire2b.png", sFire(sf, 0), 3)
+  loadSprite ("silv_exp.png", sFire(sf, 0), 4)
+  setSpriteTrans (sFire(sf, 0), 255, 0, 255)
+  sFire(sf, 4) = 0
+  sFire(sf, 6) = 10
+  sFire(sf, 5) = 0
+REPEAT 
+pacSP = newSprite (4)
+loadSprite ("paca.png", pacSP, 0)
+loadSprite ("pacRight2a.png", pacSP, 1)
+loadSprite ("pacRight3a.png", pacSP, 2)
+loadSprite ("pacRight4a.png", pacSP, 3)
+setSpriteTrans (pacSP, 255, 0, 255)
+logo = newSprite (1)
+loadSprite ("silvLogo3.png", logo, 0)
+setSpriteTrans (logo, 255, 0, 220)
+ENDPROC 
+//
+DEF PROC variables
+setMode (800, 600)
+updateMode = 0
+mouseOff 
+DIM silv(54, 5)
+DIM sFire(54, 6)
+DIM SF(54, 2)
+DIM oldPos(54)
+dead = 0
+gw = gWidth
+gh = gHeight
+gXmid = gw / 2
+gYmid = gh / 2
+lmax = gw / 2 - 310
+rmax = lmax + 570
+slmax = gw / 2 - 288
+srmax = slmax + 520
+txtXmid = tWidth / 2
+txtYmid = tHeight / 2
+txtXmax = tWidth
+txtYmax = tHeight
+px = 0
+py = 40
+ufo = 0
+ufoDir = 0
+ufx = lmax - 44
+ufy = gh - 96
+ufoCount = 0
+usv = 0
+ufoHit = 0
+invnum = 0
+invDir = 4
+invID = 0
+invDelay = 0
+invCount = 54
+ixstep = 44
+ixstart = gw / 2 - (ixstep * 11 / 2)
+ix = ixstart
+iystep = 40
+iydrop = 20
+iymax = 400
+iy = iymax
+drop = 0
+invSpeed = invCount * 2
+fire = 0
+shot = 0
+pfx = px + 17
+pfy = 60
+score = 0
+hiScore = score
+points = 0
+sfc = 0
+tw = tWidth
+th = tHeight
+scr$ = "SCORE <1> "
+score$ = "0000"
+hiscore$ = "0000"
+hiscr$ = "HI-SCORE "
+lives = 3
+extra = 0
+livesmx = 4
+level = 1
+pMissID = 0
+pMissx = 0
+pMissy = 0
+pMissCount = 0
+sfc = 0
+sFireID = 0
+si = 0
+scc = 0
+boo = 0
+sFireDelay = 2
+ground = 40
+gameOver = 0
+falling = 1
+exploding = 2
+off = 3
+sFireState = off
+sFireType = 0
+attract = 1
+sLogoX = 0
+sLogoY = 0
+pacX = 0
+pacy = 0
+play$ = "PLAY"
+silvader$ = "SILVADERS"
+g$ = "GAME OVER"
+baseHit = 0
+but = 0
+setMouse (0, 0)
+px = lmax
+mouseControl = 0
+padControl = 0
+invStep = 0
+ENDPROC 
+//
+DEF PROC clearEverything
+FOR n = 0 TO 54 CYCLE 
+  plotSprite (silv(n, 0), silv(n, 2) - 2000, silv(n, 3), 0)
+  hideSprite (silv(n, 0))
+  plotSprite (silv(n, 0), silv(n, 2) - 2050, silv(n, 3), 0)
+  plotSprite (sFire(n, 0), sFire(n, 2) - 2000, sFire(n, 3), 4)
+  WAIT (0.003)
+  UPDATE 
+  sFire(n, 1) = 0
+  sFire(n, 4) = 0
+  sFire(n, 6) = 0
+REPEAT 
+plotSprite (pMiss, -100, pMissy, 0)
+plotSprite (ship, -100, pfy, 0)
+plotSprite (pMissile, -100, pfy, 0)
+plotSprite (ufoID, -100, ufy, 0)
+setMouse (0, 0)
+px = lmax
+ENDPROC 
+//
+DEF PROC initialiseSprites
+FOR ii = 0 TO 4 CYCLE 
+  IF ii = 0 THEN 
+    offset = 4
+  ELSE 
+    IF ii > 0 AND ii < 3 THEN 
+      offset = 2
+    ELSE 
+      offset = 0
+    ENDIF 
+  ENDIF 
+  FOR i = 0 TO 10 CYCLE 
+    iii = ii * 11 + i
+    silv(iii, 4) = 1
+    silv(iii, 2) = ix + offset
+    silv(iii, 3) = iy
+    IF iii < 43 THEN silv(iii, 5) = 0
+  ELSE 
+    silv(iii, 5) = 1
+  ENDIF 
+  WAIT (0.01)
+  plotSprite (silv(iii, 0), silv(iii, 2), silv(iii, 3), silv(iii, 1))
+  UPDATE 
+  ix = ix + ixstep
+REPEAT 
+iy = iy - iystep
+ix = ixstart
+REPEAT 
+setMouse (0, 0)
+px = lmax
+ENDPROC 
+//
+DEF PROC screen
+COLOUR = BrightGreen
+RECT (gw / 2 - 298, 36, 580, 2, 1)
+by = 90
+bxx = slmax + 40
+FOR base = 0 TO 3 CYCLE 
+  bx = bxx + base * 140
+  polyStart 
+  polyPlot (bx, by)
+  polyPlot (bx, by + 35)
+  polyPlot (bx + 10, by + 45)
+  polyPlot (bx + 50, by + 45)
+  polyPlot (bx + 60, by + 35)
+  polyPlot (bx + 60, by)
+  polyPlot (bx + 50, by)
+  polyPlot (bx + 50, by + 5)
+  polyPlot (bx + 40, by + 15)
+  polyPlot (bx + 20, by + 15)
+  polyPlot (bx + 10, by + 5)
+  polyPlot (bx + 10, by + 0)
+  polyPlot (bx, by)
+  polyEnd 
+  UPDATE 
+  WAIT (0.1)
+REPEAT 
+tx = tw / 2 / 2
+printAt (tw / 2 / 2, 0);  scr$
+printAt (tw / 2, 0);  hiscr$
+UPDATE 
+PROC drawLives
+setMouse (0, 0)
+px = lmax
+ENDPROC 
+//
+DEF PROC gameover
+WAIT (0.5)
+PROC clearEverything
+CLS 
+INK = Red
+hvTab (tWidth / 2 - LEN (g$) / 2, 14)
+PRINT g$
+UPDATE 
+WAIT (1)
+hvTab (tWidth / 2 - LEN (g$) / 2, 14)
+PRINT "         "
+UPDATE 
+fire = 0
+lives = 3
+score = 0
+level = 1
+INK = BrightGreen
+ENDPROC 
+//
+DEF PROC attractScreen
+PROC clearEverything
+INK = BrightGreen
+tx1 = tWidth / 2 - (LEN (play$) / 2)
+FOR t = 0 TO LEN (play$) - 1 CYCLE 
+  hvTab (tx1 + t, txtYmid)
+  PRINT MID$ (play$, t, 1);  
+  UPDATE 
+  //
+  WAIT (.2)
+REPEAT 
+FOR ax = gw TO (gw / 2) + 74 STEP -4 CYCLE 
+  plotSprite (silv(0, 0), ax, gYmid - 18, silv(0, 1))
+  UPDATE 
+REPEAT 
+WAIT (0.2)
+FOR num = 0 TO 5 CYCLE 
+  hvTab ((tx1 + t) + 4, txtYmid - 1)
+  PRINT "!";  
+  hvTab ((tx1 + t) + 6, txtYmid)
+  PRINT "!";  
+  hvTab ((tx1 + t) + 4, txtYmid + 1)
+  PRINT "!";  
+  hvTab ((tx1 + t) + 2, txtYmid)
+  PRINT "!";  
+  WAIT (0.1)
+  UPDATE 
+  hvTab ((tx1 + t) + 4, txtYmid - 1)
+  PRINT " ";  
+  hvTab ((tx1 + t) + 6, txtYmid)
+  PRINT " ";  
+  hvTab ((tx1 + t) + 4, txtYmid + 1)
+  PRINT " ";  
+  hvTab ((tx1 + t) + 2, txtYmid)
+  PRINT " ";  
+  WAIT (0.1)
+  UPDATE 
+REPEAT 
+hvTab (tx1, txtYmid)
+PRINT "    ";  
+UPDATE 
+num = 0
+tag = 1
+count = 0
+FOR pacx = -200 TO gWidth + 20 STEP 6 CYCLE 
+  plotSprite (pacSP, pacx, gYmid - 50, num)
+  plotSprite (silv(0, 0), ax, gYmid - 18, silv(0, 1))
+  ax = ax + 3
+  count = count + 1
+  IF count >= 10 THEN 
+    num = num + tag
+    count = 0
+    IF num = 0 OR num = 3 THEN tag =  - tag
+  ENDIF 
+  UPDATE 
+REPEAT 
+FOR ly = gh TO (gh / 2) - 80 STEP -8 CYCLE 
+  plotSprite (logo, (gw / 2) - 240, ly, 0)
+  UPDATE 
+REPEAT 
+press$ = "CLICK MOUSE TO PLAY"
+pb = 0
+counter = 0
+WHILE  NOT pb AND counter < 200 CYCLE 
+  getMouse (xx, yy, pb)
+  INK = RND (15) + 1
+  hvTab ((tw / 2) - LEN (press$) / 2, 24)
+  PRINT press$
+  UPDATE 
+  counter = counter + 1
+REPEAT 
+hideSprite (logo)
+hideSprite (pacSP)
+INK = BrightGreen
+CLS 
+setMouse (0, 0)
+px = lmax
+ENDPROC 
+//
+DEF PROC sounds
+sndShipFire = loadSample ("1.wav")
+DIM sndInv(3)
+sndInv(0) = loadSample ("4.wav")
+sndInv(1) = loadSample ("5.wav")
+sndInv(2) = loadSample ("6.wav")
+sndInv(3) = loadSample ("7.wav")
+sndInvHit = loadSample ("3.wav")
+sndUfo = loadSample ("0.wav")
+sndUfoHit = loadSample ("8.wav")
+sndShipHit = loadSample ("2.wav")
+sndExtraLife = loadSample ("9.wav")
+ENDPROC 
+//

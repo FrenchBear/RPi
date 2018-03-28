@@ -1,0 +1,48 @@
+// Random SenseHat Rectangles
+CYCLE 
+  FOR demo = 0 TO 50 CYCLE 
+    x1 = INT (RND (5))
+    y1 = INT (RND (5))
+    x2 = INT (7 - RND (x1))
+    y2 = INT (7 - RND (y1))
+    R = RND (255) + 1
+    G = RND (255) + 1
+    B = RND (255) + 1
+    senseRgbColour (R, G, B)
+    senseRect (x1, y1, x2, y2, INT (RND (2)))
+    WAIT (0.1)
+  REPEAT 
+  x1 = 0
+  y1 = 0
+  FOR demo = 0 TO 200 CYCLE 
+    R = RND (255) + 1
+    G = RND (255) + 1
+    B = RND (255) + 1
+    senseRgbColour (R, G, B)
+    senseRect (x1, y1, 7 - x1 * 2, 7 - y1 * 2, 1)
+    WAIT (0.01)
+    x1 = x1 + 1
+    IF x1 > 7 THEN x1 = 0
+    y1 = y1 + 1
+    IF y1 > 7 THEN y1 = 0
+  REPEAT 
+  x1 = 8
+  y1 = 8
+  xd = -1
+  yd = -1
+  R = 255
+  G = 0
+  B = 0
+  FOR demo = 0 TO 200 CYCLE 
+    senseRgbColour (R, G, B)
+    senseRect (x1, y1, 7 - x1 * 2, 7 - y1 * 2, 1)
+    WAIT (0.01)
+    x1 = x1 + xd
+    IF x1 < 0 OR x1 > 7 THEN xd =  - xd
+    y1 = y1 + yd
+    IF y1 < 0 OR y1 > 7 THEN yd =  - yd
+    R = R - 5
+    IF R <= 0 THEN R = 255
+  REPEAT 
+REPEAT 
+END 

@@ -1,0 +1,22 @@
+
+// Draw Circles
+
+CLS
+setmode(640,480)
+CYCLE
+  COLOUR = RND (16)
+  x = RND (GWIDTH)
+  y = RND (GHEIGHT)
+  r = RND (GWIDTH / 4)
+  f = rnd(255)
+hvtab(0,0)
+c$ = ""+str$(x)+" "+str$(y)+" "+str$(r)+" "+str$(f)+"            "
+
+
+
+print c$
+  CIRCLE (x, y, r, f)
+  UPDATE
+  IF INKEY <> -1 THEN BREAK
+REPEAT
+END

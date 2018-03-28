@@ -1,0 +1,44 @@
+// Mandelbrot
+CLS 
+start = TIME
+PROC mandel
+taken = TIME - start
+numFormat (5, 3)
+printAt (0, 0);  "Time taken: ";  taken / 1000
+END 
+//
+DEF PROC mandel
+LOCAL mColour, cCounter
+mColour = 16
+LOCAL lSide, tp
+lSide = -2.0
+tp = 1.25
+LOCAL xSide, ySide
+xSide = 2.5
+ySide = -2.5
+LOCAL xScale, yScale, oMax
+xScale = xSide / gWidth
+yScale = ySide / gHeight
+LOCAL x, y
+LOCAL cx, cy, zx, zy, tempx
+FOR y = 0 TO gHeight / 2 CYCLE 
+  FOR x = 0 TO gWidth - 1 CYCLE 
+    cx = x * xScale + lSide
+    cy = y * yScale + tp
+    zx = 0
+    zy = 0
+    cCounter = 0
+    oMax = 15
+    WHILE (((zx * zx + zy * zy) < oMax) & (cCounter < mColour)) CYCLE 
+      tempx = zx * zx - zy * zy + cx
+      zy = 2 * zx * zy + cy
+      zx = tempx
+      cCounter = cCounter + 1
+    REPEAT 
+    COLOUR = cCounter
+    PLOT (x, y)
+    PLOT (x, gHeight - 1 - y)
+  REPEAT 
+  UPDATE 
+REPEAT 
+ENDPROC 

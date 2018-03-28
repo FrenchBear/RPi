@@ -1,0 +1,29 @@
+//
+// Coloured bars
+//    Running in a sine-wave sort of thing
+//
+CLS 
+RAD 
+thickness = 10
+c = 0
+CYCLE 
+  PROC animation(TIME / 1000)
+  UPDATE 
+  c = c + 0.01
+REPEAT 
+DATA 0.0, 0.2, 0.5, 0.8, 0.7
+DATA -1
+//
+DEF PROC animation(cx)
+LOCAL phase, x, now
+COLOUR = Black
+RECT (0, 0, gWidth, gHeight, 1)
+RESTORE
+CYCLE 
+  COLOUR = COLOUR + 1
+  READ phase
+  IF phase = -1 THEN BREAK 
+  x = gWidth / 2 + SIN (2 * PI * ((cx * 0.02) + phase)) * gWidth / 2
+  RECT (x - thickness / 2, 0, thickness, gHeight, 1)
+REPEAT 
+ENDPROC 

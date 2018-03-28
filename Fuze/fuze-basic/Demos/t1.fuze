@@ -1,0 +1,19 @@
+CLS 
+CLOCK  // Clock angle mode
+COLOUR = Green
+penDown 
+FOR rotate = 1 TO 10 CYCLE 
+  FOR size = 20 TO 120 STEP 20 CYCLE 
+    PROC square(size)
+  REPEAT 
+  right (6)
+REPEAT 
+END 
+DEF PROC square(dist)
+LOCAL i
+FOR i = 1 TO 4 CYCLE 
+  move (dist)
+  right (15)
+  WAIT (0)
+REPEAT 
+ENDPROC 

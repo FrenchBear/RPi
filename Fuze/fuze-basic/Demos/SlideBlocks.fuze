@@ -1,0 +1,226 @@
+setmode(1280,720)
+fullscreen=0
+CLS 
+mouseOn 
+PROC Init
+PROC DrawScreen("Trains.jpg")
+PROC Shuffle(difficulty * 100)
+CYCLE 
+  getMouse (xPos, yPos, button)
+  IF button & 1 THEN 
+    xBlock = FN getxBlock(xPos)
+    yBlock = FN getyBlock(yPos)
+    dir = FN CanMove(xBlock, yBlock)
+    IF dir >= 0 THEN 
+      PROC MoveBlock(xBlock, yBlock, dir, 10)
+      PROC SwapGrid(xBlock, yBlock, dir)
+    ELSE 
+      tone (1, 50, 300, 0.2)
+      WAIT (0.2)
+    ENDIF 
+  ENDIF 
+REPEAT UNTIL FN CheckWin()
+PRINT "Congratulations! You Win"
+END 
+//
+// Initialise variables
+DEF PROC Init
+lastDir = -1
+dirDown = 0
+dirUp = 1
+dirLeft = 2
+dirRight = 3
+xOffset = 300
+yOffset = 60
+imageWidth = 600
+imageHeight = 600
+blocksAcross = 5
+blocksDown = 5
+DIM Grid(blocksAcross, blocksDown, 2)
+INPUT "Enter Difficulty (1-10): ", difficulty
+IF difficulty > 10 THEN 
+  difficulty = 10
+ENDIF 
+IF difficulty < 1 THEN 
+  difficulty = 1
+ENDIF 
+ENDPROC 
+//
+// REM Shuffle the tiles
+DEF PROC Shuffle(times)
+FOR I = 1 TO times CYCLE 
+  X = RND (blocksAcross) + 1
+  Y = RND (blocksDown) + 1
+  dir = FN CanMove(X, Y)
+  IF dir >= 0 THEN 
+    IF  NOT FN ReverseMove(dir, lastDir) THEN 
+      lastDir = dir
+      PROC MoveBlock(X, Y, dir, 50)
+      PROC SwapGrid(X, Y, dir)
+    ENDIF 
+  ENDIF 
+REPEAT 
+ENDPROC 
+//
+// Swap the current tile with the empty one
+DEF PROC SwapGrid(X, Y, dir)
+SWITCH (dir)
+  CASE 0
+    Grid(X, Y - 1, 0) = Grid(X, Y, 0)
+    Grid(X, Y - 1, 1) = Grid(X, Y, 1)
+  ENDCASE 
+  CASE 1
+    Grid(X, Y + 1, 0) = Grid(X, Y, 0)
+    Grid(X, Y + 1, 1) = Grid(X, Y, 1)
+  ENDCASE 
+  CASE 2
+    Grid(X - 1, Y, 0) = Grid(X, Y, 0)
+    Grid(X - 1, Y, 1) = Grid(X, Y, 1)
+  ENDCASE 
+  CASE 3
+    Grid(X + 1, Y, 0) = Grid(X, Y, 0)
+    Grid(X + 1, Y, 1) = Grid(X, Y, 1)
+  ENDCASE 
+ENDSWITCH 
+Grid(X, Y, 0) = -1
+Grid(X, Y, 1) = -1
+ENDPROC 
+//
+// Check if the current tile can move (and return the direction)
+DEF FN CanMove(X, Y)
+LOCAL result
+result = -1
+IF X > 0 THEN 
+  IF Grid(X - 1, Y, 0) = -1 THEN result = dirLeft
+ENDIF 
+IF X < blocksAcross THEN 
+  IF Grid(X + 1, Y, 0) = -1 THEN result = dirRight
+ENDIF 
+IF Y > 0 THEN 
+  IF Grid(X, Y - 1, 0) = -1 THEN result = dirDown
+ENDIF 
+IF Y < blocksDown THEN 
+  IF Grid(X, Y + 1, 0) = -1 THEN result = dirUp
+ENDIF 
+ = result
+//
+// Check if the move reverses the previous one
+DEF FN ReverseMove(dir, lastDir)
+LOCAL result
+result = FALSE
+SWITCH (dir)
+  CASE 0
+    IF lastDir = dirUp THEN result = TRUE
+  ENDCASE 
+  CASE 1
+    IF lastDir = dirDown THEN result = TRUE
+  ENDCASE 
+  CASE 2
+    IF lastDir = dirRight THEN result = TRUE
+  ENDCASE 
+  CASE 3
+    IF lastDir = dirLeft THEN result = TRUE
+  ENDCASE 
+ENDSWITCH 
+ = result
+//
+// Draw the screen
+DEF PROC DrawScreen(imageFile$)
+CLS 
+handle = loadImage (imageFile$)
+plotImage (handle, xOffset, yOffset)
+COLOUR = White
+RECT (xOffset - 2, yOffset - 2, imageWidth + 4, imageHeight + 4, FALSE)
+blockWidth = imageWidth / blocksAcross
+blockHeight = imageHeight / blocksDown
+COLOUR = Black
+FOR xBlock = 1 TO blocksAcross CYCLE 
+  FOR yBlock = 1 TO blocksDown CYCLE 
+    Grid(xBlock, yBlock, 0) = xBlock
+    Grid(xBlock, yBlock, 1) = yBlock
+    xPos = FN getxPos(xBlock)
+    yPos = FN getyPos(yBlock)
+    IF (xBlock = blocksAcross) AND (yBlock = 1) THEN 
+      RECT (xPos, yPos, blockWidth, blockHeight, TRUE)
+      Grid(xBlock, yBlock, 0) = -1
+      Grid(xBlock, yBlock, 1) = -1
+    ELSE 
+      RECT (xPos, yPos, blockWidth, blockHeight, FALSE)
+      RECT (xPos + 1, yPos + 1, blockWidth - 2, blockHeight - 2, FALSE)
+    ENDIF 
+  REPEAT 
+REPEAT 
+ENDPROC 
+//
+// Scroll a block in the specified direction
+DEF PROC MoveBlock(xBlock, yBlock, dir, stepSize)
+LOCAL I
+COLOUR = Black
+SWITCH (dir)
+  CASE 0
+    xPos = FN getxPos(xBlock)
+    yPos = FN getyPos(yBlock - 1)
+    FOR I = 1 TO blockHeight CYCLE 
+      scrollDown (xPos, yPos, blockWidth, blockHeight * 2, 1)
+      IF I MOD stepSize = 0 THEN UPDATE 
+    REPEAT 
+  ENDCASE 
+  CASE 1
+    xPos = FN getxPos(xBlock)
+    yPos = FN getyPos(yBlock)
+    FOR I = 1 TO blockHeight CYCLE 
+      scrollUp (xPos, yPos, blockWidth, blockHeight * 2, 1)
+      IF I MOD stepSize = 0 THEN UPDATE 
+    REPEAT 
+  ENDCASE 
+  CASE 2
+    xPos = FN getxPos(xBlock - 1)
+    yPos = FN getyPos(yBlock)
+    FOR I = 1 TO blockWidth CYCLE 
+      scrollLeft (xPos, yPos, blockWidth * 2, blockHeight - 2, 1)
+      IF I MOD stepSize = 0 THEN UPDATE 
+    REPEAT 
+  ENDCASE 
+  CASE 3
+    xPos = FN getxPos(xBlock)
+    yPos = FN getyPos(yBlock)
+    FOR I = 1 TO blockWidth CYCLE 
+      scrollRight (xPos, yPos, blockWidth * 2, blockHeight - 2, 1)
+      IF I MOD stepSize = 0 THEN UPDATE 
+    REPEAT 
+  ENDCASE 
+ENDSWITCH 
+UPDATE 
+ENDPROC 
+//
+// Return True if picture is correct
+DEF FN CheckWin()
+LOCAL result
+result = TRUE
+FOR xBlock = 1 TO blocksAcross CYCLE 
+  FOR yBlock = 1 TO blocksDown CYCLE 
+    IF Grid(xBlock, yBlock, 0) <> -1 THEN 
+      IF Grid(xBlock, yBlock, 0) <> xBlock THEN result = FALSE
+      IF Grid(xBlock, yBlock, 1) <> yBlock THEN result = FALSE
+    ENDIF 
+  REPEAT 
+REPEAT 
+ = result
+//
+// Get the x cooridinate of the specified tile
+DEF FN getxPos(xBlock)
+ = INT (xOffset + (xBlock - 1) * blockWidth)
+//
+// Get the y coordinate of the specified tile
+DEF FN getyPos(yBlock)
+ = INT (yOffset + (yBlock - 1) * blockHeight)
+//
+// Get the x block at the specified coordinate
+DEF FN getxBlock(xPos)
+ = INT ((xPos - xOffset) / blockWidth) + 1
+//
+// Get the y block at the specified coordinate
+DEF FN getyBlock(yPos)
+ = INT ((yPos - yOffset) / blockHeight) + 1
+//
+//

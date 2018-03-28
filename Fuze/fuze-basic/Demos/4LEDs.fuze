@@ -1,0 +1,22 @@
+// attach 4 LEDs to GPIO pins 0 to 3 and GND
+//
+// Set the pins to digital output
+FOR Pin = 0 TO 3 CYCLE 
+  pinMode (Pin, 1)
+REPEAT 
+//
+// Main loop
+CYCLE 
+  // Turn on each LED in sequence
+  FOR Pin = 0 TO 3 CYCLE 
+    digitalWrite (Pin, 1)
+    WAIT (.1)
+  REPEAT 
+  //
+  // Turn off each LED in sequence
+  FOR Pin = 3 TO 0 STEP -1 CYCLE 
+    digitalWrite (Pin, 0)
+    WAIT (.1)
+  REPEAT 
+  UPDATE 
+REPEAT  // forever

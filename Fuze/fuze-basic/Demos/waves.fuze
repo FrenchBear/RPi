@@ -1,0 +1,88 @@
+PROC setup
+CYCLE 
+  CLS2 
+  PROC sea
+  PROC stars
+  UPDATE 
+REPEAT 
+END 
+//
+DEF PROC stars
+FOR s = 0 TO maxStars CYCLE 
+  rgbColour (stars(s, 2), stars(s, 2), stars(s, 4))
+  PLOT (stars(s, 0), stars(s, 1))
+REPEAT 
+ENDPROC 
+//
+DEF PROC sea
+multiplier = multiplier + multiplierStep
+IF multiplier < 2 OR multiplier > 12 THEN multiplierStep =  - multiplierStep
+//
+FOR w = 0 TO maxWave CYCLE 
+  colourPhase = colourPhase + colourStep
+  IF colourPhase < -5 OR colourPhase > 5 THEN colourStep =  - colourStep
+  //wave(w, 8)=wave(w, 8)+colourPhase
+  wave(w, 9) = wave(w, 9) + colourPhase
+  wave(w, 10) = wave(w, 10) + colourPhase
+  wave(w, 6) = wave(w, 6) + wave(w, 7)
+  wave(w, 1) = wave(w, 1) + wave(w, 5)
+  IF wave(w, 1) <  - wave(w, 12) OR wave(w, 1) > wave(w, 13) THEN wave(w, 5) =  - wave(w, 5)
+  wave(w, 3) = wave(w, 3) + wave(w, 4)
+  IF wave(w, 3) <  - wave(w, 14) OR wave(w, 3) > wave(w, 15) THEN wave(w, 4) =  - wave(w, 4)
+  wave(w, 16) = wave(w, 16) + wave(w, 19)
+  IF wave(w, 16) <  - wave(w, 17) OR wave(w, 16) > wave(w, 17) THEN wave(w, 19) =  - wave(w, 19)
+  gh = gHeight / 2
+  FOR n = wave(w, 17) TO gWidth + wave(w, 18) STEP wave(w, 0) CYCLE 
+    wave(w, 2) = gh - w * w + wave(w, 1) * COS ((n / wave(w, 0) * multiplier))
+    IF n >= wave(w, 17) AND wave(w, 18) <= gWidth THEN 
+      rgbColour (wave(w, 8), wave(w, 9), wave(w, 10))
+      RECT (n, 0, wave(w, 0), wave(w, 2), wave(w, 11))
+    ENDIF 
+  REPEAT 
+REPEAT 
+ENDPROC 
+//
+DEF PROC setup
+setMode (1024, 600)
+updateMode = 0
+PAPER = Navy
+CLS 
+maxWave = 15
+DIM wave(maxWave, 20)
+FOR w = 0 TO maxWave CYCLE 
+  wave(w, 0) = w //thickness
+  wave(w, 1) = w * 2 //hy1
+  wave(w, 2) = 0 //hyy1
+  wave(w, 3) = w * 2 //gh1
+  wave(w, 4) = w / 4 //gh1step
+  wave(w, 5) = w / 4 //hystep1
+  wave(w, 6) = w / 2 //start1
+  wave(w, 7) = w / 4 //start1Step
+  wave(w, 8) = 32 //Red
+  wave(w, 9) = 8 //Green
+  wave(w, 10) = 255 - 255 / (w / 2) //Blue
+  wave(w, 11) = 1 //transparency
+  wave(w, 12) = wave(w, 1) * 1.2 //height Min/max
+  wave(w, 13) = wave(w, 1) * 1.2 //height Min/max
+  wave(w, 14) = RND (10) + 10 //height Min/max
+  wave(w, 15) = RND (10) + 10 //height Min/max
+  wave(w, 16) = w * 3 //X Offset
+  wave(w, 17) =  - w * 3 //X Offset min
+  wave(w, 18) = w * 3 //X Offset max
+  wave(w, 19) = w * 2 //X Offset step
+REPEAT 
+gh = gHeight / 2
+multiplier = 2
+multiplierStep = .02
+colourPhase = 0
+colourStep = .1
+maxStars = 30
+DIM stars(maxStars, 8)
+FOR s = 0 TO maxStars CYCLE 
+  stars(s, 0) = RND (gWidth) // x pos
+  stars(s, 1) = RND (gHeight / 2) + gHeight / 2 // y pos
+  stars(s, 2) = RND (10) + 220 // R Col
+  stars(s, 3) = RND (10) + 220 // G Col
+  stars(s, 4) = RND (10) + 220 // B Col
+REPEAT 
+ENDPROC 

@@ -1,0 +1,977 @@
+// REACTION RACER!
+// by JB
+//
+// This game requires the breadboard (IO Board) to be set up
+// See rr_breadboard.pdf
+//
+race = 1000 // length of race
+setMode (1024, 600)
+PROC setup_vars
+PROC setup_sprites
+PROC setup_pins
+//
+CYCLE 
+  IF GO THEN 
+    IF winner THEN PROC endgame
+    PROC speed
+    PROC anim
+    PROC move_man
+    PROC track
+    PROC player1
+    PROC player2
+    PROC player3
+    PROC checkWin
+  ENDIF 
+  PROC plot_sprites
+  UPDATE 
+  IF  NOT GO THEN PROC start
+  IF beginx >= -800 THEN 
+    beginx = beginx - 40
+    plotSprite (begin, beginx, gHeight / 2, st)
+    //
+  ENDIF 
+REPEAT 
+END 
+//
+DEF PROC checkWin
+IF p1distance <= 0 THEN winner = 1
+IF p2distance <= 0 THEN winner = 2
+IF p3distance <= 0 THEN winner = 3
+IF winner THEN 
+  SWITCH (winner)
+    CASE 1
+      FOR del = 0 TO 10 CYCLE 
+        plotSprite (p1spr, 2, 722, 9)
+        hideSprite (man1)
+        hideSprite (p1icon)
+        UPDATE 
+        WAIT (0.02)
+        plotSprite (p1spr, 2, 722, 10)
+        plotSprite (man1, m1x, m1y, m1_ID)
+        plotSprite (p1icon, p1ix, 4, 0)
+        WAIT (0.02)
+        UPDATE 
+      REPEAT 
+      win$ = "1"
+    ENDCASE 
+    CASE 2
+      FOR del = 0 TO 10 CYCLE 
+        plotSprite (p2spr, 429, 722, 9)
+        hideSprite (man2)
+        hideSprite (p2icon)
+        UPDATE 
+        WAIT (0.02)
+        plotSprite (p2spr, 429, 722, 10)
+        plotSprite (man2, m2x, m2y, m2_ID)
+        plotSprite (p2icon, p2ix, 4, 0)
+        WAIT (0.02)
+        UPDATE 
+      REPEAT 
+      win$ = "2"
+    ENDCASE 
+    CASE 3
+      FOR del = 0 TO 10 CYCLE 
+        plotSprite (p3spr, 856, 722, 9)
+        hideSprite (man3)
+        hideSprite (p3icon)
+        UPDATE 
+        WAIT (0.02)
+        plotSprite (p3spr, 856, 722, 10)
+        plotSprite (man3, m3x, m3y, m3_ID)
+        plotSprite (p3icon, p3ix, 4, 0)
+        WAIT (0.02)
+        UPDATE 
+      REPEAT 
+      win$ = "3"
+    ENDCASE 
+  ENDSWITCH 
+ENDIF 
+ENDIF 
+ENDPROC 
+//
+DEF PROC move_man
+maxx = gWidth / 2
+SWITCH (m1speed)
+  CASE 2, 3, 4
+    m1step = 2
+    m1x = m1x + 1
+  ENDCASE 
+  CASE 5, 6, 7, 8, 9
+    m1step = 4
+    m1x = m1x + 2
+  ENDCASE 
+  CASE 0, 1
+    m1step = 1
+    m1x = m1x - 2
+  ENDCASE 
+ENDSWITCH 
+SWITCH (m2speed)
+  CASE 2, 3, 4
+    m2step = 2
+    m2x = m2x + 1
+  ENDCASE 
+  CASE 5, 6, 7, 8, 9
+    m2step = 4
+    m2x = m2x + 2
+  ENDCASE 
+  CASE 0, 1
+    m2step = 1
+    m2x = m2x - 2
+  ENDCASE 
+ENDSWITCH 
+SWITCH (m3speed)
+  CASE 2, 3, 4
+    m3step = 2
+    m3x = m3x + 1
+  ENDCASE 
+  CASE 5, 6, 7, 8, 9
+    m3step = 4
+    m3x = m3x + 2
+  ENDCASE 
+  CASE 0, 1
+    m3step = 1
+    m3x = m3x - 2
+  ENDCASE 
+ENDSWITCH 
+p1distance = p1distance - m1step
+p2distance = p2distance - m2step
+p3distance = p3distance - m3step
+IF m1x <= m1xx THEN m1x = m1xx
+IF m2x <= m2xx THEN m2x = m2xx
+IF m3x <= m3xx THEN m3x = m3xx
+IF m1x >= maxx THEN m1x = maxx
+IF m2x >= maxx THEN m2x = maxx
+IF m3x >= maxx THEN m3x = maxx
+p1icount = p1distance / p1distmax * 100
+p1ix = p1ixx + p1imax - (p1imax * p1icount / 100)
+p2icount = p2distance / p2distmax * 100
+p2ix = p2ixx + p2imax - (p2imax * p2icount / 100)
+p3icount = p3distance / p3distmax * 100
+p3ix = p3ixx + p3imax - (p3imax * p3icount / 100)
+ENDPROC 
+//
+DEF PROC player1
+p1cheat = 0
+m1react = 0
+IF p1wait = 1 THEN 
+  p1_ID = 6
+  w1counter = w1counter + 1
+  IF digitalRead (1) THEN 
+    p1miss = 1
+    p1cheat = 1
+    p1counter = 0
+    w1counter = 0
+  ENDIF 
+  IF w1counter >= w1cMax AND p1cheat = 0 THEN 
+    p1wait = 0
+    w1counter = 0
+    p1miss = 0
+    p1press = 1
+    p1counter = 0
+    digitalWrite (0, 1)
+    w1cMax = INT (RND (20) + 15 + (40 - (p1imax / 10)))
+  ENDIF 
+ENDIF 
+IF p1press = 1 THEN 
+  p1_ID = 0
+  p1result = 0
+  p1counter = p1counter + 1
+  IF p1counter <= (p1Max * 2) AND p1but <> 1 THEN 
+    IF digitalRead (1) THEN 
+      p1result = p1counter
+      IF p1cheat THEN p1result = 0
+      p1counter = 0
+      digitalWrite (0, 0)
+      SWITCH (p1result)
+        CASE 0
+          p1miss = 1
+          p1press = 0
+          p1but = 1
+          m1react = 0
+        ENDCASE 
+        CASE 2, 3
+          p1press = 0
+          p1_ID = 5
+          m1react = 2
+          p1but = 1
+        ENDCASE 
+        CASE 4, 5, 6, 7, 8
+          p1press = 0
+          p1_ID = 4
+          m1react = 1
+          p1but = 1
+        ENDCASE 
+        CASE 9, 10, 11, 12, 13, 14
+          p1press = 0
+          p1_ID = 3
+          m1react = 0
+          p1but = 1
+        ENDCASE 
+        CASE 15, 16, 17, 18, 19, 20
+          p1press = 0
+          p1_ID = 2
+          m1react = -1
+          p1but = 1
+        ENDCASE 
+      ENDSWITCH 
+      IF  NOT p1miss THEN 
+        m1speed = m1speed + m1react
+        IF m1speed < 0 THEN m1speed = 0
+        IF m1speed > p1Max THEN 
+          m1speed = p1Max
+          p1_ID = 8
+        ENDIF 
+        p1Bar_ID = m1speed
+        m1react = 0
+      ENDIF 
+    ENDIF 
+  ELSE 
+    IF p1counter <= 20 THEN 
+      p1counter = p1counter + 1
+    ELSE 
+      p1press = 0
+      p1miss = 1
+      digitalWrite (0, 0)
+    ENDIF 
+  ENDIF 
+ENDIF 
+IF p1but AND  NOT p1miss THEN 
+  IF p1c2 <= 10 THEN 
+    p1c2 = p1c2 + 1
+  ELSE 
+    p1but = 0
+    p1wait = 1
+    p1miss = 0
+    p1c2 = 0
+  ENDIF 
+ENDIF 
+IF p1miss = 1 THEN 
+  IF m1speed <= 0 THEN 
+    p1_ID = 7
+  ELSE 
+    p1_ID = 1
+  ENDIF 
+  IF p1c3 <= 20 THEN 
+    p1c3 = p1c3 + 1
+  ELSE 
+    p1wait = 1
+    p1miss = 0
+    p1c3 = 0
+    m1react = -2
+  ENDIF 
+  m1speed = m1speed + m1react
+  IF m1speed < 0 THEN m1speed = 0
+  IF m1speed > p1Max THEN m1speed = p1Max
+  p1Bar_ID = m1speed
+  p1cheat = 0
+ENDIF 
+//
+ENDPROC 
+//
+DEF PROC player2
+p2cheat = 0
+m2react = 0
+//
+IF p2wait = 1 THEN 
+  p2_ID = 6
+  w2counter = w2counter + 1
+  IF digitalRead (3) THEN 
+    p2miss = 1
+    p2cheat = 1
+    p2counter = 0
+    w2counter = 0
+  ENDIF 
+  IF w2counter >= w2cMax AND p2cheat = 0 THEN 
+    p2wait = 0
+    w2counter = 0
+    p2miss = 0
+    p2press = 1
+    p2counter = 0
+    digitalWrite (2, 1)
+    w2cMax = INT (RND (20) + 15 + (40 - (p2imax / 10)))
+  ENDIF 
+ENDIF 
+IF p2press = 1 THEN 
+  p2_ID = 0
+  p2result = 0
+  p2counter = p2counter + 1
+  IF p2counter <= (p2Max * 2) AND p2but <> 1 THEN 
+    IF digitalRead (3) THEN 
+      p2result = p2counter
+      IF p2cheat THEN p2result = 0
+      p2counter = 0
+      digitalWrite (2, 0)
+      SWITCH (p2result)
+        CASE 0
+          p2miss = 1
+          p2press = 0
+          p2but = 1
+          m2react = 0
+        ENDCASE 
+        CASE 2, 3
+          p2press = 0
+          p2_ID = 5
+          m2react = 2
+          p2but = 1
+        ENDCASE 
+        CASE 4, 5, 6, 7, 8
+          p2press = 0
+          p2_ID = 4
+          m2react = 1
+          p2but = 1
+        ENDCASE 
+        CASE 9, 10, 11, 12, 13, 14
+          p2press = 0
+          p2_ID = 3
+          m2react = 0
+          p2but = 1
+        ENDCASE 
+        CASE 15, 16, 17, 18, 19, 20
+          p2press = 0
+          p2_ID = 2
+          m2react = -1
+          p2but = 1
+        ENDCASE 
+      ENDSWITCH 
+      IF  NOT p2miss THEN 
+        m2speed = m2speed + m2react
+        IF m2speed < 0 THEN m2speed = 0
+        IF m2speed > p2Max THEN 
+          m2speed = p2Max
+          p2_ID = 8
+        ENDIF 
+        p2Bar_ID = m2speed
+        m2react = 0
+      ENDIF 
+    ENDIF 
+  ELSE 
+    IF p2counter <= 20 THEN 
+      p2counter = p2counter + 1
+    ELSE 
+      p2press = 0
+      p2miss = 1
+      digitalWrite (2, 0)
+    ENDIF 
+  ENDIF 
+ENDIF 
+IF p2but AND  NOT p2miss THEN 
+  IF p2c2 <= 10 THEN 
+    p2c2 = p2c2 + 1
+  ELSE 
+    p2but = 0
+    p2wait = 1
+    p2miss = 0
+    p2c2 = 0
+  ENDIF 
+ENDIF 
+IF p2miss = 1 THEN 
+  IF m2speed <= 0 THEN 
+    p2_ID = 7
+  ELSE 
+    p2_ID = 1
+  ENDIF 
+  IF p2c3 <= 20 THEN 
+    p2c3 = p2c3 + 1
+  ELSE 
+    p2wait = 1
+    p2miss = 0
+    p2c3 = 0
+    m2react = -2
+  ENDIF 
+  m2speed = m2speed + m2react
+  IF m2speed < 0 THEN m2speed = 0
+  IF m2speed > p2Max THEN m2speed = p2Max
+  p2Bar_ID = m2speed
+  p2cheat = 0
+ENDIF 
+ENDPROC 
+//
+DEF PROC player3
+p3cheat = 0
+m3react = 0
+//
+IF p3wait = 1 THEN 
+  p3_ID = 6
+  w3counter = w3counter + 1
+  IF digitalRead (5) THEN 
+    p3miss = 1
+    p3cheat = 1
+    p3counter = 0
+    w3counter = 0
+  ENDIF 
+  IF w3counter >= w3cMax AND p3cheat = 0 THEN 
+    p3wait = 0
+    w3counter = 0
+    p3miss = 0
+    p3press = 1
+    p3counter = 0
+    digitalWrite (4, 1)
+    w3cMax = INT (RND (20) + 15 + (40 - (p3imax / 10)))
+  ENDIF 
+ENDIF 
+IF p3press = 1 THEN 
+  p3_ID = 0
+  p3result = 0
+  p3counter = p3counter + 1
+  IF p3counter <= (p3Max * 2) AND p3but <> 1 THEN 
+    IF digitalRead (5) THEN 
+      p3result = p3counter
+      IF p3cheat THEN p3result = 0
+      p3counter = 0
+      digitalWrite (4, 0)
+      SWITCH (p3result)
+        CASE 0
+          p3miss = 1
+          p3press = 0
+          p3but = 1
+          m3react = 0
+        ENDCASE 
+        CASE 2, 3
+          p3press = 0
+          p3_ID = 5
+          m3react = 2
+          p3but = 1
+        ENDCASE 
+        CASE 4, 5, 6, 7, 8
+          p3press = 0
+          p3_ID = 4
+          m3react = 1
+          p3but = 1
+        ENDCASE 
+        CASE 9, 10, 11, 12, 13, 14
+          p3press = 0
+          p3_ID = 3
+          m3react = 0
+          p3but = 1
+        ENDCASE 
+        CASE 15, 16, 17, 18, 19, 20
+          p3press = 0
+          p3_ID = 2
+          m3react = -1
+          p3but = 1
+        ENDCASE 
+      ENDSWITCH 
+      IF  NOT p3miss THEN 
+        m3speed = m3speed + m3react
+        IF m3speed < 0 THEN m3speed = 0
+        IF m3speed > p3Max THEN 
+          m3speed = p3Max
+          p3_ID = 8
+        ENDIF 
+        p3Bar_ID = m3speed
+        m3react = 0
+      ENDIF 
+    ENDIF 
+  ELSE 
+    IF p3counter <= 20 THEN 
+      p3counter = p3counter + 1
+    ELSE 
+      p3press = 0
+      p3miss = 1
+      digitalWrite (4, 0)
+    ENDIF 
+  ENDIF 
+ENDIF 
+IF p3but AND  NOT p3miss THEN 
+  IF p3c2 <= 10 THEN 
+    p3c2 = p3c2 + 1
+  ELSE 
+    p3but = 0
+    p3wait = 1
+    p3miss = 0
+    p3c2 = 0
+  ENDIF 
+ENDIF 
+IF p3miss = 1 THEN 
+  IF m3speed <= 0 THEN 
+    p3_ID = 7
+  ELSE 
+    p3_ID = 1
+  ENDIF 
+  IF p3c3 <= 20 THEN 
+    p3c3 = p3c3 + 1
+  ELSE 
+    p3wait = 1
+    p3miss = 0
+    p3c3 = 0
+    m3react = -2
+  ENDIF 
+  m3speed = m3speed + m3react
+  IF m3speed < 0 THEN m3speed = 0
+  IF m3speed > p3Max THEN m3speed = p3Max
+  p3Bar_ID = m3speed
+  p3cheat = 0
+ENDIF 
+ENDPROC 
+//
+DEF PROC speed
+m1anim = INT ((m1speed + 1) / 2)
+m1anim = 5 - m1anim
+m2anim = INT ((m2speed + 1) / 2)
+m2anim = 5 - m2anim
+m3anim = INT ((m3speed + 1) / 2)
+m3anim = 5 - m3anim
+ENDPROC 
+//
+DEF PROC plot_sprites
+plotSprite (p1spr, 0, 458, p1_ID)
+plotSprite (p2spr, 344, 458, p2_ID)
+plotSprite (p3spr, 688, 458, p3_ID)
+plotSprite (man1, m1x, m1y, m1_ID)
+plotSprite (man2, m2x, m2y, m2_ID)
+plotSprite (man3, m3x, m3y, m3_ID)
+plotSprite (trackBot, tBx, tBy, 0)
+plotSprite (trackBot2, tB1x, tBy, 0)
+plotSprite (trackBot3, tB2x, tBy, 0)
+plotSprite (trackMid, tMx, tMy, tBy)
+plotSprite (trackMid2, tM1x, tMy, 0)
+plotSprite (trackMid3, tM2x, tMy, 0)
+plotSprite (trackTop, tTx, tTy, 0)
+plotSprite (trackTop2, tT1x, tTy, 0)
+plotSprite (trackTop3, tT2x, tTy, 0)
+plotSprite (grass1, gx1, gy, 0)
+plotSprite (grass2, gx2, gy, 0)
+plotSprite (grass3, gx3, gy, 0)
+plotSprite (p1Bar, 0, 584, p1Bar_ID)
+plotSprite (p2Bar, 344, 584, p2Bar_ID)
+plotSprite (p3Bar, 688, 584, p3Bar_ID)
+plotSprite (p1dist, 0, 0, 0)
+plotSprite (p2dist, 344, 0, 0)
+plotSprite (p3dist, 688, 0, 0)
+plotSprite (p1icon, p1ix, 4, 0)
+plotSprite (p2icon, p2ix, 4, 0)
+plotSprite (p3icon, p3ix, 4, 0)
+ENDPROC 
+//
+DEF PROC track
+tBs = ((5 - m1anim) * 20) + 2
+tBx = tBx - tBs
+tB1x = tB1x - tBs
+tB2x = tB2x - tBs
+IF tBx < -1000 THEN tBx = tBx + 3000
+IF tB1x < -1000 THEN tB1x = tB1x + 3000
+IF tB2x < -1000 THEN tB2x = tB2x + 3000
+tMs = ((5 - m2anim) * 20) + 2
+tMx = tMx - tMs
+tM1x = tM1x - tMs
+tM2x = tM2x - tMs
+IF tMx <= -1000 THEN tMx = tMx + 3000
+IF tM1x <= -1000 THEN tM1x = tM1x + 3000
+IF tM2x <= -1000 THEN tM2x = tM2x + 3000
+tTs = ((5 - m3anim) * 20) + 2
+tTx = tTx - tTs
+tT1x = tT1x - tTs
+tT2x = tT2x - tTs
+IF tTx <= -1000 THEN tTx = tTx + 3000
+IF tT1x <= -1000 THEN tT1x = tT1x + 3000
+IF tT2x <= -1000 THEN tT2x = tT2x + 3000
+gspd = (tBs + tMs + tTs) / 10
+gx1 = gx1 - gspd
+gx2 = gx2 - gspd
+gx3 = gx3 - gspd
+IF gx1 <= -1000 THEN gx1 = gx1 + 3000
+IF gx2 <= -1000 THEN gx2 = gx2 + 3000
+IF gx3 <= -1000 THEN gx3 = gx3 + 3000
+ENDPROC 
+//
+DEF PROC anim
+m1c = m1c + 1
+IF m1c >= m1anim THEN 
+  m1_ID = m1_ID + 1
+  m1c = 0
+ENDIF 
+IF m1_ID > 14 THEN m1_ID = 0
+m2c = m2c + 1
+IF m2c >= m2anim THEN 
+  m2_ID = m2_ID + 1
+  m2c = 0
+ENDIF 
+IF m2_ID > 14 THEN m2_ID = 0
+m3c = m3c + 1
+IF m3c >= m3anim THEN 
+  m3_ID = m3_ID + 1
+  m3c = 0
+ENDIF 
+IF m3_ID > 14 THEN m3_ID = 0
+ENDPROC 
+//
+DEF PROC setup_vars
+m1c = 0
+m2c = 0
+m3c = 0
+m1x = -120
+m1xx = m1x
+m1y = 30
+m2x = -40
+m2xx = m2x
+m2y = 170
+m3x = 60
+m3xx = m3x
+m3y = 280
+m1spd = 0
+m1speed = 0
+m2spd = 0
+m2speed = 0
+m3spd = 0
+m3speed = 0
+m1anim = 4
+m2anim = 4
+m3anim = 4
+mSmax = 40
+gx1 = 0
+gy = 350
+gspd = 1
+gx2 = gx1 + 1000
+gx3 = gx2 + 1000
+GO = 0
+beginx = gWidth / 2
+beginy = 320
+tBx = 0
+tBy = 0
+tBspd = m1spd
+tB1x = tBx + 1000
+tB2x = tB1x + 1000
+tMx = 0
+tMy = 150
+tMspd = m2spd
+tM1x = tMx + 1000
+tM2x = tM1x + 1000
+tTx = 0
+tTy = 260
+tTspd = m3spd
+tT1x = tTx + 1000
+tT2x = tT1x + 1000
+p1_ID = 6
+p2_ID = 6
+p3_ID = 6
+p1wait = 1
+p2wait = 1
+p3wait = 1
+p1miss = 0
+p2miss = 0
+p3miss = 0
+p1bad = 0
+p2bad = 0
+p3bad = 0
+p1ok = 0
+p2ok = 0
+p3ok = 0
+p1good = 0
+p2good = 0
+p3good = 0
+p1perfect = 0
+p2perfect = 0
+p3perfect = 0
+p1press = 0
+p2press = 0
+p3press = 0
+w1counter = 0
+w1cMax = INT (RND (35) + 40)
+w2counter = 0
+w2cMax = INT (RND (35) + 40)
+w3counter = 0
+w3cMax = INT (RND (35) + 40)
+p1counter = 0
+p1Max = 9
+p2counter = 0
+p2Max = 9
+p3counter = 0
+p3Max = 9
+p1miss = 0
+p1but = 0
+p2but = 0
+p3but = 0
+p1c2 = 0
+p1c3 = 0
+p2c2 = 0
+p2c3 = 0
+p3c2 = 0
+p3c3 = 0
+p1Bar_ID = 0
+p2Bar_ID = 0
+p3Bar_ID = 0
+p1result = 0
+p2result = 0
+p3result = 0
+p1cheat = 0
+p2cheat = 0
+p3cheat = 0
+m1_ID = 1
+m2_ID = 4
+m3_ID = 6
+p1distmax = race
+p2distmax = p1distmax
+p3distmax = p1distmax
+p1distance = p1distmax
+p2distance = p1distmax
+p3distance = p1distmax
+p1ix = 6
+p2ix = 350
+p3ix = 694
+p1ixx = 6
+p2ixx = 350
+p3ixx = 694
+p1imax = 310
+p2imax = p1imax
+p3imax = p1imax
+p1icount = 0
+p2icount = 0
+p3icount = 0
+p1win = 0
+p2win = 0
+p3win = 0
+wc = 0
+wc_ID = 0
+winner = 0
+ENDPROC 
+//
+DEF PROC setup_sprites
+grass1 = newSprite (1)
+loadSprite ("grass.png", grass1, 0)
+grass2 = newSprite (1)
+loadSprite ("grass.png", grass2, 0)
+grass3 = newSprite (1)
+loadSprite ("grass.png", grass3, 0)
+trackBot = newSprite (1)
+loadSprite ("trackBot.png", trackBot, 0)
+trackBot2 = newSprite (1)
+loadSprite ("trackBot.png", trackBot2, 0)
+trackBot3 = newSprite (1)
+loadSprite ("trackBot.png", trackBot3, 0)
+trackMid = newSprite (1)
+loadSprite ("trackMid.png", trackMid, 0)
+trackMid2 = newSprite (1)
+loadSprite ("trackMid.png", trackMid2, 0)
+trackMid3 = newSprite (1)
+loadSprite ("trackMid.png", trackMid3, 0)
+trackTop = newSprite (1)
+loadSprite ("trackTop.png", trackTop, 0)
+trackTop2 = newSprite (1)
+loadSprite ("trackTop.png", trackTop2, 0)
+trackTop3 = newSprite (1)
+loadSprite ("trackTop.png", trackTop3, 0)
+//
+p1Bar = newSprite (10)
+p2Bar = newSprite (10)
+p3Bar = newSprite (10)
+setSpriteTrans (p1Bar, 254, 254, 254)
+setSpriteTrans (p2Bar, 254, 254, 254)
+setSpriteTrans (p3Bar, 254, 254, 254)
+//
+//
+FOR num = 0 TO 9 CYCLE 
+  m1$ = "spBar" + STR$ (num) + ".png"
+  loadSprite (m1$, p1Bar, num)
+  loadSprite (m1$, p2Bar, num)
+  loadSprite (m1$, p3Bar, num)
+REPEAT 
+//
+//
+p1spr = newSprite (11)
+loadSprite ("p1press.png", p1spr, 0)
+loadSprite ("p1miss.png", p1spr, 1)
+loadSprite ("p1bad.png", p1spr, 2)
+loadSprite ("p1ok.png", p1spr, 3)
+loadSprite ("p1good.png", p1spr, 4)
+loadSprite ("p1perfect.png", p1spr, 5)
+loadSprite ("p1wait.png", p1spr, 6)
+loadSprite ("p1oh.png", p1spr, 7)
+loadSprite ("p1excellent.png", p1spr, 8)
+loadSprite ("p1win1.png", p1spr, 9)
+loadSprite ("p2win2.png", p1spr, 10)
+p2spr = newSprite (11)
+loadSprite ("p2press.png", p2spr, 0)
+loadSprite ("p2miss.png", p2spr, 1)
+loadSprite ("p2bad.png", p2spr, 2)
+loadSprite ("p2ok.png", p2spr, 3)
+loadSprite ("p2good.png", p2spr, 4)
+loadSprite ("p2perfect.png", p2spr, 5)
+loadSprite ("p2wait.png", p2spr, 6)
+loadSprite ("p2oh.png", p2spr, 7)
+loadSprite ("p2excellent.png", p2spr, 8)
+loadSprite ("p2win1.png", p2spr, 9)
+loadSprite ("p2win2.png", p2spr, 10)
+p3spr = newSprite (11)
+loadSprite ("p3press.png", p3spr, 0)
+loadSprite ("p3miss.png", p3spr, 1)
+loadSprite ("p3bad.png", p3spr, 2)
+loadSprite ("p3ok.png", p3spr, 3)
+loadSprite ("p3good.png", p3spr, 4)
+loadSprite ("p3perfect.png", p3spr, 5)
+loadSprite ("p3wait.png", p3spr, 6)
+loadSprite ("p3oh.png", p3spr, 7)
+loadSprite ("p3excellent.png", p3spr, 8)
+loadSprite ("p3win1.png", p3spr, 9)
+loadSprite ("p3win2.png", p3spr, 10)
+man3 = newSprite (15)
+man2 = newSprite (15)
+man1 = newSprite (15)
+FOR num = 1 TO 15 CYCLE 
+  m1$ = "m1" + STR$ (num) + ".png"
+  m2$ = "m2" + STR$ (num) + ".png"
+  m3$ = "m3" + STR$ (num) + ".png"
+  loadSprite (m3$, man3, num - 1)
+  loadSprite (m2$, man2, num - 1)
+  loadSprite (m1$, man1, num - 1)
+REPEAT 
+setSpriteTrans (man1, 254, 254, 254)
+setSpriteTrans (man2, 254, 254, 254)
+setSpriteTrans (man3, 254, 254, 254)
+//
+p1dist = newSprite (1)
+p2dist = newSprite (1)
+p3dist = newSprite (1)
+loadSprite ("distance.png", p1dist, 0)
+loadSprite ("distance.png", p2dist, 0)
+loadSprite ("distance.png", p3dist, 0)
+p1icon = newSprite (1)
+p2icon = newSprite (1)
+p3icon = newSprite (1)
+//
+loadSprite ("m1icon.png", p1icon, 0)
+loadSprite ("m2icon.png", p2icon, 0)
+loadSprite ("m3icon.png", p3icon, 0)
+setSpriteTrans (p1icon, 254, 254, 254)
+setSpriteTrans (p2icon, 254, 254, 254)
+setSpriteTrans (p3icon, 254, 254, 254)
+//
+begin = newSprite (3)
+loadSprite ("ready.png", begin, 0)
+loadSprite ("steady.png", begin, 1)
+loadSprite ("go.png", begin, 2)
+setSpriteTrans (begin, 254, 254, 254)
+setSpriteOrigin (begin, getSpriteW (begin) / 2, getSpriteH (begin) / 2)
+//
+//
+ENDPROC 
+//
+DEF PROC setup_pins
+pinMode (0, 1)
+pinMode (2, 1)
+pinMode (4, 1)
+pinMode (1, 0)
+pinMode (3, 0)
+pinMode (5, 0)
+FOR p = 0 TO 5 CYCLE 
+  digitalWrite (p, 0)
+REPEAT 
+ENDPROC 
+//
+DEF PROC start
+FOR st = 0 TO 2 CYCLE 
+  plotSprite (begin, beginx, gHeight / 2, st)
+  UPDATE 
+  IF st < 2 THEN WAIT (1) + INT (RND (1) + 1)
+REPEAT 
+GO = 1
+m1react = 0
+m2react = 0
+m3react = 0
+ENDPROC 
+//
+DEF PROC endgame
+hidedelay = .02
+hideSprite (p1spr)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (p2spr)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (p3spr)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (man1)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (man2)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (man3)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (trackBot)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (trackBot2)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (trackBot3)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (trackMid)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (trackMid2)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (trackMid3)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (trackTop)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (trackTop2)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (trackTop3)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (grass1)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (grass2)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (grass3)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (p1Bar)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (p2Bar)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (p3Bar)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (p1dist)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (p2dist)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (p3dist)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (p1icon)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (p2icon)
+WAIT (hidedelay)
+UPDATE 
+hideSprite (p3icon)
+WAIT (hidedelay)
+CLS2 
+UPDATE 
+win$ = "Well done Player " + win$
+FOR num1 = 1 TO 10 CYCLE 
+  FOR num2 = 1 TO 15 CYCLE 
+    INK = num2
+    hvTab ((tWidth - LEN (win$)) / 2, tHeight / 2)
+    PRINT win$
+  REPEAT 
+REPEAT 
+count = 0
+CLS 
+CYCLE 
+  INK = INT (RND (15) + 1)
+  text$ = "Press any button to play again"
+  hvTab ((tWidth - LEN (text$)) / 2, tHeight / 2)
+  PRINT text$
+  count = count + 1
+REPEAT UNTIL digitalRead (1) OR digitalRead (3) OR digitalRead (5) OR count >= 150
+WAIT (.5)
+PROC setup_pins
+PROC setup_vars
+ENDPROC 
+//

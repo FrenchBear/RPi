@@ -1,0 +1,43 @@
+setMode (1280, 800)
+PAPER = 0
+INK = 1
+CLS 
+ship = newSprite (1)
+shot = newSprite (1)
+angle = 0
+shotcount = 100
+DIM shots(shotcount)
+PROC doshot(MOUSEX, MOUSEY, angle)
+CYCLE 
+  FOR a = 0 TO shotcount CYCLE 
+    IF shots(a) > 0 AND SpriteOut (shots(a)) = FALSE THEN 
+      advanceSprite (shots(a), 8)
+    ELSE 
+      angle = getSpriteAngle (shots(a))
+      advanceSprite (shots(a), -8)
+      setSpriteAngle (shots(a), RND (360))
+    ENDIF 
+  REPEAT 
+  UPDATE 
+REPEAT 
+END 
+//
+DEF PROC doshot(x, y, angle)
+FOR a = 0 TO shotcount CYCLE 
+  IF (shots(a) < 1) THEN 
+    shots(a) = newSprite (1)
+    setSpriteTrans (shots(a), 0, 0, 0)
+    IF RND (100) > 50 THEN 
+      loadSprite ("ballGrey.png", shots(a), 0)
+    ELSE 
+      loadSprite ("ballBlue.png", shots(a), 0)
+    ENDIF 
+    setSpriteOrigin (shots(a), getSpriteW (shots(a)) / 2, getSpriteH (shots(a)) / 2)
+  ENDIF 
+  setSpriteSize (shots(a), 40)
+  plotSprite (shots(a), x, y, 0)
+  setSpriteAngle (shots(a), a / shotcount * 360)
+  advanceSprite (shots(a), 10)
+REPEAT 
+ENDPROC 
+//

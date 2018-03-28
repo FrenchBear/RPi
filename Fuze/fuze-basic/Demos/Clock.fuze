@@ -1,0 +1,66 @@
+cls
+CLOCK
+NUMFORMAT(6,2)
+LargeFont = ((gWidth DIV tWidth) = 16)
+Radius = gwidth / 4
+Second = 0
+Minute = 0
+Hour = 0
+PROC DrawDial()
+CYCLE
+  PROC DrawHand(Second, Black, Radius - 5)
+  PROC DrawHand(Minute, Black, Radius - 5)
+  PROC DrawHand(Hour, Black, Radius * 0.8)
+  Now$ = TIME$
+  hvTab (tWidth / 2 - 4, 1)
+  REM PRINT Now$
+  Second = VAL (RIGHT$ (Now$, 2))
+  Minute = VAL (MID$ (Now$, 3, 2)) + Second / 60
+  Hour = ((VAL (LEFT$ (Now$, 2)) MOD 12) + (Minute / 60)) * 5
+  PROC DrawHand(Second, Red, Radius - 5)
+  PROC DrawHand(Minute, White, Radius - 5)
+  PROC DrawHand(Hour, White, Radius * 0.8)
+  CIRCLE (gWidth / 2, gHeight / 2, 5, TRUE)
+  UPDATE
+  WAIT (0.1)
+REPEAT UNTIL INKEY <> -1
+END
+
+DEF PROC DrawHand(Position, handColour, Length)
+COLOUR = handColour
+Xpos = Length * SIN (Position) + gWidth / 2
+Ypos = Length * COS (Position) + gHeight / 2
+LINE (gWidth / 2, gHeight / 2, Xpos, Ypos)
+ENDPROC
+
+DEF PROC DrawDial()
+COLOUR = White
+FOR Angle = 0 TO 60 CYCLE
+  Xpos = Radius * SIN (Angle) + gWidth / 2
+  Ypos = Radius * COS (Angle) + gHeight / 2
+  IF Angle MOD 5 = 0 THEN
+    IF LargeFont THEN
+      TXpos = Xpos / 14 - (gWidth / 200)
+      TYpos = (gHeight - Ypos) / 18 - (gHeight / 400)
+    ELSE
+      TXpos = Xpos / 7 - (gWidth / 100)
+      TYpos = (gHeight - Ypos) / 9 - (gHeight / 200)
+    ENDIF
+    hvTab (TXpos, TYpos)
+    Hour = Angle / 5
+    Hour$ = STR$ (Hour)
+    IF Hour < 7 THEN
+      Hour$ = " " + Hour$
+    ENDIF
+    IF LEN (Hour$) < 2 THEN
+      Hour$ = Hour$ + " "
+    ENDIF
+    PRINT Hour$;
+    CIRCLE (Xpos, Ypos, 5, TRUE)
+  ELSE
+    CIRCLE (Xpos, Ypos, 2, TRUE)
+  ENDIF
+REPEAT
+CIRCLE (gWidth / 2, gHeight / 2, 5, TRUE)
+ENDPROC
+

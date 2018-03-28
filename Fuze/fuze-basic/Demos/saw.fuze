@@ -1,0 +1,20 @@
+//
+// Saw:
+//    Simple turtle graphics
+//
+CLS 
+penDown 
+COLOUR = Red
+FOR i = 1 TO 12 CYCLE 
+  PROC sawtooth
+  right (30)
+REPEAT 
+END 
+//
+DEF PROC sawtooth
+right (45)
+move (65)
+left (135)
+move (40)
+right (90)
+ENDPROC 

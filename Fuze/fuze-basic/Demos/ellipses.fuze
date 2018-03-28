@@ -1,0 +1,17 @@
+//
+// Draw ellipses
+//
+CLS 
+//
+CYCLE 
+  COLOUR = RND (16)
+  cx = RND (gWidth)
+  cy = RND (gHeight)
+  rx = RND (gWidth / 4)
+  ry = RND (gHeight / 4)
+  f = RND (2)
+  ELLIPSE (cx, cy, rx, ry, f)
+  UPDATE 
+  IF INKEY <> -1 THEN BREAK 
+REPEAT 
+END 

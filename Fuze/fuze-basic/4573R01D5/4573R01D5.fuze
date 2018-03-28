@@ -1,0 +1,1155 @@
+PROC setup
+PROC gameVariables
+PROC initialiseSounds
+CYCLE 
+  PROC attractScreen
+  PROC newLevel
+  WHILE pLives > 0 CYCLE 
+    IF volume < 70 THEN volume = volume + .5
+    setMusicVol (volume)
+    frameStart = TIME
+    CLS2 
+    IF  NOT DEAD THEN 
+      PROC playerControls
+      PROC drawPlayerShip
+      PROC drawPlayerBullets
+      PROC enemyShip
+      PROC drawEnemyBullets
+      PROC drawExplosions
+      PROC drawPlayerBullets
+      PROC silvoids
+      PROC collision
+      PROC drawScreen
+    ENDIF 
+    IF DEAD = TRUE THEN 
+      PROC explodePlayer
+      PROC drawExplosions
+      IF playerExplode = FALSE THEN 
+        pLives = pLives - 1
+        PROC initialisePlayer
+      ENDIF 
+    ENDIF 
+    IF silvoids <= 0 AND enemyShipActive = FALSE AND playerExplode = FALSE AND explode = FALSE THEN 
+      WAIT (.5)
+      level = level + 1
+      PROC newLevel
+    ENDIF 
+    UPDATE 
+    frameEnd = TIME
+    timeTaken = frameEnd - frameStart
+    frameRate = timeTaken
+    WAIT (.012 - (timeTaken / 1000))
+  REPEAT 
+  PROC gameOver
+  PROC enterHiScore
+REPEAT 
+END 
+///////////////////////////////////
+DEF PROC initialisePlayer
+LOCAL count, counter
+PROC resetPlayer
+WAIT (.5)
+safe = FALSE
+hyper = FALSE
+WHILE safe = FALSE CYCLE 
+  counter = 0
+  PROC silvoids
+  FOR count = 0 TO maxSilvoids CYCLE 
+    IF silvoid(count, sActive) = TRUE THEN 
+      IF silvoid(count, sDist) < 180 THEN counter = counter + 1
+    ENDIF 
+  REPEAT 
+  IF counter > 0 THEN 
+    safe = FALSE
+  ELSE 
+    safe = TRUE
+  ENDIF 
+REPEAT 
+CLS2 
+PROC drawScreen
+UPDATE 
+ENDPROC 
+///////////////////////////////////
+DEF PROC newExplosion(exX, eyY)
+LOCAL n
+explode = TRUE
+FOR ex = 0 TO maxExplosions CYCLE 
+  IF explosion(ex, expActive) = FALSE THEN 
+    explosion(ex, expActive) = TRUE
+    explosion(ex, expColour) = White
+    explosion(ex, 0) = exX
+    explosion(ex, 1) = eyY
+    FOR n = 4 TO 50 STEP 5 CYCLE 
+      explosion(ex, n + 2) = RND (360) // angle
+      explosion(ex, n + 3) = .1 // radius
+      explosion(ex, n + 4) = RND (10) / 100 // speed
+      explosion(ex, n) = exX + explosion(ex, n + 3) * COS (explosion(ex, n + 2))
+      explosion(ex, n + 1) = eyY + explosion(ex, n + 3) * SIN (explosion(ex, n + 2))
+    REPEAT 
+    BREAK 
+  ENDIF 
+REPEAT 
+ENDPROC 
+///////////////////////////////////
+DEF PROC drawExplosions
+LOCAL n
+FOR ex = 0 TO maxExplosions CYCLE 
+  IF explosion(ex, expActive) = TRUE THEN 
+    explode = TRUE
+    rgbColour (INT (RND (255) + 1), INT (RND (255) + 1), INT (RND (255) + 1))
+    FOR n = 4 TO 50 STEP 5 CYCLE 
+      explosion(ex, n + 3) = explosion(ex, n + 3) + explosion(ex, n + 4)
+      IF explosion(ex, n + 3) >= 3 THEN 
+        explosion(ex, expActive) = FALSE
+        explode = FALSE
+        BREAK 
+      ENDIF 
+      explosion(ex, n) = explosion(ex, n) + explosion(ex, n + 3) * COS (explosion(ex, n + 2))
+      explosion(ex, n + 1) = explosion(ex, n + 1) + explosion(ex, n + 3) * SIN (explosion(ex, n + 2))
+      CIRCLE (explosion(ex, n), explosion(ex, n + 1), 1, 1)
+    REPEAT 
+  ENDIF 
+REPEAT 
+ENDPROC 
+///////////////////////////////////
+DEF PROC resetPlayer
+FOR n = 0 TO maxPlayerBullets CYCLE 
+  pBullet(n, pBactive) = FALSE
+REPEAT 
+FOR n = 0 TO maxEnemyBullets CYCLE 
+  eBullet(n, eBactive) = FALSE
+REPEAT 
+FOR n = 0 TO 23 STEP 3 CYCLE 
+  playerData(n) = originalPlayerData(n)
+  playerData(n + 1) = originalPlayerData(n + 1)
+  playerData(n + 2) = originalPlayerData(n + 2)
+REPEAT 
+activePlayerBullets = 0
+enemyShipActive = FALSE
+safe = FALSE
+pX = gWidth / 2
+pY = gHeight / 2
+expX = pX
+expY = pY
+expDist = 0
+DEAD = FALSE
+pRotate = 0
+pAngle = 0
+playerFire = FALSE
+playerExplode = FALSE
+pThrustX = 0
+pThrustY = 0
+ENDPROC 
+///////////////////////////////////
+DEF PROC explodePlayer
+COLOUR = Lime
+expX = pX
+expY = pY
+playerExplode = TRUE
+expDist = expDist + .4
+LINE (expX - expDist * COS (270), expY - expDist * SIN (expX), expX - expDist * COS (expY), expY + expDist * COS (expX))
+LINE (expX - expDist * COS (90), expY + expDist * SIN (expY), expX + expDist * COS (expX), expY + expDist * SIN (expX))
+LINE (expX + expDist * SIN (90), expY + expDist * COS (expY), expX + expDist * SIN (expY), expY - expDist * SIN (expY))
+LINE (expX + expDist * SIN (180), expY - expDist * SIN (expY), expX - expDist * SIN (expX), expY - expDist * COS (expY))
+IF expDist > 15 THEN playerExplode = FALSE
+ENDPROC 
+///////////////////////////////////
+// Draw the player ship
+DEF PROC drawPlayerShip
+COLOUR = Lime
+LINE (playerData(0), playerData(1), playerData(3), playerData(4))
+lineTo (playerData(6), playerData(7))
+lineTo (playerData(9), playerData(10))
+lineTo (playerData(12), playerData(13))
+IF pThrust = TRUE THEN 
+  LINE (playerData(15), playerData(16), playerData(18), playerData(19))
+  lineTo (playerData(21), playerData(22))
+ENDIF 
+ENDPROC 
+//
+///////////////////////////////////
+DEF PROC gameOver
+LOCAL gSize, gX, gY, gCount
+clearKeyboard 
+gSize = 6
+gX = gWidth / 2 - ((LEN (gameOver$) * gSize * 5) / 2)
+gY = gHeight / 2
+FOR gCount = 0 TO 140 CYCLE 
+  setMusicVol (70 - ((200 / 100) * gCount))
+  frameStart = TIME
+  CLS2 
+  PROC text(gameOver$, gX, gY, 200, 200, 200, gSize, INT (RND (2)))
+  PROC drawScreen
+  PROC silvoids
+  UPDATE 
+  frameEnd = TIME
+  timeTaken = frameEnd - frameStart
+  frameRate = timeTaken
+  WAIT (.012 - (timeTaken / 1000))
+REPEAT 
+ENDPROC 
+///////////////////////////////////
+DEF PROC newLevel
+enemyShipActive = FALSE
+PROC resetSilvoids
+PROC initialisePlayer
+ENDPROC 
+///////////////////////////////////
+DEF PROC resetSilvoids
+FOR sCount = 0 TO maxSilvoids CYCLE 
+  silvoid(sCount, sActive) = 0
+REPEAT 
+silvoids = 4 + level
+IF silvoids >= 15 THEN silvoids = 15
+FOR n = 0 TO silvoids - 1 CYCLE 
+  silvoid(n, sID) = n
+  silvoid(n, sType) = INT (RND (4))
+  silvoid(n, sSize) = largeSilv
+  silvoid(n, sX) = RND (gWidth)
+  silvoid(n, sY) = RND (gHeight)
+  silvoid(n, sDirX) = RND (3) + 1 + level / 20
+  IF INT (RND (2)) = 1 THEN silvoid(n, sDirX) =  - silvoid(n, sDirX)
+  silvoid(n, sDirY) = RND (1) + level / 20
+  IF INT (RND (2)) = 1 THEN silvoid(n, sDirY) =  - silvoid(n, sDirY)
+  silvoid(n, sAngle) = RND (360)
+  silvoid(n, sColour) = Green
+  silvoid(n, sScore) = 20
+  silvoid(n, sActive) = 1
+REPEAT 
+ENDIF 
+ENDPROC 
+//////////////////////////////////////////////////////////////////////////////////////
+DEF PROC playerControls
+// checks for key presses and acts as required.
+// Check for Hyperspace key press
+IF scanKeyboard (scanSpace) AND hyper = FALSE THEN 
+  hyper = TRUE
+  hyperX = RND (gWidth * .8) + gWidth * .1
+  hyperY = RND (gHeight * .8) + gHeight * .1
+  FOR point = 0 TO 23 STEP 3 CYCLE 
+    oldPX = playerData(point) - pX
+    oldPY = playerData(point + 1) - pY
+    playerData(point) = hyperX + oldPX
+    playerData(point + 1) = hyperY + oldPY
+  REPEAT 
+  pX = hyperX
+  pY = hyperY
+  pThrustX = pThrustX / 4
+  pThrustY = pThrustY / 4
+ENDIF 
+IF hyper = TRUE THEN 
+  hyperCount = hyperCount + 1
+  IF hyperCount >= 40 THEN 
+    hyperCount = 0
+    hyper = FALSE
+  ENDIF 
+ENDIF 
+// Check for left and right rotate
+// to determine the angle the ship is pointing in
+IF scanKeyboard (scanZ) OR scanKeyboard (scanX) THEN 
+  turn = TRUE
+  IF scanKeyboard (scanZ) THEN pRotate = 3
+  IF scanKeyboard (scanX) THEN pRotate = -3
+  pAngle = pAngle + pRotate
+ELSE 
+  turn = FALSE
+ENDIF 
+/////////////////////////////////////////////////////////////////////////////////////
+// Next we check for the thrust button. If pressed we add thrust.  Thrust is added
+IF scanKeyboard (scanReturn) THEN 
+  pThrust = TRUE
+  IF ABS (pThrustX + COS (pAngle + 90)) < pThrustMaxX THEN 
+    pThrustX = pThrustX + COS (pAngle + 90) / 10
+  ENDIF 
+  IF ABS (pThrustY + SIN (pAngle + 90)) < pThrustMaxY THEN 
+    pThrustY = pThrustY + SIN (pAngle + 90) / 10
+  ENDIF 
+ENDIF 
+IF scanKeyboard (scanReturn) = FALSE THEN pThrust = FALSE
+/////////////////////////////////////////////////////////////////////////////////////
+// While not true in real space, for the sake of gameplay the ship must decelerate
+// on its own so...
+pThrustX = pThrustX * 0.995
+pThrustY = pThrustY * 0.995
+/////////////////////////////////////////////////////////////////////////////////////
+// the new player X & Y position is set
+pX = pX + pThrustX
+pY = pY + pThrustY
+/////////////////////////////////////////////////////////////////////////////////////
+// and applied to each of the points making up the ship
+FOR point = 0 TO 23 STEP 3 CYCLE 
+  playerData(point) = playerData(point) + pThrustX
+  playerData(point + 1) = playerData(point + 1) + pThrustY
+  /////////////////////////////////////////////////////////////////////////////////////
+  // If we have rotated the ship then this is also applied
+  IF turn = TRUE THEN 
+    xd1 = playerData(point) - pX
+    yd1 = playerData(point + 1) - pY
+    distance = SQRT (xd1 * xd1 + yd1 * yd1)
+    playerData(point) = pX + distance * COS (playerData(point + 2))
+    playerData(point + 1) = pY + distance * SIN (playerData(point + 2))
+    playerData(point + 2) = playerData(point + 2) + pRotate
+  ENDIF 
+REPEAT 
+/////////////////////////////////////////////////////////////////////////////////////
+// Check to see if fire button has been pressed and we haven't gone over the five
+// maximum - also checks to make sure we we cannot auto fire by holding down the key
+IF scanKeyboard (scanHash) AND playerFire = FALSE THEN 
+  playerFire = TRUE
+  IF activePlayerBullets < maxPlayerBullets THEN 
+    activePlayerBullets = activePlayerBullets + 1
+    newBulletAngle = playerData(point + 2)
+    PROC newPlayerBullet
+  ENDIF 
+ELSE 
+  IF  NOT scanKeyboard (scanHash) THEN 
+    playerFire = FALSE
+  ENDIF 
+ENDIF 
+// If the player leaves the right of the screen wrap round to the left
+IF pX > gWidth THEN 
+  pX = pX - gWidth
+  FOR point2 = 0 TO 23 STEP 3 CYCLE 
+    playerData(point2) = playerData(point2) - gWidth
+  REPEAT 
+ENDIF 
+// If the player leaves the left of the screen wrap round to the right
+IF pX < 0 THEN 
+  pX = pX + gWidth
+  FOR point2 = 0 TO 23 STEP 3 CYCLE 
+    playerData(point2) = playerData(point2) + gWidth
+  REPEAT 
+ENDIF 
+// If the player leaves the top of the screen wrap round to the bottom
+IF pY > gHeight THEN 
+  pY = pY - gHeight
+  FOR point2 = 0 TO 23 STEP 3 CYCLE 
+    playerData(point2 + 1) = playerData(point2 + 1) - gHeight
+  REPEAT 
+ENDIF 
+// If the player leaves the bottom of the screen wrap round to the top
+IF pY < 0 THEN 
+  pY = pY + gHeight
+  FOR point2 = 0 TO 23 STEP 3 CYCLE 
+    playerData(point2 + 1) = playerData(point2 + 1) + gHeight
+  REPEAT 
+ENDIF 
+clearKeyboard 
+ENDPROC 
+//
+///////////////////////////////////
+DEF PROC silvoids
+FOR sCount = 0 TO maxSilvoids CYCLE 
+  IF silvoid(sCount, sActive) = TRUE THEN 
+    silvoid(sCount, sX) = silvoid(sCount, sX) + silvoid(sCount, sDirX)
+    silvoid(sCount, sDist) = FN distance(silvoid(sCount, sX), silvoid(sCount, sY), pX, pY)
+    testX = silvoid(sCount, sX)
+    minX =  - silvoid(sCount, sRad) / 2
+    maxX = (silvoid(sCount, sRad) / 2) + gWidth
+    IF testX > maxX THEN silvoid(sCount, sX) = minX
+    IF testX < minX THEN silvoid(sCount, sX) = maxX
+    silvoid(sCount, sY) = silvoid(sCount, sY) + silvoid(sCount, sDirY)
+    testY = silvoid(sCount, sY)
+    minY =  - silvoid(sCount, sRad) / 2
+    maxY = (silvoid(sCount, sRad) / 2) + gHeight
+    IF testY > maxY THEN silvoid(sCount, sY) = minY
+    IF testY < minY THEN silvoid(sCount, sY) = maxY
+    COLOUR = White
+    // first what kind of rock are we dealing with - 0 to 3
+    silvType = silvoid(sCount, sType)
+    // then what scale is it 0.25, 0.5 or full
+    silvScale = silvoid(sCount, sSize)
+    // how many lines do we have to draw
+    sData = silvData(silvType, 0)
+    // workout the first plot position
+    x1 = silvoid(sCount, sX) + silvData(silvType, 1) * silvScale
+    y1 = silvoid(sCount, sY) + silvData(silvType, 2) * silvScale
+    // If we are checking distances then don't draw stuff
+    IF safe = TRUE THEN 
+      PLOT (x1, y1)
+      // now draw a line from there to the next point until finished
+      FOR sPoint = 3 TO sData * 2 STEP 2 CYCLE 
+        x1 = silvoid(sCount, sX) + silvData(silvType, sPoint) * silvScale
+        y1 = silvoid(sCount, sY) + silvData(silvType, sPoint + 1) * silvScale
+        lineTo (x1, y1)
+        sRadMax = ABS (x1 - silvoid(sCount, sX))
+        IF sRadMax > silvoid(sCount, sRad) THEN silvoid(sCount, sRad) = sRadMax
+      REPEAT 
+    ENDIF 
+  ENDIF 
+REPEAT 
+ENDPROC 
+///////////////////////////////////
+DEF PROC drawScreen
+text$ = STR$ (score)
+size = 4
+tY = gHeight - (10 * size)
+tX = gWidth / 5 - (LEN (text$) * size * 5) / 2
+PROC text(text$, tX, tY, 214, 38, 79, size, 0)
+text$ = hiScore$(0)
+size = 2
+tY = gHeight - (20 * size)
+tX = gWidth / 2 - (LEN (text$) * size * 5) / 2
+PROC text(text$, tX, tY, 214, 38, 79, size, 0)
+COLOUR = Lime
+IF pLives > 1 THEN 
+  FOR n = 1 TO pLives - 1 CYCLE 
+    scX = 100 + n * 20
+    scY = gHeight - 70
+    LINE (scX, scY, scX + 8, scY + 20)
+    lineTo (scX + 16, scY)
+    lineTo (scX + 8, scY + 5)
+    lineTo (scX, scY)
+  REPEAT 
+ENDIF 
+text$ = "WWW.FUZE.CO.UK"
+size = 2
+tY = 10 * size
+tX = gWidth / 2 - (LEN (text$) * size * 5) / 2
+PROC text(text$, tX, tY, 214, 38, 79, size, 0)
+COLOUR = DarkGrey
+RECT (0, 0, gWidth, gHeight, 0)
+ENDPROC 
+///////////////////////////////////
+DEF PROC collision
+LOCAL count, n
+// CHECK silvoids against Player Ship
+FOR count = 0 TO maxSilvoids CYCLE 
+  IF game THEN 
+    IF silvoid(count, sActive) = TRUE THEN 
+      DistCheck = FN distance(silvoid(count, sX), silvoid(count, sY), pX, pY)
+      IF DistCheck < (silvoid(count, sRad) * silvoid(count, sSize)) + pRad * .9 THEN 
+        PROC newExplosion(pX, pY)
+        PROC newExplosion(silvoid(count, sX), silvoid(count, sY))
+        silvoid(count, sActive) = FALSE
+        silvoids = silvoids - 1
+        PROC score(silvoid(count, sScore))
+        DEAD = TRUE
+        PROC newExplosion(silvoid(count, sX), silvoid(count, sY))
+        PROC silvoidSmash
+      ENDIF 
+    ENDIF 
+  ENDIF 
+  // CHECK silvoids against Player bullets
+  FOR n = 0 TO maxPlayerBullets CYCLE 
+    IF pBullet(n, pBactive) = TRUE AND silvoid(count, sActive) = TRUE THEN 
+      DistCheck = FN distance(silvoid(count, sX), silvoid(count, sY), pBullet(n, pBx), pBullet(n, pBy))
+      IF DistCheck < (silvoid(count, sRad) * silvoid(count, sSize)) + pRad * .5 THEN 
+        activePlayerBullets = activePlayerBullets - 1
+        PROC newExplosion(silvoid(count, sX), silvoid(count, sY))
+        pBullet(n, pBactive) = FALSE
+        silvoid(count, sActive) = FALSE
+        silvoids = silvoids - 1
+        PROC score(silvoid(count, sScore))
+        PROC silvoidSmash
+      ENDIF 
+    ENDIF 
+  REPEAT 
+  // CHECK silvoids against Enemy Ship
+  IF enemyShipActive = TRUE AND silvoid(count, sActive) = TRUE THEN 
+    DistCheck = FN distance(silvoid(count, sX), silvoid(count, sY), enemyX, enemyY)
+    IF DistCheck < (silvoid(count, sRad) * silvoid(count, sSize)) + eRad * .9 THEN 
+      PROC newExplosion(silvoid(count, sX), silvoid(count, sY))
+      PROC newExplosion(enemyX, enemyY)
+      enemyShipActive = FALSE
+      silvoid(count, sActive) = FALSE
+      silvoids = silvoids - 1
+      PROC silvoidSmash
+    ENDIF 
+  ENDIF 
+  // CHECK silvoids against Enemy Bullets
+  FOR n = 0 TO maxEnemyBullets CYCLE 
+    IF eBullet(n, eBactive) = TRUE AND silvoid(count, sActive) = TRUE THEN 
+      DistCheck = FN distance(silvoid(count, sX), silvoid(count, sY), eBullet(n, eBx), eBullet(n, eBy))
+      IF DistCheck < (silvoid(count, sRad) * silvoid(count, sSize)) * .9 THEN 
+        PROC newExplosion(silvoid(count, sX), silvoid(count, sY))
+        activeEnemyBullets = activeEnemyBullets - 1
+        eBullet(n, eBactive) = FALSE
+        silvoid(count, sActive) = FALSE
+        silvoids = silvoids - 1
+        PROC silvoidSmash
+      ENDIF 
+    ENDIF 
+  REPEAT 
+REPEAT 
+// CHECK enemy ship against Player Ship
+IF enemyShipActive = TRUE THEN 
+  DistCheck = FN distance(enemyX, enemyY, pX, pY)
+  IF DistCheck < eRad + pRad * .9 THEN 
+    IF game THEN playSample (exp1, 1, 0)
+    PROC newExplosion(enemyX, enemyY)
+    PROC newExplosion(pX, pY)
+    enemyShipActive = FALSE
+    PROC score(enemyScore)
+    DEAD = TRUE
+  ENDIF 
+ENDIF 
+// CHECK enemy bullets against Player Ship
+FOR n = 0 TO maxEnemyBullets CYCLE 
+  IF eBullet(n, eBactive) = TRUE THEN 
+    DistCheck = FN distance(pX, pY, eBullet(n, eBx), eBullet(n, eBy))
+    IF DistCheck < pRad * .9 THEN 
+      IF game THEN playSample (exp1, 1, 0)
+      PROC newExplosion(pX, pY)
+      activeEnemyBullets = activeEnemyBullets - 1
+      eBullet(n, eBactive) = FALSE
+      DEAD = TRUE
+      PROC silvoidSmash
+    ENDIF 
+  ENDIF 
+REPEAT 
+// CHECK Player bullets against enemy Ship
+FOR n = 0 TO maxPlayerBullets CYCLE 
+  IF pBullet(n, pBactive) = TRUE AND enemyShipActive = TRUE THEN 
+    DistCheck = FN distance(enemyX, enemyY, pBullet(n, pBx), pBullet(n, pBy))
+    IF DistCheck < eRad * .9 THEN 
+      playSample (exp1, 1, 0)
+      PROC newExplosion(enemyX, enemyY)
+      activePlayerBullets = activePlayerBullets - 1
+      pBullet(n, pBactive) = FALSE
+      enemyShipActive = FALSE
+      PROC score(enemyScore)
+    ENDIF 
+  ENDIF 
+REPEAT 
+ENDPROC 
+///////////////////////////////////
+DEF PROC silvoidSmash
+sOldX = silvoid(count, sX)
+sOldY = silvoid(count, sY)
+id = 0
+IF (silvoid(count, sSize)) = largeSilv THEN 
+  IF game THEN playSample (exp1, 3, 0)
+  newSilvSize = mediumSilv
+  silvoid(count, sScore) = 20
+ELSE 
+  IF (silvoid(count, sSize)) = mediumSilv THEN 
+    IF game THEN playSample (exp1, 3, 0)
+    newSilvSize = smallSilv
+    silvoid(count, sScore) = 50
+  ENDIF 
+ENDIF 
+IF (silvoid(count, sSize)) = smallSilv THEN 
+  IF game THEN playSample (exp1, 3, 0)
+ENDIF 
+IF (silvoid(count, sSize)) = mediumSilv OR (silvoid(count, sSize)) = largeSilv THEN 
+  silvoids = silvoids + 2
+  FOR num = 0 TO 1 CYCLE 
+    FOR id = 0 TO silvoids CYCLE 
+      IF silvoid(id, sActive) = FALSE THEN 
+        silvoid(id, sType) = INT (RND (4))
+        silvoid(id, sSize) = newSilvSize
+        silvoid(id, sX) = sOldX
+        silvoid(id, sY) = sOldY
+        IF newSilvSize = smallSilv THEN silvoid(id, sScore) = 100
+        IF newSilvSize = mediumSilv THEN silvoid(id, sScore) = 50
+        silvoid(id, sDirX) = RND (4) + 1
+        IF INT (RND (2)) = 1 THEN silvoid(id, sDirX) =  - silvoid(id, sDirX)
+        silvoid(id, sDirY) = RND (1)
+        IF INT (RND (2)) = 1 THEN silvoid(id, sDirY) =  - silvoid(id, sDirY)
+        silvoid(id, sAngle) = RND (360)
+        silvoid(id, sActive) = TRUE
+        BREAK 
+      ENDIF 
+    REPEAT 
+  REPEAT 
+ENDIF 
+ENDPROC 
+///////////////////////////////////
+DEF PROC newPlayerBullet
+FOR n = 0 TO maxPlayerBullets CYCLE 
+  IF pBullet(n, pBactive) = FALSE THEN 
+    playSample (playerFire, 0, 0)
+    pBullet(n, pBx) = playerData(0)
+    pBullet(n, pBy) = playerData(1)
+    pBullet(n, pBoriginX) = playerData(0)
+    pBullet(n, pBoriginY) = playerData(1)
+    pBullet(n, pBangle) = playerData(2)
+    pBullet(n, pBspeed) = 3
+    pBullet(n, pBactive) = TRUE
+    BREAK 
+  ENDIF 
+REPEAT 
+ENDPROC 
+///////////////////////////////////
+DEF PROC drawPlayerBullets
+COLOUR = Lime
+FOR n = 0 TO maxPlayerBullets CYCLE 
+  IF pBullet(n, pBactive) = TRUE THEN 
+    IF pBullet(n, pBx) > gWidth THEN pBullet(n, pBx) = 0
+    IF pBullet(n, pBx) < 0 THEN pBullet(n, pBx) = gWidth
+    IF pBullet(n, pBy) > gHeight THEN pBullet(n, pBy) = 0
+    IF pBullet(n, pBy) < 0 THEN pBullet(n, pBy) = gHeight
+    pBullet(n, pBx) = pBullet(n, pBx) + pBullet(n, pBspeed) * COS (pBullet(n, pBangle))
+    pBullet(n, pBy) = pBullet(n, pBy) + pBullet(n, pBspeed) * SIN (pBullet(n, pBangle))
+    pBullet(n, pBdistance) = pBullet(n, pBdistance) + pBullet(n, pBspeed)
+    CIRCLE (pBullet(n, pBx), pBullet(n, pBy), 1, 1)
+    IF pBullet(n, pBdistance) >= 400 THEN 
+      activePlayerBullets = activePlayerBullets - 1
+      pBullet(n, pBactive) = FALSE
+      pBullet(n, pBdistance) = 0
+    ENDIF 
+  ENDIF 
+REPEAT 
+ENDPROC 
+///////////////////////////////////
+DEF PROC setup
+setMode (1280, 720)
+//FULLSCREEN = 1
+updateMode = 0
+mouseOff 
+game = FALSE
+// Silvoid variables
+maxSilvoids = 50
+extraLife = 10000
+points = 0
+scoreCheck = 0
+silvoids = 5
+sID = 0
+sType = 1
+sSize = 2
+sX = 3
+sY = 4
+sDirX = 5
+sDirY = 6
+sAngle = 7
+sColour = 8
+sScore = 9
+sActive = 10
+sRad = 11
+sDist = 12
+smallSilv = .25
+mediumSilv = .5
+largeSilv = 1
+silvCount = 0
+DIM silvoid(maxSilvoids, 12)
+DIM silvData(3, 36)
+FOR n = 0 TO 3 CYCLE 
+  READ counter
+  silvData(n, 0) = counter
+  FOR nn = 1 TO counter * 2 CYCLE 
+    READ dat
+    silvData(n, nn) = dat
+  REPEAT 
+REPEAT 
+DATA 12, 0, -8, 0, -32, 20, -32, 40, -8, 40, 8, 20, 32, -10, 32, -40, 8, -20, 0, -40, -8, -20, -32, 0, -8
+DATA 11, 0, 16, 20, 32, 40, 16, 30, 0, 40, -16, 10, -32, -20, -32, -40, -16, -40, 16, -20, 32, 0, 16
+DATA 13, 10, 32, 30, 40, 50, 16, 40, 8, 50, -8, 20, -32, 0, -24, -20, -32, -40, -16, -30, 0, -40, 24, -10, 40, 10, 32
+DATA 13, 10, 0, 40, 8, 40, 16, 10, 32, -20, 32, -10, 16, -40, 16, -40, -8, -20, -32, 10, -24, 20, -32, 40, -8, 10, 0
+// Player variables
+pRotate = 0
+pAngle = 0
+pX = gWidth / 2
+pY = gHeight / 2
+pRad = 15
+pThrustMaxX = 6
+pThrustMaxY = 6
+pThrustX = 0
+pThrustY = 0
+pLives = 3
+DEAD = FALSE
+pThrust = FALSE
+hyper = FALSE
+hyperCount = 0
+DIM playerData(24)
+DIM originalPlayerData(24)
+FOR n = 0 TO 23 STEP 3 CYCLE 
+  READ datX, datY, angle
+  playerData(n) = (datX / 2) + pX
+  playerData(n + 1) = (datY / 2) + pY
+  playerData(n + 2) = angle + 90
+  originalPlayerData(n) = (datX / 2) + pX
+  originalPlayerData(n + 1) = (datY / 2) + pY
+  originalPlayerData(n + 2) = angle + 90
+REPEAT 
+DATA 0, 30, 0, 20, -30, 146, 0, -20, 180, -20, -30, 214, 0, 30, 0, -10, -25, 170, 0, -40, 180, 10, -25, 190
+// Player Bullet Variables
+maxPlayerBullets = 5
+DIM pBullet(maxPlayerBullets, 7)
+pBx = 0
+pBy = 1
+pBangle = 2
+pBspeed = 3
+pBactive = 4
+pBoriginX = 5
+pBoriginY = 6
+pBdistance = 7
+activePlayerBullets = 0
+playerFire = FALSE
+playerExp = FALSE
+// ENEMY SHIP VARIABLES
+enemyX = 0
+enemyY = 0
+enemyAngle = 0
+enemySpeed = 4
+enemyShipActive = FALSE
+enemySize = 0
+EnemyScore = 0
+enemyDistance = 0
+activeEnemyBullets = FALSE
+enemyFire = FALSE
+enemyDir = 0
+eRad = 20
+DIM enemyData(25)
+FOR n = 0 TO 24 STEP 2 CYCLE 
+  READ datX, datY
+  enemyData(n) = datX
+  enemyData(n + 1) = datY
+REPEAT 
+DATA -30, 0, -10, -16, 20, -16, 40, 0, -30, 0, -10, 16, -10, 16
+DATA 0, 32, 10, 32, 20, 16, 40, 0, 20, 16, -10, 16
+// PLAYER BULLET VARIABLES
+maxEnemyBullets = 6
+DIM eBullet(maxEnemyBullets, 8)
+eBx = 0
+eBy = 1
+eBangle = 2
+eBaccuracy = 4
+eBspeed = 6
+eBdistance = 7
+eBactive = 8
+eBcounter = 0
+activeEnemyBullets = 0
+enemyFire = FALSE
+// EXPLOSION VARIABLES
+maxExplosions = 25
+DIM explosion(maxExplosions, 54)
+expX = 0
+expY = 1
+expActive = 2
+expColour = 3
+expMaxRad = 30
+explode = FALSE
+// GAME VARIABLES
+maxLogo = 20
+DIM attract(20, 5)
+PROC hiScoreFile
+bold = FALSE
+PROC fontData
+ENDPROC 
+///////////////////////////////////
+DEF PROC hiScoreFile
+DIM digit$(2)
+DIM hiScore$(9)
+FOR num = 0 TO 9 CYCLE 
+  hiScore$(num) = "FTL " + STR$ (10000 - num * 1000)
+REPEAT 
+ENDPROC 
+///////////////////////////////////
+DEF FN distance(fnx1, fny1, fnx2, fny2)
+fnxd = fnx2 - fnx1
+fnyd = fny2 - fny1
+result = SQRT (fnxd * fnxd + fnyd * fnyd)
+ = result
+///////////////////////////////////
+DEF PROC text(textText$, textX, textY, tR, tG, tB, textSize, bold)
+LOCAL n, nn
+rgbColour (tR, tG, tB)
+FOR n = 0 TO LEN (textText$) - 1 CYCLE 
+  char = ASC (MID$ (textText$, n, 1))
+  IF char <> 32 AND char <> 46 THEN 
+    FOR nn = 1 TO fontData(char, 0) * 2 STEP 4 CYCLE 
+      LINE (textX + (fontData(char, nn) * textSize), textY + (fontData(char, nn + 1) * textSize), textX + (fontData(char, nn + 2) * textSize), textY + (fontData(char, nn + 3) * textSize))
+      IF bold = TRUE THEN 
+        LINE (textX + (fontData(char, nn) * textSize), textY - 1 + (fontData(char, nn + 1) * textSize), textX + (fontData(char, nn + 2) * textSize), textY - 1 + (fontData(char, nn + 3) * textSize))
+        LINE (textX + (fontData(char, nn) * textSize), textY + 1 + (fontData(char, nn + 1) * textSize), textX + (fontData(char, nn + 2) * textSize), textY + 1 + (fontData(char, nn + 3) * textSize))
+        LINE (textX - 1 + (fontData(char, nn) * textSize), textY + (fontData(char, nn + 1) * textSize), textX - 1 + (fontData(char, nn + 2) * textSize), textY + (fontData(char, nn + 3) * textSize))
+        LINE (textX + 1 + (fontData(char, nn) * textSize), textY + (fontData(char, nn + 1) * textSize), textX + 1 + (fontData(char, nn + 2) * textSize), textY + (fontData(char, nn + 3) * textSize))
+      ENDIF 
+    REPEAT 
+  ENDIF 
+  IF char = 46 THEN 
+    CIRCLE (textX + 3, textY + 1, 1, 1)
+  ENDIF 
+  textX = textX + 5 * textSize
+REPEAT 
+ENDPROC 
+///////////////////////////////////
+DEF PROC fontData
+title$ = "4573R01D5"
+maxMessages = 4
+DIM message$(maxMessages)
+message$(0) = "Z X TO ROTATE SHIP  HASH TO FIRE  ENTER TO THRUST"
+message$(1) = "MUSIC BY DAVID SILVERA"
+message$(2) = "PROGRAM WRITTEN BY JON SILVERA"
+message$(3) = "CHECK OUT FUZE BASIC AT WWW.FUZE.CO.UK"
+highScores$ = "HIGH SCORES"
+press$ = "PRESS ENTER TO PLAY"
+gameOver$ = "GAME OVER"
+web$ = "WWW.FUZE.CO.UK"
+wellDone$ = "WELL DONE YOUR SCORE IS IN THE TOP TEN"
+instruct$ = "Z X TO CHANGE LETTER HASH TO SELECT"
+char$ = ""
+message = 0
+DIM fontData(95, 50)
+WHILE char$ <> "!" CYCLE 
+  READ char$
+  READ counter
+  fontData(ASC (char$), 0) = counter
+  FOR dat = 1 TO counter * 2 STEP 2 CYCLE 
+    READ fX, fY
+    fontData(ASC (char$), dat) = fX
+    fontData(ASC (char$), dat + 1) = fY
+  REPEAT 
+REPEAT 
+// letters
+DATA "A", 10, 0, 0, 0, 4, 0, 4, 2, 6, 2, 6, 4, 4, 4, 4, 4, 0, 0, 2, 4, 2
+DATA "B", 20, 0, 0, 0, 6, 0, 6, 3, 6, 3, 6, 4, 5, 4, 5, 4, 4, 4, 4, 3, 3, 3, 3, 4, 2, 4, 2, 4, 1, 4, 1, 3, 0, 3, 0, 0, 0, 0, 3, 3, 3
+DATA "C", 6, 0, 0, 0, 6, 0, 6, 4, 6, 0, 0, 4, 0
+DATA "D", 12, 0, 0, 0, 6, 0, 6, 2, 6, 2, 6, 4, 4, 4, 4, 4, 2, 4, 2, 2, 0, 2, 0, 0, 0
+DATA "E", 8, 0, 0, 0, 6, 0, 0, 4, 0, 0, 3, 3, 3, 0, 6, 4, 6
+DATA "F", 6, 0, 0, 0, 6, 0, 6, 4, 6, 0, 3, 3, 3
+DATA "G", 12, 0, 0, 0, 6, 0, 6, 4, 6, 4, 6, 4, 4, 2, 2, 4, 2, 4, 2, 4, 0, 4, 0, 0, 0
+DATA "H", 6, 0, 0, 0, 6, 0, 3, 4, 3, 4, 6, 4, 0
+DATA "I", 6, 0, 0, 4, 0, 2, 0, 2, 6, 0, 6, 4, 6
+DATA "J", 6, 0, 2, 2, 0, 2, 0, 4, 0, 4, 0, 4, 6
+DATA "K", 6, 0, 0, 0, 6, 0, 3, 4, 6, 0, 3, 4, 0
+DATA "L", 4, 0, 0, 0, 6, 0, 0, 4, 0
+DATA "M", 8, 0, 0, 0, 6, 0, 6, 2, 4, 2, 4, 4, 6, 4, 6, 4, 0
+DATA "N", 6, 0, 0, 0, 6, 0, 6, 4, 0, 4, 0, 4, 6
+DATA "O", 8, 0, 0, 0, 6, 0, 6, 4, 6, 4, 6, 4, 0, 4, 0, 0, 0
+DATA "P", 8, 0, 0, 0, 6, 0, 6, 4, 6, 4, 6, 4, 3, 4, 3, 0, 3
+DATA "Q", 12, 0, 0, 0, 6, 0, 6, 4, 6, 4, 6, 4, 2, 4, 2, 2, 0, 2, 0, 0, 0, 2, 2, 4, 0
+DATA "R", 10, 0, 0, 0, 6, 0, 6, 4, 6, 4, 6, 4, 3, 4, 3, 0, 3, 0, 3, 4, 0
+DATA "S", 10, 0, 0, 4, 0, 4, 0, 4, 3, 4, 3, 0, 3, 0, 3, 0, 6, 0, 6, 4, 6
+DATA "T", 4, 2, 0, 2, 6, 0, 6, 4, 6
+DATA "U", 6, 0, 0, 0, 6, 0, 0, 4, 0, 4, 0, 4, 6
+DATA "V", 4, 2, 0, 0, 6, 2, 0, 4, 6
+DATA "W", 8, 0, 0, 0, 6, 0, 0, 2, 2, 2, 2, 4, 0, 4, 0, 4, 6
+DATA "X", 4, 0, 0, 4, 6, 0, 6, 4, 0
+DATA "Y", 6, 0, 6, 2, 4, 2, 4, 4, 6, 2, 0, 2, 4
+DATA "Z", 6, 0, 6, 4, 6, 4, 6, 0, 0, 0, 0, 4, 0
+// numbers
+DATA "0", 8, 0, 0, 0, 6, 0, 6, 4, 6, 4, 6, 4, 0, 4, 0, 0, 0
+DATA "1", 2, 2, 0, 2, 6
+DATA "2", 10, 0, 0, 0, 3, 0, 3, 4, 3, 4, 3, 4, 6, 4, 6, 0, 6, 0, 0, 4, 0
+DATA "3", 8, 0, 0, 4, 0, 4, 0, 4, 6, 4, 6, 0, 6, 0, 3, 4, 3
+DATA "4", 6, 0, 3, 0, 6, 0, 3, 4, 3, 4, 0, 4, 6
+DATA "5", 10, 0, 0, 4, 0, 4, 0, 4, 3, 4, 3, 0, 3, 0, 3, 0, 6, 0, 6, 4, 6
+DATA "6", 8, 0, 0, 0, 6, 0, 0, 4, 0, 4, 0, 4, 3, 4, 3, 0, 3
+DATA "7", 4, 4, 0, 4, 6, 4, 6, 0, 6
+DATA "8", 10, 0, 0, 0, 6, 0, 6, 4, 6, 4, 6, 4, 0, 4, 0, 0, 0, 0, 3, 4, 3
+DATA "9", 8, 0, 3, 0, 6, 0, 6, 4, 6, 4, 6, 4, 0, 0, 3, 4, 3
+// symbols
+DATA "_", 2, 0, 0, 4, 0
+DATA ".", 2, 0, 0, 0, 0
+DATA " ", 2, 0, 0, 0, 0
+DATA "!", 1, 0, 0
+ENDPROC 
+///////////////////////////////////
+DEF PROC score(points)
+score = score + points
+scoreCheck = scoreCheck + points
+IF scoreCheck >= extraLife THEN 
+  pLives = pLives + 1
+  playSample (extra, 1, 0)
+  scoreCheck = scoreCheck - extraLife
+ENDIF 
+ENDPROC 
+///////////////////////////////////
+DEF PROC initialiseSounds
+exp1 = loadSample ("exp1.wav") // play on channel 3
+playerFire = loadSample ("pfire.wav") // play on channel 0
+extra = loadSample ("1up.wav") // play on channel 1
+largeEnemyShip = loadSample ("lenemy.wav") // play on channel 1
+smallEnemyShip = loadSample ("senemy.wav") // play on channel 1
+playerThrust = loadSample ("pthrust.wav") // play on channel 2
+neon = loadMusic ("neon.mp3")
+gameMusic = loadMusic ("ForNext.mp3")
+volume = 70
+setMusicVol (volume)
+ENDPROC 
+///////////////////////////////////////////////////////////////
+DEF PROC attractScreen
+IF game = FALSE THEN playMusic (neon, -1)
+PROC resetSilvoids
+attract = TRUE
+game = FALSE
+titleSize = 21
+tY = gHeight / 2
+sizeStep = .2
+counter = 0
+countStep = .2
+cSize = 2
+attractTimer = TIME
+PROC colourChange
+WHILE  NOT scanKeyboard (scanReturn) CYCLE 
+  frameStart = TIME
+  CLS2 
+  IF TIME - attractTimer > 6000 THEN 
+    attract =  NOT attract
+    attractTimer = TIME
+    PROC colourChange
+  ENDIF 
+  IF attract = TRUE THEN 
+    titleSize = titleSize + sizeStep
+    IF titleSize <= 20 OR titleSize >= 21 THEN sizeStep =  - sizeStep
+    attract(0, 5) = titleSize
+    attract(0, 0) = gWidth / 2 - (LEN (title$) * attract(0, 5) * 5) / 2 + 80 * COS (counter)
+    attract(0, 1) = tY + 40 * SIN (counter)
+    attract(0, 2) = startRed
+    attract(0, 3) = startGreen
+    attract(0, 4) = startBlue
+    FOR num = maxLogo TO 1 STEP -1 CYCLE 
+      attract(num, 5) = maxLogo - num
+      attract(num, 0) = gWidth / 2 - (LEN (title$) * attract(num, 5) * 5) / 2 + 80 * COS (counter)
+      attract(num, 1) = attract(num - 1, 1) + attract(num, 5) * SIN (counter) / 2
+      attract(num, 2) = startRed / (num * 1.5)
+      attract(num, 3) = startGreen / (num * 1.5)
+      attract(num, 4) = startBlue / (num * 1.5)
+      counter = counter + countStep
+      IF counter >= 360 THEN counter = 0
+      PROC text(title$, attract(num, 0), attract(num, 1), attract(num, 2), attract(num, 3), attract(num, 4), attract(num, 5), 0)
+    REPEAT 
+    PROC text(title$, attract(0, 0), attract(0, 1), attract(0, 2), attract(0, 3), attract(0, 4), attract(0, 5), INT (RND (2)))
+  ELSE 
+    PROC text(highScores$, gWidth / 2 - (LEN (highScores$) * 6 * 5) / 2, gHeight / 10) * 7, 214, 38, 79, 6, INT (RND (2)))
+    hSy = (gHeight / 10) * 6
+    hsSize = 5
+    FOR num = 0 TO 9 CYCLE 
+      h$ = hiScore$(num)
+      hSx = gWidth / 2 - (LEN (h$) * hsSize * 5) / 2
+      IF num = 0 THEN 
+        bold = INT (RND (2))
+      ELSE 
+        bold = 0
+      ENDIF 
+      PROC text(h$, hSx, hSy, 50, 100, 200, hsSize, bold)
+      hSy = hSy - hsSize * 8
+      hsSize = hsSize / 1.15
+    REPEAT 
+  ENDIF 
+  tX = gWidth / 2 - (LEN (press$) * 6 * 5) / 2
+  PROC text(press$, tX, 80, 214, 38, 79, 6, INT (RND (2)))
+  IF RND (500) < 1 THEN message = INT (RND (maxMessages))
+  tX = gWidth / 2 - (LEN (message$(message)) * 2 * 5) / 2
+  PROC text(message$(message), tX, 20, 200, 200, 0, 2, INT (RND (2)))
+  PROC silvoids
+  PROC enemyShip
+  PROC drawEnemyBullets
+  PROC collision
+  PROC drawExplosions
+  UPDATE 
+  frameEnd = TIME
+  timeTaken = frameEnd - frameStart
+  frameRate = timeTaken
+  WAIT (.016 - (timeTaken / 1000))
+REPEAT 
+PROC gameVariables
+WHILE volume > 0 CYCLE 
+  volume = volume - .5
+  setMusicVol (volume)
+REPEAT 
+stopMusic 
+playMusic (gameMusic, -1)
+game = TRUE
+ENDPROC 
+//////////////////////////////////////////////////////////
+DEF PROC gameVariables
+score = 0
+scoreCheck = 0
+pLives = 3
+level = 1
+safe = 0
+game = FALSE
+ENDPROC 
+DEF PROC colourChange
+startRed = INT (RND (2))
+startGreen = INT (RND (2))
+startBlue = INT (RND (2))
+IF startRed = FALSE THEN 
+  startRed = 0
+ELSE 
+  startRed = 255
+ENDIF 
+IF startGreen = FALSE THEN 
+  startGreen = 0
+ELSE 
+  startGreen = 255
+ENDIF 
+IF startBlue = FALSE THEN 
+  startBlue = 0
+ELSE 
+  startBlue = 255
+ENDIF 
+IF startRed + startGreen + startBlue = 0 THEN startRed = 255
+ENDPROC 
+//////////////////////////////////////////////////////////////////////////////////////
+DEF PROC enterHiScore
+stopMusic 
+volume = 0
+press = FALSE
+playMusic (neon, -1)
+scoreLen = LEN (hiScore$(9))
+scoreValue = VAL (RIGHT$ (hiScore$(9), scoreLen - 4))
+IF score >= scoreValue THEN 
+  finished = FALSE
+  digit = 0
+  letter = 65
+  digit$(0) = "A"
+  digit$(1) = ""
+  digit$(2) = ""
+  WHILE digit <= 2 CYCLE 
+    volume = volume + .5
+    IF volume >= 80 THEN volume = 80
+    setMusicVol (volume)
+    CLS2 
+    IF scanKeyboard (scanZ) AND press = FALSE AND letter > 65 THEN 
+      letter = letter - 1
+      digit$(digit) = CHR$ (letter)
+    ENDIF 
+    IF scanKeyboard (scanX) AND press = FALSE AND letter < 90 THEN 
+      letter = letter + 1
+      digit$(digit) = CHR$ (letter)
+    ENDIF 
+    IF scanKeyboard (scanHash) AND press = FALSE AND digit <= 2 THEN 
+      digit = digit + 1
+      IF digit <= 2 THEN digit$(digit) = CHR$ (letter)
+    ENDIF 
+    IF scanKeyboard (scanZ) = TRUE OR scanKeyboard (scanX) = TRUE OR scanKeyboard (scanHash) = TRUE THEN 
+      press = TRUE
+    ELSE 
+      press = FALSE
+    ENDIF 
+    clearKeyboard 
+    entry$ = digit$(0) + digit$(1) + digit$(2)
+    tX = gWidth / 2 - (LEN (wellDone$) * 4 * 5) / 2
+    PROC text(wellDone$, tX, gHeight / 10 * 8, 200, 200, 0, 4, INT (RND (2)))
+    tX = gWidth / 2 - (LEN (entry$) * 8 * 5) / 2
+    PROC text(entry$, tX, gHeight / 2, 214, 38, 79, 8, INT (RND (2)))
+    tX = gWidth / 2 - (LEN (instruct$) * 2 * 5) / 2
+    PROC text(instruct$, tX, 20, 200, 200, 0, 2, INT (RND (2)))
+    PROC silvoids
+    PROC enemyShip
+    UPDATE 
+  REPEAT 
+  tempHiScore$ = digit$(0) + digit$(1) + digit$(2) + " " + STR$ (score)
+  FOR num = 0 TO 9 CYCLE 
+    scoreLen = LEN (hiScore$(num))
+    scoreValue = VAL (RIGHT$ (hiScore$(num), scoreLen - 4))
+    IF score >= scoreValue THEN 
+      position = num
+      FOR num2 = 9 TO position STEP -1 CYCLE 
+        IF num2 > 0 THEN 
+          hiScore$(num2) = hiScore$(num2 - 1)
+        ENDIF 
+      REPEAT 
+      BREAK 
+    ENDIF 
+  REPEAT 
+  hiScore$(num) = tempHiScore$
+ENDIF 
+ENDPROC 
+///////////////////////////////////
+DEF PROC enemyShip
+IF enemyShipActive = FALSE THEN 
+  randomEnemyAppear = 1000 - level * 50
+  IF RND (randomEnemyAppear) < level * 2 THEN 
+    IF level < 10 THEN 
+      randomEnemySize = 10
+    ELSE 
+      randomEnemySize = 1
+    ENDIF 
+    IF RND (randomEnemySize) < level THEN 
+      soundEffect = smallEnemyShip
+      enemySize = .3
+      eRad = 6
+      enemyScore = 1000
+      IF level <= 12 THEN 
+        randomEnemySpeed = RND (level / 6) + 1 + (level / 3)
+      ELSE 
+        randomEnemySpeed = RND (12 / 6) + 1 + (12 / 3)
+      ENDIF 
+      eSpeedVariant = randomEnemySpeed
+    ELSE 
+      soundEffect = largeEnemyShip
+      enemySize = .6
+      eRad = 16
+      enemyScore = 200
+      eSpeedVariant = RND (level / 6) + 1 + (level / 6)
+    ENDIF 
+    enemyDir = RND (10)
+    IF enemyDir <= 4 THEN 
+      enemyDir = 1
+      enemyYdir = 1 + (INT (RND (3)) / 5) + (level / 6)
+      enemyX = 0
+      enemySpeed = eSpeedVariant
+    ELSE 
+      enemyDir = 0
+      enemyYdir =  - 1 + (INT (RND (3)) / 5) + (level / 6)
+      enemyX = gWidth
+      enemySpeed =  - eSpeedVariant
+    ENDIF 
+    enemyY = RND (gHeight)
+    enemyShipActive = TRUE
+    activeEnemyBullets = FALSE
+    enemyFire = FALSE
+  ENDIF 
+ENDIF 
+IF enemyShipActive = TRUE THEN 
+  IF game THEN playSample (soundEffect, 2, 0)
+  random = 1000 - level * 20
+  IF RND (random) < level AND activeEnemyBullets < maxEnemyBullets THEN 
+    PROC newEnemyBullet
+  ENDIF 
+  IF RND (500) < 1 THEN 
+    enemyYdir = 1 + (INT (RND (3)) / 10) + level / 5
+    IF RND (2) < 1 THEN enemyYdir =  - enemyYdir
+  ENDIF 
+  enemyX = enemyX + enemySpeed
+  enemyY = enemyY + enemyYdir
+  IF enemyY > gHeight THEN enemyY = 0
+  IF enemyY < 0 THEN enemyY = gHeight
+  IF enemyX > gWidth OR enemyX < 0 THEN enemyShipActive = FALSE
+  COLOUR = Red
+  PLOT (enemyData(0) * enemySize + enemyX, enemyData(1) * enemySize + enemyY)
+  FOR n = 2 TO 24 STEP 2 CYCLE 
+    lineTo (enemyData(n) * enemySize + enemyX, enemyData(n + 1) * enemySize + enemyY)
+  REPEAT 
+ENDIF 
+ENDIF 
+ENDPROC 
+///////////////////////////////////
+DEF PROC drawEnemyBullets
+COLOUR = Red
+FOR n = 0 TO maxEnemyBullets CYCLE 
+  IF eBullet(n, eBactive) = TRUE THEN 
+    IF eBullet(n, eBx) > gWidth THEN eBullet(n, eBx) = 0
+    IF eBullet(n, eBx) < 0 THEN eBullet(n, eBx) = gWidth
+    IF eBullet(n, eBy) > gHeight THEN eBullet(n, eBy) = 0
+    IF eBullet(n, eBy) < 0 THEN eBullet(n, eBy) = gHeight
+    eBullet(n, eBx) = eBullet(n, eBx) - eBullet(n, eBspeed) * COS (eBullet(n, eBangle))
+    eBullet(n, eBy) = eBullet(n, eBy) - eBullet(n, eBspeed) * SIN (eBullet(n, eBangle))
+    eBullet(n, eBdistance) = eBullet(n, eBdistance) + eBullet(n, eBspeed)
+    CIRCLE (eBullet(n, eBx), eBullet(n, eBy), 1, 1)
+    IF eBullet(n, eBdistance) >= 400 THEN 
+      activeEnemyBullets = activeEnemyBullets - 1
+      eBullet(n, eBactive) = FALSE
+      eBullet(n, eBdistance) = 0
+    ENDIF 
+  ENDIF 
+REPEAT 
+ENDPROC 
+///////////////////////////////////
+DEF PROC newEnemyBullet
+activeEnemyBullets = activeEnemyBullets + 1
+FOR n = 0 TO maxEnemyBullets CYCLE 
+  IF eBullet(n, eBactive) = FALSE THEN 
+    eBullet(n, eBx) = enemyX
+    eBullet(n, eBy) = enemyY
+    eBullet(n, eBaccuracy) = (RND (360) - 180) / (level / 2)
+    tx3 = ABS (eBullet(n, eBx) - pX)
+    ty3 = ABS (eBullet(n, eBy) - pY)
+    IF eBullet(n, eBx) > pX AND eBullet(n, eBy) > pY THEN eBullet(n, eBangle) = ATAN (ABS (ty3 / tx3))
+    IF eBullet(n, eBx) < pX AND eBullet(n, eBy) > pY THEN eBullet(n, eBangle) = 180 - ATAN (ABS (ty3 / tx3))
+    IF eBullet(n, eBx) < pX AND eBullet(n, eBy) < pY THEN eBullet(n, eBangle) = 180 + ATAN (ABS (ty3 / tx3))
+    IF eBullet(n, eBx) > pX AND eBullet(n, eBy) < pY THEN eBullet(n, eBangle) = 270 - ATAN (ABS (ty3 / tx3)) + 90
+    eBullet(n, eBangle) = eBullet(n, eBangle) + eBullet(n, eBaccuracy)
+    eBullet(n, eBdistance) = 0
+    eBullet(n, eBspeed) = RND (4) + 2 + level / 3
+    eBullet(n, eBactive) = TRUE
+    IF game THEN playSample (playerFire, 2, 0)
+    BREAK 
+  ENDIF 
+REPEAT 
+ENDPROC 

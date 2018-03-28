@@ -1,0 +1,54 @@
+//
+//
+//    Bounce a ball round the screen
+//
+CLS 
+numSprites = 100
+updateMode = 0
+setMode (1024, 600)
+DIM sprites(numSprites)
+DIM xPos(numSprites)
+DIM yPos(numSprites)
+DIM xSpeed(numSprites)
+DIM ySpeed(numSprites)
+DIM xDir(numSprites)
+DIM yDir(numSprites)
+FOR i = 0 TO numSprites CYCLE 
+  sprites(i) = newSprite (1)
+  loadSprite ("ballBlue.png", sprites(i), 0)
+  setSpriteTrans (sprites(i), 0, 0, 0)
+  xPos(i) = RND (gWidth - 64)
+  yPos(i) = RND (gHeight - 64)
+  xSpeed(i) = RND (3) + 1
+  ySpeed(i) = RND (3) + 1
+  xDir(i) = RND (2)
+  IF xDir(i) = 0 THEN xDir(i) = -1
+  yDir(i) = RND (2)
+  IF yDir(i) = 0 THEN yDir(i) = -1
+REPEAT 
+numFormat (5, 1)
+CYCLE 
+  start = TIME
+  PROC updateSprites
+  printAt (0, 0);  "fps: ";  1000 / (TIME - start);  
+REPEAT 
+END 
+DEF PROC updateSprites
+LOCAL i, newX, newY
+FOR i = 1 TO numSprites CYCLE 
+  newX = xPos(i) + xSpeed(i) * xDir(i)
+  IF (newX > (gWidth - 64)) OR (newX < 0) THEN 
+    newX = xPos(i)
+    xDir(i) =  - xDir(i)
+  ENDIF 
+  xPos(i) = newX
+  newY = yPos(i) + ySpeed(i) * yDir(i)
+  IF (newY > (gHeight - 64)) OR (newY < 0) THEN 
+    newY = yPos(i)
+    yDir(i) =  - yDir(i)
+  ENDIF 
+  yPos(i) = newY
+  plotSprite (sprites(i), xPos(i), yPos(i), 0)
+REPEAT 
+UPDATE 
+ENDPROC 

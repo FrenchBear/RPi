@@ -1,0 +1,20 @@
+REM Moire
+CLS 
+CYCLE 
+  CLS 
+  COLOUR = RND (15) + 1
+  x = RND (gWidth)
+  y = RND (gHeight)
+  FOR w = 0 TO gWidth - 1 STEP 3 CYCLE 
+    LINE (x, y, w, 0)
+    LINE (x, y, w, gHeight - 1)
+    UPDATE 
+  REPEAT 
+  FOR h = 0 TO gHeight - 1 STEP 3 CYCLE 
+    LINE (x, y, 0, h)
+    LINE (x, y, gWidth - 1, h)
+    UPDATE 
+  REPEAT 
+  WAIT (1)
+REPEAT 
+END 

@@ -1,0 +1,11 @@
+// Attach an LDR (Light sensitive resistor to analog pin 0 and 3.3v
+// wave your hand over the LDR to change the size of the circle
+//
+CYCLE  // begin main loop
+  CLS2  // clears the screen without updating (flicker free)
+  // Draw a circle at x,y, Radius=Light value, filled
+  COLOUR = Orange
+  CIRCLE (gWidth / 2, gHeight / 2, analogRead (0) * 2, 1)
+  UPDATE  // Update screen
+REPEAT  // end of main loop
+END  // program end

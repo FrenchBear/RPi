@@ -1,0 +1,20 @@
+// Connect 8 LEDs to GPIO pins 0 to 7 and GND
+CLS 
+FOR p = 0 TO 7 CYCLE 
+  pinMode (p, 1)
+REPEAT 
+CYCLE 
+  FOR p = 0 TO 7 CYCLE 
+    digitalWrite (p, 1)
+    WAIT (.05)
+    digitalWrite (p, 0)
+  REPEAT 
+  FOR p = 6 TO 1 STEP -1 CYCLE 
+    digitalWrite (p, 1)
+    WAIT (.05)
+    digitalWrite (p, 0)
+  REPEAT 
+  UPDATE 
+REPEAT 
+END 
+//

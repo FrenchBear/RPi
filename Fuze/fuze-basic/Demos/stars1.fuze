@@ -1,0 +1,18 @@
+CLS 
+penDown 
+COLOUR = Yellow
+FOR j = 1 TO 100 CYCLE 
+  FOR i = 1 TO 5 CYCLE 
+//    IF (j MOD 2) = 0 THEN 
+//      COLOUR = 1
+//    ELSE 
+//      COLOUR = 13
+//    ENDIF 
+    move (200)
+    right (90 + 54)
+//update
+  REPEAT 
+  right (3.6)
+  UPDATE 
+REPEAT 
+END 
