@@ -9,12 +9,11 @@ fi
 
 if [ -f /usr/bin/go ]; then
 echo GO configured
-export PATH=$PATH:$HOME/.cargo/bin
 export GOROOT=/usr/local/go
 export PATH=$PATH:$GOROOT/bin
 fi
 
 if [ -d $HOME/.cargo ]; then
 echo RUST configured
-export PATH="$HOME/.cargo/bin:$PATH"
+export PATH=$PATH:$HOME/.cargo/bin
 fi
