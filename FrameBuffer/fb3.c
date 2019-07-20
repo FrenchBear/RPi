@@ -4,6 +4,7 @@
 // Compare Bresenham line drawing (non-aliasing) and  Xiaolin Wu line (aliasing) algorithms
 //
 // 2016-06-05	PV	Adapted fbtestXX.c to support all depths and not only 8-bit palette
+// 2019-07-20	PV	Double buffering doesn't work anymore on RPi4...
 
 #include <unistd.h>
 #include <stdio.h>
@@ -413,7 +414,8 @@ void draw() {
 		frames++;
 
         // change page to draw to (between 0 and 1)
-        cur_page = (cur_page + 1) % 2;
+        //cur_page = (cur_page + 1) % 2;
+		cur_page = 0;
 
         // clear the previous image (= fill entire screen)
 		clear_screen(0);
@@ -461,6 +463,7 @@ int main(int argc, char **aargv)
     printf("Original %dx%d, %dbpp\n", vinfo.xres, vinfo.yres,
          vinfo.bits_per_pixel );
 
+#ifdef ZZ
 #define PrintVar(s)  printf(#s "= %d\n", vinfo.s)
 	PrintVar(xres);			/* visible resolution		*/
 	PrintVar(yres);
@@ -486,6 +489,7 @@ int main(int argc, char **aargv)
 	PrintVar(vmode);			/* see FB_VMODE_*		*/
 	PrintVar(rotate);			/* angle we rotate counter clockwise */
 	PrintVar(colorspace);		/* colorspace for FOURCC-based modes */
+#endif
 
     // Store for reset (copy vinfo to vinfo_orig)
     memcpy(&orig_vinfo, &vinfo, sizeof(struct fb_var_screeninfo));
@@ -495,13 +499,12 @@ int main(int argc, char **aargv)
     //vinfo.xres = 960;
     //vinfo.yres = 540;
     vinfo.xres_virtual = vinfo.xres;
-    vinfo.yres_virtual = vinfo.yres * 1;
+    //vinfo.yres_virtual = vinfo.yres * 2;
+    vinfo.yres_virtual = vinfo.yres * 1;	// Should be, but *2 (even +1) is rejected on RPi4
     if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &vinfo)) {
       printf("Error setting variable information.\n");
 	  goto exit;
     }
-
-	printf("$0\n");
 
     // hide cursor
     char *kbfds = "/dev/tty";
@@ -513,8 +516,6 @@ int main(int argc, char **aargv)
         printf("Could not open %s.\n", kbfds);
 		goto exit;
 	}
-	
-	printf("$1\n");
 
     // Get fixed screen information
     if (ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo) == -1) {
@@ -522,6 +523,7 @@ int main(int argc, char **aargv)
 		goto exit;
     }
 
+#ifdef ZZ
 #define PrintVar_s(s)   printf(#s "= %s\n", finfo.s)
 #define PrintVar_32(s)  printf(#s "= %d\n", finfo.s)
 #define PrintVar_16(s)  printf(#s "= %d\n", finfo.s)
@@ -540,12 +542,9 @@ int main(int argc, char **aargv)
 	PrintVar_32(mmio_len);			/* Length of Memory Mapped I/O  */
 	PrintVar_32(accel);			/* Indicate to driver which	*/
 	PrintVar_16(capabilities);		/* see FB_CAP_*			*/
+#endif
 
     page_size = finfo.line_length * vinfo.yres;
-	printf("\npage_size=%d\n", page_size);
-
-	printf("$2\n");
-	goto exit;
 
     // map fb to user mem
     screensize = finfo.smem_len;

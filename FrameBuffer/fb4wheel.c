@@ -5,6 +5,7 @@
 //
 // 2016-06-05	PV	Adapted fbtestXX.c to support all depths and not only 8-bit palette
 // 2016-06-07	PV	Retrieve existing pixel colog for smooth blending in final version
+// 2019-07-20	PV	Double buffering doesn't work anymore on RPi4...
 
 #include <unistd.h>
 #include <stdio.h>
@@ -520,7 +521,8 @@ void draw() {
 		frames++;
 
         // change page to draw to (between 0 and 1)
-        cur_page = (cur_page + 1) % 2;
+        //cur_page = (cur_page + 1) % 2;	// Doesn't work on RPi4
+        cur_page = 0;
 
         // clear the previous image (= fill entire screen)
 		clear_screen(0x0);
@@ -576,6 +578,7 @@ int main(int argc, char* argv[])
 {
     long int screensize = 0;
     struct fb_var_screeninfo orig_vinfo;
+	int kbfd = 0;
 
 	signal(SIGINT, exit_program);
 
@@ -583,13 +586,14 @@ int main(int argc, char* argv[])
     fbfd = open("/dev/fb0", O_RDWR);
     if (fbfd == -1) {
         printf("Error: cannot open framebuffer device.\n");
-        return(1);
+        return 1;
     }
     printf("The framebuffer device was opened successfully.\n");
 
     // Get variable screen information
     if (ioctl(fbfd, FBIOGET_VSCREENINFO, &vinfo) == -1) {
         printf("Error reading variable information.\n");
+		return 1;
     }
     printf("Original %dx%d, %dbpp\n", vinfo.xres, vinfo.yres,
          vinfo.bits_per_pixel );
@@ -602,24 +606,28 @@ int main(int argc, char* argv[])
     //vinfo.xres = 960;
     //vinfo.yres = 540;
     vinfo.xres_virtual = vinfo.xres;
-    vinfo.yres_virtual = vinfo.yres * 2;
+    //vinfo.yres_virtual = vinfo.yres * 2;
+    vinfo.yres_virtual = vinfo.yres * 1;	// Should be, but *2 (even +1) is rejected on RPi4
     if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &vinfo)) {
       printf("Error setting variable information.\n");
+	  goto exit;
     }
-
 
     // hide cursor
     char *kbfds = "/dev/tty";
-    int kbfd = open(kbfds, O_WRONLY);
+    kbfd = open(kbfds, O_WRONLY);
     if (kbfd >= 0)
         ioctl(kbfd, KDSETMODE, KD_GRAPHICS);
     else
+	{
         printf("Could not open %s.\n", kbfds);
-
+		goto exit;
+	}
 
     // Get fixed screen information
     if (ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo) == -1) {
         printf("Error reading fixed information.\n");
+		goto exit;
     }
 
     page_size = finfo.line_length * vinfo.yres;
@@ -635,6 +643,7 @@ int main(int argc, char* argv[])
 
     if ((int)fbp == -1) {
         printf("Failed to mmap.\n");
+		goto exit;
     }
     else {
 		struct timespec tstart, tend;
@@ -646,10 +655,11 @@ int main(int argc, char* argv[])
 		printf("Duration: %ld ms, %d frames drawn = %.1f fps\n", ms, frames, frames*1000.0/ms);
     }
 
+exit:
     // cleanup
     // unmap fb file from memory
-    munmap(fbp, screensize);
-
+	if (fbp!=0)
+		munmap(fbp, screensize);
 
     // reset cursor
     if (kbfd >= 0) {
@@ -657,12 +667,11 @@ int main(int argc, char* argv[])
         close(kbfd);
     }
 
-/*
     // reset the display mode
     if (ioctl(fbfd, FBIOPUT_VSCREENINFO, &orig_vinfo)) {
         printf("Error re-setting variable information.\n");
     }
-*/
+
     // close fb file    
     close(fbfd);
 
