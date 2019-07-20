@@ -10,6 +10,8 @@ and may not be redistributed without written permission.*/
 #include <sstream>
 #include <iomanip>		// std::setprecision
 
+#define _SDL_TTF_H 1
+
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -435,10 +437,10 @@ bool loadMedia()
 
 	//Open the font
 	//gFont = TTF_OpenFont( "23_advanced_timers/lazy.ttf", 28 );
-	gFont = TTF_OpenFont("/usr/share/fonts/truetype/ttf-bitstream-vera/VeraBd.ttf", 24);
+	gFont = TTF_OpenFont("/usr/share/fonts/truetype/noto/NotoSerif-Bold.ttf", 24);
 	if( gFont == NULL )
 	{
-		printf( "Failed to load Bitstream Vera Sans Bold font! SDL_ttf Error: %s\n", TTF_GetError() );
+		printf( "Failed to load Bitstream NotoSerif Bold font! SDL_ttf Error: %s\n", TTF_GetError() );
 		success = false;
 	}
 	else

@@ -9,6 +9,8 @@ and may not be redistributed without written permission.*/
 #include <string>
 #include <sstream>
 
+#define _SDL_TTF_H 1
+
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -298,10 +300,10 @@ bool loadMedia()
 
 	//Open the font
 	//gFont = TTF_OpenFont( "lazy.ttf", 28 );
-	gFont = TTF_OpenFont("/usr/share/fonts/truetype/roboto/Roboto-Bold.ttf", 24);
+	gFont = TTF_OpenFont("/usr/share/fonts/truetype/ttf-bitstream-vera/VeraBd.ttf", 24);
 	if( gFont == NULL )
 	{
-		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
+		printf( "Failed to load Bitstream Vera Sans Bold font! SDL_ttf Error: %s\n", TTF_GetError() );
 		success = false;
 	}
 	else

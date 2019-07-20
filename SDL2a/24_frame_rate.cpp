@@ -10,6 +10,8 @@ and may not be redistributed without written permission.*/
 #include <sstream>
 #include <iomanip>
 
+#define _SDL_TTF_H 1
+
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
@@ -437,7 +439,7 @@ bool loadMedia()
 	gFont = TTF_OpenFont("/home/pi/.fonts/Ubuntu Mono/UbuntuMono-R.ttf", 24);
 	if( gFont == NULL )
 	{
-		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
+		printf( "Failed to load UbuntoMono font! SDL_ttf Error: %s\n", TTF_GetError() );
 		success = false;
 	}
 
