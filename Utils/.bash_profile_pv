@@ -9,7 +9,7 @@ fi
 
 if [ -f /usr/bin/go ]; then
 echo GO configured
-export GOROOT=/usr/local/go
+export GOROOT=/usr/lib/go
 export PATH=$PATH:$GOROOT/bin
 fi
 

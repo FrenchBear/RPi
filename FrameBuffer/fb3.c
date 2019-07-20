@@ -461,6 +461,32 @@ int main(int argc, char **aargv)
     printf("Original %dx%d, %dbpp\n", vinfo.xres, vinfo.yres,
          vinfo.bits_per_pixel );
 
+#define PrintVar(s)  printf(#s "= %d\n", vinfo.s)
+	PrintVar(xres);			/* visible resolution		*/
+	PrintVar(yres);
+	PrintVar(xres_virtual);		/* virtual resolution		*/
+	PrintVar(yres_virtual);
+	PrintVar(xoffset);			/* offset from virtual to visible */
+	PrintVar(yoffset);			/* resolution			*/
+	PrintVar(bits_per_pixel);		/* guess what			*/
+	PrintVar(grayscale);		/* 0 = color, 1 = grayscale, >1 = FOURCC			*/
+	PrintVar(nonstd);			/* != 0 Non standard pixel format */
+	PrintVar(activate);			/* see FB_ACTIVATE_*		*/
+	PrintVar(height);			/* height of picture in mm    */
+	PrintVar(width);			/* width of picture in mm     */
+	PrintVar(accel_flags);		/* (OBSOLETE) see fb_info.flags */
+	PrintVar(pixclock);			/* pixel clock in ps (pico seconds) */
+	PrintVar(left_margin);		/* time from sync to picture	*/
+	PrintVar(right_margin);		/* time from picture to sync	*/
+	PrintVar(upper_margin);		/* time from sync to picture	*/
+	PrintVar(lower_margin);
+	PrintVar(hsync_len);		/* length of horizontal sync	*/
+	PrintVar(vsync_len);		/* length of vertical sync	*/
+	PrintVar(sync);			/* see FB_SYNC_*		*/
+	PrintVar(vmode);			/* see FB_VMODE_*		*/
+	PrintVar(rotate);			/* angle we rotate counter clockwise */
+	PrintVar(colorspace);		/* colorspace for FOURCC-based modes */
+
     // Store for reset (copy vinfo to vinfo_orig)
     memcpy(&orig_vinfo, &vinfo, sizeof(struct fb_var_screeninfo));
 
@@ -475,6 +501,8 @@ int main(int argc, char **aargv)
 	  goto exit;
     }
 
+	printf("$0\n");
+
     // hide cursor
     char *kbfds = "/dev/tty";
     kbfd = open(kbfds, O_WRONLY);
@@ -485,6 +513,8 @@ int main(int argc, char **aargv)
         printf("Could not open %s.\n", kbfds);
 		goto exit;
 	}
+	
+	printf("$1\n");
 
     // Get fixed screen information
     if (ioctl(fbfd, FBIOGET_FSCREENINFO, &finfo) == -1) {
@@ -492,7 +522,30 @@ int main(int argc, char **aargv)
 		goto exit;
     }
 
+#define PrintVar_s(s)   printf(#s "= %s\n", finfo.s)
+#define PrintVar_32(s)  printf(#s "= %d\n", finfo.s)
+#define PrintVar_16(s)  printf(#s "= %d\n", finfo.s)
+#define PrintVar_ul(s)  printf(#s "= %lx\n", finfo.s)
+	PrintVar_s(id);				/* identification string eg "TT Builtin" */
+	PrintVar_ul(smem_start);	/* Start of frame buffer mem */
+	PrintVar_ul(mmio_start);	/* Start of Memory Mapped I/O   */
+	PrintVar_32(smem_len);			/* Length of frame buffer mem */
+	PrintVar_32(type);			/* see FB_TYPE_*		*/
+	PrintVar_32(type_aux);			/* Interleave for interleaved Planes */
+	PrintVar_32(visual);			/* see FB_VISUAL_*		*/ 
+	PrintVar_16(xpanstep);			/* zero if no hardware panning  */
+	PrintVar_16(ypanstep);			/* zero if no hardware panning  */
+	PrintVar_16(ywrapstep);		/* zero if no hardware ywrap    */
+	PrintVar_32(line_length);		/* length of a line in bytes    */
+	PrintVar_32(mmio_len);			/* Length of Memory Mapped I/O  */
+	PrintVar_32(accel);			/* Indicate to driver which	*/
+	PrintVar_16(capabilities);		/* see FB_CAP_*			*/
+
     page_size = finfo.line_length * vinfo.yres;
+	printf("\npage_size=%d\n", page_size);
+
+	printf("$2\n");
+	goto exit;
 
     // map fb to user mem
     screensize = finfo.smem_len;
