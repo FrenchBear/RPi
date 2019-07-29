@@ -1,8 +1,8 @@
 #!/bin/bash
 
-pushd ~/Development
+pushd ~/Development >/dev/null
 cd GitVSTS
 gitall.sh $@
 cd ../GitHub
 gitall.sh $@
-popd
+popd >/dev/null
