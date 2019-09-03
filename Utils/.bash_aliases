@@ -12,3 +12,4 @@ alias ver='cat /sys/firmware/devicetree/base/model;echo ;uname -a;cat /etc/debia
 alias man='man -P less'
 alias python=python3
 alias pip=pip3
+alias up='sudo sh -c "apt update && apt dist-upgrade && apt autoremove"'
