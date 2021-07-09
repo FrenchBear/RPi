@@ -250,7 +250,7 @@ void fill_circle(int x0, int y0, int r, int c) {
 // the main function when just want to change what to draw...
 void draw() {
 
-    int x;
+    unsigned int x;
     
     // some pixels
     for (x = 0; x < vinfo.xres; x+=5) {
@@ -268,7 +268,7 @@ void draw() {
     fill_rect(vinfo.xres / 4 + 20, vinfo.yres / 2 + 30, vinfo.xres / 4 - 40, vinfo.yres / 4 - 40, YELLOW);    
 
     // some circles
-    int d;
+    unsigned int d;
     for(d = 10; d < vinfo.yres / 6; d+=10) {
         draw_circle(3 * vinfo.xres / 4, vinfo.yres / 4, d, RED);
     }
