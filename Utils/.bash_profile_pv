@@ -22,3 +22,8 @@ if [ -d /usr/local/bin/node ]; then
 echo Node.js configured
 export PATH=$PATH:/usr/local/bin/node/bin
 fi
+
+echo g++-10 configured
+export PATH=/opt/gcc-10.1.0/bin:$PATH
+export LD_LIBRARY_PATH=/opt/gcc-10.1.0/lib:/usr/lib/arm-linux-gnueabihf:$LD_LIBRARY_PATH
+
