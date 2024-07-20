@@ -1,30 +1,90 @@
 #!/bin/sh
 
-if [ -d ~/dotnet ]; then
-echo DOTNET configured
-export PATH=$PATH:$HOME/dotnet
-export DOTNET_ROOT=$HOME/dotnet
-export DOTNET_CLI_TELEMETRY_OPTOUT=1
+# 2024-07-20	PV		Merge with WSL version, enhance
+
+
+# .Net ================================================
+if [ -d /usr/share/dotnet ]; then
+	echo ".Net configured (shared)"
+	export DOTNET_ROOT=/usr/share/dotnet
+elif [ -d /lib/dotnet ]; then
+	echo ".Net configured (lib)"
+	export DOTNET_ROOT=/usr/lib/dotnet
+elif [ -d ~/dotnet ]; then
+	echo ".Net configured (local)"
+	export DOTNET_ROOT=$HOME/dotnet
+fi
+if [ -n "$DOTNET_ROOT" ]; then
+	export PATH=$PATH:$HOME/$DOTNET_ROOT
+	export DOTNET_CLI_TELEMETRY_OPTOUT=1
+	for s in `dotnet --list-sdks | sed -e 's/ \[.*//'`
+	do
+	  echo "  sdk $s"
+	done
 fi
 
-if [ -f /usr/bin/go ]; then
-echo GO configured
-export GOROOT=/usr/lib/go
-export PATH=$PATH:$GOROOT/bin
+# Go ================================================
+if [ -d /usr/lib/go ]; then
+	s="(usr/lib)"
+	export GOROOT=/usr/lib/go
+	export PATH=$PATH:$GOROOT/bin
+elif [ -d /usr/local/go ]; then
+	s="(usr/local)"
+	export GOROOT=/usr/local/go
+	export PATH=$PATH:$GOROOT/bin
+fi
+[ -n "$GOROOT" ] && echo `go version | sed -e 's/version go//' -e 's/ lin.*//'` $s
+
+# gcc ================================================
+if [ -f /usr/bin/gcc ]; then
+	gcc --version | head -n 1 | sed -s 's/.Debian.*) //'
 fi
 
+# g++ ================================================
+if [ -f /usr/bin/g++ ]; then
+	g++ --version | head -n 1 | sed -s 's/.Debian.*) //'
+fi
+
+# # gcc 10.1.0 (but why?)  ================================================
+# if [ -d /opt/gcc-10.1.0/bin ]; then
+# echo g++-10 configured
+# export PATH=/opt/gcc-10.1.0/bin:$PATH
+# export LD_LIBRARY_PATH=/opt/gcc-10.1.0/lib:/usr/lib/arm-linux-gnueabihf:$LD_LIBRARY_PATH
+# fi
+
+# Python ================================================
+if [ -f /usr/bin/python ]; then
+	python --version | tr '[:upper:]' '[:lower:]'
+fi
+
+# nvm (node.js installer) ================================================
+if [ -d "$HOME/.nvm" ]; then
+	export NVM_DIR="$HOME/.nvm"
+	export PATH=$PATH:$NVM_DIR
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+	nvm version | sed -e 's/v/nvm /'
+fi
+
+# node.js, npm, tsc ================================================
+if [ /usr/bin/node ]; then
+	echo "node.js configured"
+	echo "  node" `node --version`
+	echo "  npm" `npm -version`
+	echo "  tsc" `tsc --version`
+fi
+
+# rust ================================================
 if [ -d $HOME/.cargo ]; then
-echo RUST configured
-export PATH=$PATH:$HOME/.cargo/bin
+	. "$HOME/.cargo/env"
+	export PATH=$PATH:$HOME/.cargo/bin
+	rustc --version | sed -e 's/ (.*//'
 fi
 
-if [ -d /usr/local/bin/node ]; then
-echo Node.js configured
-export PATH=$PATH:/usr/local/bin/node/bin
+# julia ================================================
+if [ -d ~/julia ]; then
+	export JULIA_BINDIR=~/julia/julia-1.10.4/bin
+	export PATH=$PATH:$JULIA_BINDIR
+	julia --version | sed -e s'/version //'
 fi
 
-if [ -d /opt/gcc-10.1.0/bin ]; then
-echo g++-10 configured
-export PATH=/opt/gcc-10.1.0/bin:$PATH
-export LD_LIBRARY_PATH=/opt/gcc-10.1.0/lib:/usr/lib/arm-linux-gnueabihf:$LD_LIBRARY_PATH
-fi
