@@ -16,8 +16,8 @@ int main() {
 		for (int c=0 ; c<8 ; c++) {
 			printf("^[[%d;3%dm ", h, c);
 			for (int b=0 ; b<8 ; b++) {
-				printf("[%d;3%d;4%dm", h, c, b);
-				printf(" Hello [0;40m ");
+				printf("\x1b[%d;3%d;4%dm", h, c, b);
+				printf(" Hello \x1b[0;40m ");
 			}
 			printf("\n");
 		}
